@@ -71,6 +71,7 @@ export default function Sidebar() {
   );
 }
 
+
 function SideLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
   return (
     <Link
