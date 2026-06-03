@@ -29,28 +29,30 @@ export default function HomePage() {
   const instrumentalCount = tracks.filter((track) => track.category === "instrumental").length;
 
   return (
-    <div className="px-4 py-9 sm:px-8 lg:px-14 space-y-14">
-      <header className="relative overflow-hidden rounded-[2rem] p-6 sm:p-9 lg:p-12 min-h-[460px]" style={{ background: "linear-gradient(135deg, #0c1823 0%, #123655 54%, #0b1520 100%)", boxShadow: "0 34px 90px rgba(12,24,35,0.24)" }}>
+    <div className="px-3 py-6 sm:px-8 lg:px-14 space-y-10 sm:space-y-14">
+      <header className="relative overflow-hidden rounded-[2rem] p-6 sm:p-9 lg:p-12" style={{ background: "linear-gradient(135deg, #0c1823 0%, #123655 54%, #0b1520 100%)", boxShadow: "0 34px 90px rgba(12,24,35,0.24)" }}>
         <div className="absolute inset-0 opacity-40" style={{ background: "radial-gradient(circle at 70% 20%, rgba(230, 194, 119, 0.24), transparent 22rem)" }} />
-        <div className="relative grid lg:grid-cols-[0.92fr_1.08fr] gap-10 items-center h-full">
+        <div className="relative grid lg:grid-cols-[0.92fr_1.08fr] gap-10 items-center">
+          {/* Text content */}
           <div className="text-white">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white/75">
               Curated Worship Archive
             </span>
-            <h1 className="mt-6 text-5xl sm:text-7xl font-black tracking-tight leading-none">Discover</h1>
-            <p className="mt-5 max-w-xl text-lg leading-8 text-white/68">A polished music library for worship leaders, studios, and church teams who need every sound to feel intentional.</p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/instrumentals" className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold shadow-xl shadow-black/20" style={{ color: "#0c1823" }}>
+            <h1 className="mt-5 text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none">Discover</h1>
+            <p className="mt-4 max-w-xl text-base sm:text-lg leading-7 text-white/68">A polished music library for worship leaders, studios, and church teams.</p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/instrumentals" className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-bold shadow-xl shadow-black/20" style={{ color: "#0c1823" }}>
                 Browse Collection
-                <ArrowUpRight size={16} />
+                <ArrowUpRight size={15} />
               </Link>
-              <Link href="/download" className="inline-flex items-center gap-2 rounded-full border border-white/18 px-5 py-3 text-sm font-semibold text-white/86">
-                Studio Downloads
+              <Link href="/download" className="inline-flex items-center gap-2 rounded-full border border-white/18 px-4 py-2.5 text-sm font-semibold text-white/86">
+                Downloads
               </Link>
             </div>
           </div>
 
-          <div className="relative min-h-[340px]">
+          {/* Stacked cards — hidden on small, visible lg+ */}
+          <div className="relative hidden lg:block min-h-[340px]">
             {featured.slice(0, 3).map((track, index) => (
               <div
                 key={track.id}
@@ -64,11 +66,25 @@ export default function HomePage() {
                 }}
               >
                 <div className="relative aspect-square">
-                  <Image src={track.imageUrl} alt="" fill sizes="(min-width: 1024px) 28vw, 70vw" className="object-cover" priority={index === 1} />
+                  <Image src={track.imageUrl} alt="" fill sizes="28vw" className="object-cover" priority={index === 1} />
                 </div>
-                <div className="bg-white/92 p-4">
-                  <p className="truncate font-bold text-[var(--ink)]">{track.title}</p>
-                  <p className="truncate text-sm text-[var(--muted)]">{track.artist}</p>
+                <div className="bg-white/92 p-3">
+                  <p className="truncate font-bold text-sm text-[var(--ink)]">{track.title}</p>
+                  <p className="truncate text-xs text-[var(--muted)]">{track.artist}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Mobile: horizontal scroll of covers */}
+          <div className="flex lg:hidden gap-3 overflow-x-auto pb-1 -mx-1 px-1">
+            {featured.slice(0, 4).map((track) => (
+              <div key={track.id} className="flex-shrink-0 w-28 rounded-xl overflow-hidden border border-white/12">
+                <div className="relative aspect-square">
+                  <Image src={track.imageUrl} alt="" fill sizes="112px" className="object-cover" />
+                </div>
+                <div className="bg-white/90 px-2 py-1.5">
+                  <p className="truncate text-xs font-bold text-[var(--ink)]">{track.title}</p>
                 </div>
               </div>
             ))}
