@@ -4,11 +4,20 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 const MOODS = [
   { id: "all", label: "All" },
-  { id: "anointing", label: "Anointing" },
-  { id: "beloved", label: "Beloved" },
-  { id: "dancing", label: "Dancing" },
-  { id: "flow", label: "Flow" },
+  { id: "worship", label: "Worship" },
+  { id: "devotion", label: "Devotion" },
+  { id: "intercession", label: "Intercession" },
   { id: "honour", label: "Honour" },
+  { id: "celebration", label: "Celebration" },
+  { id: "healing", label: "Healing" },
+  { id: "hope", label: "Hope" },
+  { id: "love", label: "Love" },
+  { id: "praise", label: "Praise" },
+  { id: "prayer", label: "Prayer" },
+  { id: "relationships", label: "Relationships" },
+  { id: "spirituality", label: "Spirituality" },
+  { id: "thankfulness", label: "Thankfulness" },
+  { id: "the-church", label: "The Church" },
 ];
 
 export function MoodFilter() {

@@ -34,8 +34,8 @@ export default function SearchOverlay() {
 
   return (
     <div
-      className="fixed inset-0 z-40"
-      style={{ top: 64, left: 192, bottom: 80 }}
+      className="fixed inset-0 z-40 md:left-48"
+      style={{ top: 64, bottom: 80 }}
       onClick={() => setQuery("")}
     >
       <div

@@ -4,7 +4,6 @@ import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import TopBar from "@/components/TopBar";
 import MusicPlayer from "@/components/MusicPlayer";
-import MobileNav from "@/components/MobileNav";
 import { PlayerProvider } from "@/components/MusicPlayerContext";
 import { SearchProvider } from "@/components/SearchContext";
 import SearchOverlay from "@/components/SearchOverlay";
@@ -33,7 +32,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`dark ${inter.variable}`} suppressHydrationWarning>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})()` }} />
+      </head>
       <body className={inter.className}>
         <IntroAnimation />
         <PlayerProvider>
@@ -54,9 +56,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <SessionRestore />
               <SearchOverlay />
               <MusicPlayer />
-
-              {/* Bottom nav — visible on mobile only */}
-              <MobileNav />
             </SearchProvider>
           </LikesProvider>
         </PlayerProvider>

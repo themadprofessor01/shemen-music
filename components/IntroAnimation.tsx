@@ -10,10 +10,6 @@ export default function IntroAnimation() {
   const glowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Only show once per browser session
-    if (sessionStorage.getItem("shemen-intro")) return;
-    sessionStorage.setItem("shemen-intro", "1");
-
     const overlay = overlayRef.current;
     const logo = logoRef.current;
     const glow = glowRef.current;
