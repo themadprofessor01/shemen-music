@@ -30,10 +30,10 @@ export function TrackCardLarge({ track }: { track: Track }) {
     <>
       <div
         className="luxury-hover-card relative flex-shrink-0 rounded-2xl cursor-pointer group"
-        style={{ width: 200, background: "var(--surface2)", border: "1px solid var(--border)" }}
+        style={{ width: "100%", background: "var(--surface2)", border: "1px solid var(--border)" }}
         onClick={() => setDrawerOpen(true)}
       >
-        <div className="relative flex items-center justify-center" style={{ height: 200, overflow: "hidden" }}>
+        <div className="relative flex items-center justify-center" style={{ aspectRatio: "1", overflow: "hidden" }}>
           <CoverArt track={track} size={200} />
           <button
             className="absolute inset-0 flex items-center justify-center"

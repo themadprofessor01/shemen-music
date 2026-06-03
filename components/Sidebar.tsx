@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Headphones, Download, ListMusic, Heart, Music2, Sun, Moon, Mail } from "lucide-react";
+import { Headphones, Download, ListMusic, Heart, Music2, Sun, Moon, Mail, Home } from "lucide-react";
 import Image from "next/image";
 
 export default function Sidebar() {
@@ -12,8 +12,9 @@ export default function Sidebar() {
     const saved = localStorage.getItem("shemen_theme");
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     const isDark = saved ? saved === "dark" : prefersDark;
-    setDark(isDark);
     if (isDark) document.documentElement.classList.add("dark");
+    const frame = window.requestAnimationFrame(() => setDark(isDark));
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   function toggleTheme() {
@@ -29,24 +30,25 @@ export default function Sidebar() {
   }
 
   return (
-    <aside
-      className="fixed top-0 left-0 bottom-0 w-48 flex flex-col z-40 overflow-y-auto"
-      style={{ background: "var(--surface)", borderRight: "1px solid var(--border)" }}
-    >
-      {/* Logo */}
-      <div className="px-5 py-5">
-        <Link href="/" className="flex items-center">
-          <Image
-            src="https://shemenmusic.com/three/wp-content/uploads/2022/07/NewLogo2022.png"
-            alt="ShemenMusic"
-            width={140}
-            height={20}
-            className="h-7 w-auto object-contain"
-            style={{ filter: "var(--logo-filter, none)" }}
-            priority
-          />
-        </Link>
-      </div>
+    <>
+      <aside
+        className="desktop-sidebar fixed top-0 left-0 bottom-0 w-48 flex-col z-40 overflow-y-auto"
+        style={{ background: "var(--surface)", borderRight: "1px solid var(--border)" }}
+      >
+        {/* Logo */}
+        <div className="px-5 py-5">
+          <Link href="/" className="flex items-center">
+            <Image
+              src="https://shemenmusic.com/three/wp-content/uploads/2022/07/NewLogo2022.png"
+              alt="ShemenMusic"
+              width={140}
+              height={20}
+              className="h-7 w-auto object-contain"
+              style={{ filter: "var(--logo-filter, none)" }}
+              priority
+            />
+          </Link>
+        </div>
 
       {/* Browse */}
       <div className="px-4 mt-2">
@@ -97,7 +99,16 @@ export default function Sidebar() {
 
         <p className="text-xs" style={{ color: "var(--foreground-muted)" }}>@2024 ShemenMusic</p>
       </div>
-    </aside>
+      </aside>
+
+      <nav className="mobile-bottom-nav fixed inset-x-3 bottom-3 z-50 grid grid-cols-5 rounded-[1.35rem] border p-1.5 backdrop-blur-xl" style={{ background: "rgba(255,253,250,0.88)", borderColor: "rgba(231,223,209,0.92)", boxShadow: "0 20px 60px rgba(12,24,35,0.18)" }}>
+        <MobileLink href="/" icon={<Home size={18} />} label="Home" />
+        <MobileLink href="/instrumentals" icon={<Headphones size={18} />} label="Tracks" />
+        <MobileLink href="/playlists" icon={<ListMusic size={18} />} label="Lists" />
+        <MobileLink href="/download" icon={<Download size={18} />} label="Files" />
+        <MobileLink href="/likes" icon={<Heart size={18} />} label="Likes" />
+      </nav>
+    </>
   );
 }
 
@@ -110,6 +121,15 @@ function SideLink({ href, icon, label }: { href: string; icon: React.ReactNode; 
     >
       <span className="flex-shrink-0 mt-0.5" style={{ color: "var(--accent)" }}>{icon}</span>
       <span className="leading-snug">{label}</span>
+    </Link>
+  );
+}
+
+function MobileLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
+  return (
+    <Link href={href} className="flex min-w-0 flex-col items-center justify-center gap-1 rounded-2xl px-1 py-2 text-[10px] font-bold" style={{ color: "var(--foreground-muted)" }}>
+      <span className="text-[var(--accent)]">{icon}</span>
+      <span className="truncate">{label}</span>
     </Link>
   );
 }

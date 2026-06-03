@@ -10,15 +10,7 @@ export default function TopBar() {
 
   return (
     <>
-      <header
-        className="fixed top-0 right-0 z-30 h-16 flex items-center gap-4 px-6"
-        style={{
-          left: "192px",
-          background: "color-mix(in srgb, var(--surface) 86%, transparent)",
-          borderBottom: "1px solid var(--border)",
-          backdropFilter: "blur(18px)",
-        }}
-      >
+      <header className="top-bar fixed top-0 right-0 z-30 h-16 flex items-center gap-4 px-4 sm:px-6">
         <button
           className="flex-1 max-w-md relative rounded-full text-left text-sm py-2 pl-9 pr-4 outline-none"
           style={{
@@ -33,7 +25,7 @@ export default function TopBar() {
           <span className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full border px-2 py-0.5 text-[10px] font-bold" style={{ borderColor: "var(--border)" }}>/</span>
         </button>
 
-        <div className="flex items-center gap-3 ml-auto flex-shrink-0">
+        <div className="hidden items-center gap-3 ml-auto flex-shrink-0 sm:flex">
           <Link
             href="/login"
             className="text-sm font-medium hover:opacity-80 transition-opacity"
@@ -42,7 +34,7 @@ export default function TopBar() {
             Sign In
           </Link>
           <Link
-            href="/login"
+            href="/login?action=register"
             className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold transition-opacity hover:opacity-90"
             style={{ background: "linear-gradient(135deg, var(--blue), var(--blue-deep))", color: "#ffffff" }}
           >

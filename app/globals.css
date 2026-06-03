@@ -66,6 +66,37 @@ body {
 
 * { box-sizing: border-box; }
 
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-content {
+  flex: 1;
+  min-width: 0;
+  margin-left: 192px;
+  margin-bottom: 80px;
+}
+
+.app-main {
+  padding-top: 64px;
+}
+
+.desktop-sidebar {
+  display: flex;
+}
+
+.mobile-bottom-nav {
+  display: none;
+}
+
+.top-bar {
+  left: 192px;
+  background: rgba(255, 253, 250, 0.86);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(18px);
+}
+
 .premium-card {
   background:
     linear-gradient(145deg, rgba(255, 253, 250, 0.96), rgba(246, 241, 232, 0.9)),
@@ -181,5 +212,44 @@ body {
   .luxury-hover-card::after,
   .luxury-hover-reveal {
     transition: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  body {
+    background:
+      radial-gradient(circle at 70% 0%, rgba(182, 138, 58, 0.16), transparent 22rem),
+      linear-gradient(180deg, #fffdfa 0%, var(--background) 18rem);
+  }
+
+  .app-shell {
+    display: block;
+  }
+
+  .app-content {
+    margin-left: 0;
+    margin-bottom: 132px;
+  }
+
+  .desktop-sidebar {
+    display: none;
+  }
+
+  .mobile-bottom-nav {
+    display: grid;
+  }
+
+  .top-bar {
+    left: 0;
+    height: 60px;
+    background: rgba(255, 253, 250, 0.78);
+  }
+
+  .app-main {
+    padding-top: 60px;
+  }
+
+  .luxury-hover-card:hover {
+    transform: none;
   }
 }

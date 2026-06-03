@@ -19,11 +19,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <PlayerProvider>
           <LikesProvider>
-            <div style={{ display: "flex", minHeight: "100vh" }}>
+            <div className="app-shell">
               <Sidebar />
-              <div style={{ flex: 1, marginLeft: "192px", marginBottom: "80px", minWidth: 0 }}>
+              <div className="app-content">
                 <TopBar />
-                <main style={{ paddingTop: "64px" }}>{children}</main>
+                <main className="app-main">{children}</main>
                 <LuxuryFooter />
               </div>
             </div>

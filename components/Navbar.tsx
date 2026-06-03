@@ -40,8 +40,8 @@ export default function Navbar() {
           </button>
 
           <div className="hidden md:flex items-center gap-4 text-sm">
-            <Link href="/likes" className="hover:text-[var(--blue)]">Sign In</Link>
-            <Link href="/download" className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 font-semibold text-white shadow-lg shadow-blue-500/20" style={{ background: "linear-gradient(135deg, var(--blue), var(--blue-deep))" }}>
+            <Link href="/login" className="hover:text-[var(--blue)]">Sign In</Link>
+            <Link href="/login?action=register" className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 font-semibold text-white shadow-lg shadow-blue-500/20" style={{ background: "linear-gradient(135deg, var(--blue), var(--blue-deep))" }}>
               <User size={15} fill="currentColor" />
               Sign Up
             </Link>
@@ -78,10 +78,10 @@ export default function Navbar() {
             </button>
           </NavGroup>
           <div className="space-y-5 text-[var(--muted)]">
-            <Link href="/download" className="block hover:text-[var(--blue)]">Contact Us</Link>
+            <Link href="/contact" className="block hover:text-[var(--blue)]">Contact Us</Link>
             <div className="flex gap-4">
-              <Link href="/download" className="hover:text-[var(--blue)]">Terms</Link>
-              <Link href="/download" className="hover:text-[var(--blue)]">Privacy Policy</Link>
+              <Link href="/terms" className="hover:text-[var(--blue)]">Terms</Link>
+              <Link href="/privacy" className="hover:text-[var(--blue)]">Privacy Policy</Link>
             </div>
           </div>
         </div>

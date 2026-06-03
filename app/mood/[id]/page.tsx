@@ -10,21 +10,13 @@ export default async function MoodPage({ params }: { params: Promise<{ id: strin
   if (!mood) notFound();
 
   const moodTracks = tracks.filter((track) => track.mood === id);
-  const moodLinks = moods.concat([
-    { id: "hope", label: "Hope", emoji: "H", color: "#dfe2e5" },
-    { id: "love", label: "Love", emoji: "L", color: "#dfe2e5" },
-    { id: "praise", label: "Praise", emoji: "P", color: "#dfe2e5" },
-    { id: "prayer", label: "Prayer", emoji: "P", color: "#dfe2e5" },
-    { id: "relationships", label: "Relationships", emoji: "R", color: "#dfe2e5" },
-    { id: "spirituality", label: "Spirituality", emoji: "S", color: "#dfe2e5" },
-  ]);
 
   return (
     <>
       <PageShell eyebrow={`${moodTracks.length || 10} tracks`} title={mood.label} />
       <div className="px-4 pb-14 sm:px-8 lg:px-14">
         <div className="flex flex-wrap gap-3">
-          {moodLinks.map((item) => (
+          {moods.map((item) => (
             <Link
               key={item.id}
               href={`/mood/${item.id}`}

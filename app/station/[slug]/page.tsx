@@ -2,47 +2,12 @@
 
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { use } from "react";
+import { use, useState } from "react";
 import { Download, Heart, MessageSquare, MoreVertical, Play, Plus, Users } from "lucide-react";
 import { CoverImage } from "@/components/CoverImage";
 import { TrackCardLarge } from "@/components/TrackCard";
 import { usePlayer } from "@/components/MusicPlayerContext";
-import { formatPlays, getStationSlug, slugifyArtist, tracks } from "@/lib/data";
-
-const roseLyrics = `Rose Of Sharon
-
-Oooh Jesus, Jesus
-Oooh Jesus, Jesus
-Oooh Jesus, Jesus
-Oooh Jesus, Jesus
-
-Anything I saw before I saw you
-Was a waste of life
-Anyone I knew before I knew you
-Was a waste of life
-Anywhere I went without you
-Was a waste of life
-Anyone I saw before I saw you
-Was a waste of life
-
-Oooh, oh
-I'm so glad, I'm so glad that I have you now
-Oooh, oh
-No more wasting my life on others
-
-You are my rose of Sharon (Sharon)
-You're my lily of the valley (Valley)
-You are my lily among the thorns
-My love among the daughters (daughters)
-
-You are my rose of Sharon
-Rose Of Sharon
-My lily of the valley
-Of the valley
-You are my rose of Sharon
-Rose Of Sharon
-My lily of the valley
-Of the valley`;
+import { formatPlays, getStationSlug, slugifyArtist, stationDetailFor, tracks } from "@/lib/data";
 
 export default function StationPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
@@ -50,12 +15,8 @@ export default function StationPage({ params }: { params: Promise<{ slug: string
   if (!track) notFound();
 
   const related = tracks.filter((item) => item.id !== track.id && item.artist === track.artist).slice(0, 3);
-  const versions = slug === "rose-of-sharon"
-    ? [
-        { title: "Rose Of Sharon (Official Instrumental with BVs)", artist: "The Living Waters Singers", time: "05:51" },
-        { title: "Rose Of Sharon (Official Instrumental without BVs)", artist: "First Love Music", time: "05:52" },
-      ]
-    : [{ title: track.title, artist: track.artist, time: track.duration }];
+  const detail = stationDetailFor(track);
+  const versions = detail.versions ?? [{ title: track.title, artist: track.artist, time: track.duration }];
 
   return <StationDetail track={track} versions={versions} related={related} />;
 }
@@ -70,7 +31,9 @@ function StationDetail({
   related: (typeof tracks)[number][];
 }) {
   const { currentTrack, isPlaying, toggle, setQueue } = usePlayer();
+  const [tab, setTab] = useState<"overview" | "versions" | "comment">("overview");
   const active = currentTrack?.id === track.id;
+  const detail = stationDetailFor(track);
 
   function handlePlay() {
     setQueue([track, ...related]);
@@ -89,8 +52,9 @@ function StationDetail({
               {track.artist}
             </Link>
             <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">{track.title}</h1>
+            <p className="mt-4 max-w-2xl leading-7 text-[var(--muted)]">{detail.description}</p>
             <p className="mt-2 text-base text-[var(--muted)]">
-              {track.category === "worship" ? "Praise & Worship" : "Instrumentals"} <span className="px-1">-</span> Album <span className="px-1">-</span> {versions.length} Tracks <span className="px-1">-</span> 11:43 <span className="px-1">-</span> 2025
+              {track.category === "worship" ? "Praise & Worship" : "Instrumentals"} <span className="px-1">-</span> Album <span className="px-1">-</span> {versions.length} Tracks <span className="px-1">-</span> {track.duration} <span className="px-1">-</span> {detail.albumYear}
             </p>
             <div className="mt-5 flex items-center gap-5 text-[var(--muted)]">
               <button className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg" style={{ background: "linear-gradient(135deg, var(--ink), var(--blue-deep))" }} onClick={handlePlay} aria-label={`Play ${track.title}`}>
@@ -126,13 +90,31 @@ function StationDetail({
         </div>
       </section>
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_300px]">
+      <div className="mt-8 flex flex-wrap gap-2 rounded-full border p-1" style={{ background: "rgba(255,253,250,0.72)", borderColor: "var(--border)" }}>
+        {[
+          ["overview", detail.lyrics ? "Lyrics" : "Overview"],
+          ["versions", "Versions"],
+          ["comment", "Comment"],
+        ].map(([value, label]) => (
+          <button
+            key={value}
+            className="rounded-full px-5 py-2 text-sm font-bold"
+            style={{ background: tab === value ? "var(--premium-soft)" : "transparent", color: tab === value ? "var(--premium)" : "var(--foreground-muted)" }}
+            onClick={() => setTab(value as "overview" | "versions" | "comment")}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {tab === "overview" && <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_300px]">
         <article className="rounded-[2rem] p-6 text-[15px] leading-7 text-[#4a4d52] whitespace-pre-line sm:p-10" style={{ background: "rgba(255,253,250,0.62)", border: "1px solid var(--border)" }}>
-          {roseLyrics}
-          <p className="mt-8 text-[var(--muted)]">November 22, 2025</p>
+          {detail.lyrics ?? detail.description}
+          <p className="mt-8 text-[var(--muted)]">{detail.date}</p>
           <div className="mt-5 flex gap-2">
-            <span className="rounded-full border px-4 py-1 text-sm font-bold" style={{ background: "var(--surface2)", borderColor: "var(--border)" }}>Living Waters</span>
-            <span className="rounded-full border px-4 py-1 text-sm font-bold" style={{ background: "var(--surface2)", borderColor: "var(--border)" }}>Rose Of Sharon</span>
+            {detail.tags.map((tag) => (
+              <span key={tag} className="rounded-full border px-4 py-1 text-sm font-bold" style={{ background: "var(--surface2)", borderColor: "var(--border)" }}>{tag}</span>
+            ))}
           </div>
         </article>
 
@@ -148,7 +130,29 @@ function StationDetail({
             ShemenMusic 2024
           </div>
         </aside>
-      </div>
+      </div>}
+
+      {tab === "versions" && (
+        <section className="mt-8 rounded-[2rem] p-5 sm:p-7" style={{ background: "rgba(255,253,250,0.72)", border: "1px solid var(--border)", boxShadow: "var(--shadow-card)" }}>
+          <h2 className="text-2xl font-black tracking-tight">Available Versions</h2>
+          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">Reference-style track versions and download access, presented as a premium release table.</p>
+          <div className="mt-6 grid gap-3">
+            {versions.map((version, index) => (
+              <div key={version.title} className="grid gap-4 rounded-2xl border p-4 sm:grid-cols-[36px_1fr_auto]" style={{ background: "var(--surface2)", borderColor: "var(--border)" }}>
+                <span className="flex h-9 w-9 items-center justify-center rounded-full text-sm font-black text-[var(--premium)]" style={{ background: "var(--premium-soft)" }}>{index + 1}</span>
+                <div className="min-w-0">
+                  <p className="truncate font-bold">{version.title}</p>
+                  <p className="truncate text-sm text-[var(--muted)]">{version.artist}</p>
+                </div>
+                <div className="flex items-center gap-4 text-sm font-bold text-[var(--muted)]">
+                  <Download size={15} />
+                  <span>{version.time}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="mt-10">
         <h2 className="text-2xl font-black tracking-tight">Discover More</h2>
@@ -159,7 +163,7 @@ function StationDetail({
         </div>
       </section>
 
-      <section className="mt-10 border-t pt-8" style={{ borderColor: "var(--border)" }}>
+      {tab === "comment" && <section className="mt-10 border-t pt-8" style={{ borderColor: "var(--border)" }}>
         <h2 className="text-2xl font-black tracking-tight">Comment</h2>
         <div className="grid grid-cols-[42px_1fr] gap-4">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#707070] text-white">○</div>
@@ -175,7 +179,7 @@ function StationDetail({
             <button className="w-fit rounded-full px-6 py-3 text-sm font-bold text-white" style={{ background: "linear-gradient(135deg, var(--ink), var(--blue-deep))" }}>Comment</button>
           </form>
         </div>
-      </section>
+      </section>}
     </div>
   );
 }

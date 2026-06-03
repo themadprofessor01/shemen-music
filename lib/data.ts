@@ -23,6 +23,8 @@ export type Playlist = {
   curator: string;
   trackCount: number;
   coverColor: string;
+  description: string;
+  trackIds: string[];
 };
 
 export type Mood = {
@@ -37,6 +39,15 @@ export type Artist = {
   slug: string;
   name: string;
   bio?: string;
+};
+
+export type StationDetail = {
+  date: string;
+  albumYear: string;
+  description: string;
+  lyrics?: string;
+  tags: string[];
+  versions?: { title: string; artist: string; time: string }[];
 };
 
 const BASE = "https://shemenmusic.com/three";
@@ -106,15 +117,48 @@ export const tracks: Track[] = [
 ];
 
 export const playlists: Playlist[] = [
-  { id: "p1", title: "Songs about the Anointing", curator: "First Love Music", trackCount: 14, coverColor: "#7b1fa2" },
+  {
+    id: "anointing",
+    title: "Songs about the Anointing",
+    curator: "First Love Music",
+    trackCount: 14,
+    coverColor: "#7b1fa2",
+    description: "A reference-inspired flow of anointing songs, altar-call instrumentals, and prayer-room arrangements.",
+    trackIds: ["t2", "t4", "t6", "t8", "t13", "t16", "t19", "f6", "f8", "r5", "r10", "r15", "r16", "r19"],
+  },
+  {
+    id: "living-waters-essentials",
+    title: "Living Waters Essentials",
+    curator: "The Living Waters Singers",
+    trackCount: 10,
+    coverColor: "#0277bd",
+    description: "The core Living Waters instrumentals from the reference catalogue, gathered for quick rehearsal access.",
+    trackIds: ["f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10"],
+  },
+  {
+    id: "praise-and-worship",
+    title: "Praise & Worship Instrumentals",
+    curator: "ShemenMusic",
+    trackCount: 12,
+    coverColor: "#b68a3a",
+    description: "Classic praise and worship selections prepared for services, devotion, and ministry teams.",
+    trackIds: ["p1a", "p2a", "p3a", "p4a", "p5a", "p6a", "p7a", "p8a", "p9a", "p10a", "t12", "t15"],
+  },
 ];
 
 export const moods: Mood[] = [
   { id: "anointing", label: "Anointing", emoji: "A", color: "#f0d860", imageUrl: `${UPL}/2024/08/Artboard-17-6.png` },
   { id: "belovedosing", label: "Belovedosing", emoji: "B", color: "#dfe2e5" },
+  { id: "beloved", label: "Beloved", emoji: "B", color: "#f4bfd1" },
   { id: "dancing", label: "Dancing", emoji: "D", color: "#7eb5f5", imageUrl: `${UPL}/2024/08/Artboard-19-6.png` },
   { id: "flow", label: "FLOW", emoji: "F", color: "#dfe2e5" },
   { id: "honour", label: "Honour", emoji: "H", color: "#9aa5ad", imageUrl: `${UPL}/2024/08/Artboard-21-4.png` },
+  { id: "hope", label: "Hope", emoji: "H", color: "#dfe2e5" },
+  { id: "love", label: "Love", emoji: "L", color: "#f5d6dc" },
+  { id: "praise", label: "Praise", emoji: "P", color: "#f0d860" },
+  { id: "prayer", label: "Prayer", emoji: "P", color: "#d9e7ef" },
+  { id: "relationships", label: "Relationships", emoji: "R", color: "#ead8c7" },
+  { id: "spirituality", label: "Spirituality", emoji: "S", color: "#dce8d8" },
 ];
 
 export const artists: Artist[] = [
@@ -128,6 +172,11 @@ export const artists: Artist[] = [
   { slug: "clint-brown", name: "Clint Brown", bio: "Clint Brown is a renowned gospel artist and worship leader with decades of ministry." },
   { slug: "tommy-walker", name: "Tommy Walker", bio: "Tommy Walker is a worship songwriter whose songs are sung in congregations worldwide." },
   { slug: "aida", name: "Aida", bio: "Aida brings powerful vocals and anointed worship to First Love Music collaborations." },
+  { slug: "alvin-slaughter", name: "Alvin Slaughter", bio: "A gospel worship voice represented in the wider reference artist archive." },
+  { slug: "benny-hinn", name: "Benny Hinn", bio: "Ministry music and worship selections associated with the wider reference archive." },
+  { slug: "brooklyn-tabernacle-choir", name: "Brooklyn Tabernacle Choir", bio: "Choir-led gospel worship represented in the wider reference artist archive." },
+  { slug: "chris-tomlin", name: "Chris Tomlin", bio: "Contemporary worship selections represented in the wider reference artist archive." },
+  { slug: "don-moen", name: "Don Moen", bio: "Classic praise and worship selections represented in the wider reference artist archive." },
 ];
 
 export type ArtistProfile = {
@@ -212,7 +261,105 @@ export const artistProfiles: ArtistProfile[] = [
     imageUrl: `${UPL}/2024/08/i-believe-i-believe-mp3-image-scaled.jpg`,
     signatureTrackId: "t15",
   },
+  {
+    id: "georlynn",
+    name: "Georlynn",
+    description: "Georlynn brings clear, prayerful worship vocals to First Love Music collaborations and ministry-focused arrangements.",
+    role: "Worship Vocalist",
+    location: "Ghana",
+    palette: "linear-gradient(135deg, #3e2723 0%, #8d6e63 100%)",
+    imageUrl: `${UPL}/2024/08/Bear-Much-Fruit.jpg`,
+    signatureTrackId: "r15",
+  },
+  {
+    id: "keziah",
+    name: "Keziah",
+    description: "Keziah's worship recordings lean intimate and reflective, with instrumentals suited for devotion and altar ministry.",
+    role: "Worship Artist",
+    location: "Ghana",
+    palette: "linear-gradient(135deg, #4a148c 0%, #7b1fa2 100%)",
+    imageUrl: `${UPL}/2024/08/A-Lovely-Diamond.jpg`,
+    signatureTrackId: "r2",
+  },
+  {
+    id: "aida",
+    name: "Aida",
+    description: "Aida appears across First Love Music worship releases with service-ready tracks shaped for teaching, praise, and prayer.",
+    role: "Worship Collaborator",
+    location: "Ghana",
+    palette: "linear-gradient(135deg, #004d40 0%, #00856f 100%)",
+    imageUrl: `${UPL}/2024/08/A-FaithFul-Friend.jpg`,
+    signatureTrackId: "r1",
+  },
 ];
+
+export const stationDetails: Record<string, StationDetail> = {
+  "rose-of-sharon": {
+    date: "November 22, 2025",
+    albumYear: "2025",
+    description: "Rose Of Sharon from The Living Waters Singers, presented with official instrumental versions and worship-room context.",
+    tags: ["Living Waters", "Rose Of Sharon"],
+    versions: [
+      { title: "Rose Of Sharon (Official Instrumental with BVs)", artist: "The Living Waters Singers", time: "05:51" },
+      { title: "Rose Of Sharon (Official Instrumental without BVs)", artist: "First Love Music", time: "05:52" },
+    ],
+    lyrics: `Rose Of Sharon
+
+Oooh Jesus, Jesus
+Oooh Jesus, Jesus
+Oooh Jesus, Jesus
+Oooh Jesus, Jesus
+
+Anything I saw before I saw you
+Was a waste of life
+Anyone I knew before I knew you
+Was a waste of life
+Anywhere I went without you
+Was a waste of life
+Anyone I saw before I saw you
+Was a waste of life
+
+Oooh, oh
+I'm so glad, I'm so glad that I have you now
+Oooh, oh
+No more wasting my life on others
+
+You are my rose of Sharon (Sharon)
+You're my lily of the valley (Valley)
+You are my lily among the thorns
+My love among the daughters (daughters)
+
+You are my rose of Sharon
+Rose Of Sharon
+My lily of the valley
+Of the valley
+You are my rose of Sharon
+Rose Of Sharon
+My lily of the valley
+Of the valley`,
+  },
+};
+
+export function stationDetailFor(track: Track): StationDetail {
+  const slug = getStationSlug(track);
+  if (slug && stationDetails[slug]) return stationDetails[slug];
+
+  return {
+    date: "ShemenMusic Archive",
+    albumYear: "2024",
+    description: `${track.title} by ${track.artist}, copied into the premium ShemenMusic archive with download and playback access for worship teams.`,
+    tags: [track.artist.split("&")[0].trim(), track.category === "worship" ? "Praise & Worship" : "Instrumentals"],
+    versions: [{ title: track.title, artist: track.artist, time: track.duration }],
+  };
+}
+
+export function tracksForPlaylist(playlist: Playlist): Track[] {
+  const selected = playlist.trackIds
+    .map((id) => tracks.find((track) => track.id === id))
+    .filter((track): track is Track => Boolean(track));
+
+  return selected.length ? selected : tracks.slice(0, playlist.trackCount);
+}
 
 export function tracksByArtist(artistName: string): Track[] {
   const normalized = artistName.toLowerCase();

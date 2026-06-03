@@ -12,13 +12,6 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
   if (!artist && !artistTracks.length) notFound();
 
   const name = artist?.name ?? artistTracks[0]?.artist ?? slug;
-  const artistLinks = artists.concat([
-    { slug: "alvin-slaughter", name: "Alvin Slaughter" },
-    { slug: "benny-hinn", name: "Benny Hinn" },
-    { slug: "brooklyn-tabernacle-choir", name: "Brooklyn Tabernacle Choir" },
-    { slug: "chris-tomlin", name: "Chris Tomlin" },
-    { slug: "don-moen", name: "Don Moen" },
-  ]);
 
   return (
     <>
@@ -26,7 +19,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
       <div className="px-4 pb-14 sm:px-8 lg:px-14">
         <section className="rounded-[2rem] p-5" style={{ background: "rgba(255,253,250,0.72)", border: "1px solid var(--border)", boxShadow: "var(--shadow-card)" }}>
           <div className="flex flex-wrap gap-3">
-            {artistLinks.map((item) => (
+            {artists.map((item) => (
               <Link
                 key={item.slug}
                 href={`/artist/${item.slug}`}
