@@ -7,6 +7,7 @@ import { PlayerProvider } from "@/components/MusicPlayerContext";
 import { SearchProvider } from "@/components/SearchContext";
 import SearchOverlay from "@/components/SearchOverlay";
 import { LikesProvider } from "@/components/LikesContext";
+import { SessionRestore } from "@/components/SessionRestore";
 
 export const metadata: Metadata = {
   title: "ShemenMusic — Church Music & Instrumentals",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <main style={{ paddingTop: "64px" }}>{children}</main>
               </div>
             </div>
+            <SessionRestore />
             <SearchOverlay />
             <MusicPlayer />
           </SearchProvider>
