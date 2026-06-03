@@ -66,7 +66,7 @@ export default function HomePage() {
                 }}
               >
                 <div className="relative aspect-square">
-                  <Image src={track.imageUrl} alt="" fill sizes="28vw" className="object-cover" priority={index === 1} />
+                  {track.imageUrl ? <Image src={track.imageUrl} alt="" fill sizes="28vw" className="object-cover" priority={index === 1} /> : <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${track.coverColor}, ${track.coverColor}88)` }} />}
                 </div>
                 <div className="bg-white/92 p-3">
                   <p className="truncate font-bold text-sm text-[var(--ink)]">{track.title}</p>
@@ -81,7 +81,7 @@ export default function HomePage() {
             {featured.slice(0, 4).map((track) => (
               <div key={track.id} className="flex-shrink-0 w-28 rounded-xl overflow-hidden border border-white/12">
                 <div className="relative aspect-square">
-                  <Image src={track.imageUrl} alt="" fill sizes="112px" className="object-cover" />
+                  {track.imageUrl ? <Image src={track.imageUrl} alt="" fill sizes="112px" className="object-cover" /> : <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${track.coverColor}, ${track.coverColor}88)` }} />}
                 </div>
                 <div className="bg-white/90 px-2 py-1.5">
                   <p className="truncate text-xs font-bold text-[var(--ink)]">{track.title}</p>
@@ -120,7 +120,7 @@ export default function HomePage() {
 
       <section className="grid lg:grid-cols-[0.82fr_1.18fr] gap-6 items-stretch">
         <div className="relative min-h-[360px] overflow-hidden rounded-[2rem]" style={{ boxShadow: "var(--shadow-card)" }}>
-          <Image src={featured[0].imageUrl} alt="" fill sizes="(min-width: 1024px) 34vw, 100vw" className="object-cover" />
+          {featured[0].imageUrl ? <Image src={featured[0].imageUrl} alt="" fill sizes="(min-width: 1024px) 34vw, 100vw" className="object-cover" /> : <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${featured[0].coverColor}, ${featured[0].coverColor}88)` }} />}
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 34%, rgba(12,24,35,0.84))" }} />
           <div className="absolute left-5 right-5 bottom-5">
             <p className="premium-pill inline-flex rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em]">Spotlight</p>
