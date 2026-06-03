@@ -4,18 +4,19 @@ import { Play, Pause, Users } from "lucide-react";
 import { usePlayer } from "@/components/MusicPlayerContext";
 import type { Track } from "@/lib/data";
 import { formatPlays } from "@/lib/data";
+import Image from "next/image";
 
 function CoverArt({ track, size }: { track: Track; size: number }) {
-  const bg = `linear-gradient(135deg, ${track.coverColor}, ${track.coverColor2 ?? track.coverColor + "88"})`;
-  const src = track.coverImage || track.imageUrl;
+  const bg = `linear-gradient(135deg, ${track.coverColor}, ${track.coverColor}88)`;
+  const src = track.imageUrl;
   if (src) {
     return (
-      <img
+      <Image
         src={src}
-        alt={track.title}
+        alt=""
         width={size}
         height={size}
-        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+        className="block h-full w-full object-cover"
       />
     );
   }

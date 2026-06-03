@@ -1,7 +1,7 @@
 import { formatPlays, tracks, playlists, moods, totalDuration } from "@/lib/data";
 import { TrackCardLarge } from "@/components/TrackCard";
-import { Activity, ArrowUpRight, BarChart3, Crown, Download, Lock, SlidersHorizontal, Sparkles, Users, Wand2 } from "lucide-react";
-
+import { Activity, ArrowUpRight, BarChart3, Download, Lock, SlidersHorizontal, Sparkles, Users, Wand2 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -63,7 +63,7 @@ export default function HomePage() {
                 }}
               >
                 <div className="relative aspect-square">
-                  <img src={track.imageUrl || track.coverImage} alt={track.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  <Image src={track.imageUrl} alt="" fill sizes="(min-width: 1024px) 28vw, 70vw" className="object-cover" priority={index === 1} />
                 </div>
                 <div className="bg-white/92 p-4">
                   <p className="truncate font-bold text-[var(--ink)]">{track.title}</p>
@@ -97,6 +97,42 @@ export default function HomePage() {
             <AnalyticsCard icon={<Activity size={18} />} value={`${trending.length}/${tracks.length}`} label="Trending now" detail="High rotation catalogue" />
             <AnalyticsCard icon={<Sparkles size={18} />} value={totalDuration(tracks)} label="Curated runtime" detail="Ready for service prep" />
             <AnalyticsCard icon={<Users size={18} />} value={`${instrumentalCount}`} label="Instrumental masters" detail="Studio-grade arrangements" />
+          </div>
+        </div>
+      </section>
+
+      <section className="grid lg:grid-cols-[0.82fr_1.18fr] gap-6 items-stretch">
+        <div className="relative min-h-[360px] overflow-hidden rounded-[2rem]" style={{ boxShadow: "var(--shadow-card)" }}>
+          <Image src={featured[0].imageUrl} alt="" fill sizes="(min-width: 1024px) 34vw, 100vw" className="object-cover" />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 34%, rgba(12,24,35,0.84))" }} />
+          <div className="absolute left-5 right-5 bottom-5">
+            <p className="premium-pill inline-flex rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em]">Spotlight</p>
+            <h2 className="mt-4 text-3xl font-black text-white">{featured[0].title}</h2>
+            <p className="mt-1 text-white/68">{featured[0].artist}</p>
+          </div>
+        </div>
+
+        <div className="premium-card rounded-[2rem] p-6 sm:p-8 lg:p-10 flex flex-col justify-between gap-10">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--premium)]">Editorial Album Spotlight</p>
+            <h2 className="mt-4 max-w-2xl text-4xl sm:text-5xl font-black tracking-tight leading-none">A release prepared for prayer rooms and Sunday mornings.</h2>
+            <p className="mt-5 max-w-xl text-[var(--muted)] leading-7">Master-quality worship audio, curated with a studio sensibility and arranged for teams that need reliable, beautiful sound in the room.</p>
+          </div>
+
+          <div className="grid sm:grid-cols-3 gap-3">
+            <SpotlightStat value={featured[0].duration} label="Runtime" />
+            <SpotlightStat value={featured[0].size} label="Master file" />
+            <SpotlightStat value={formatPlays(featured[0].plays)} label="Plays" />
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <Link href="/instrumentals" className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-bold text-white" style={{ background: "linear-gradient(135deg, var(--ink), var(--blue-deep))" }}>
+              Listen to release
+              <ArrowUpRight size={16} />
+            </Link>
+            <Link href="/download" className="inline-flex items-center gap-2 rounded-full border px-5 py-3 text-sm font-bold" style={{ borderColor: "var(--border)", color: "var(--ink)" }}>
+              View studio files
+            </Link>
           </div>
         </div>
       </section>
@@ -138,7 +174,7 @@ export default function HomePage() {
             >
               {mood.imageUrl ? (
                 <div className="relative aspect-square w-full">
-                  <img src={mood.imageUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  <Image src={mood.imageUrl} alt="" fill sizes="(min-width: 1280px) 20vw, (min-width: 768px) 33vw, 50vw" className="object-cover" />
                 </div>
               ) : (
                 <div className="aspect-square w-full" style={{ background: mood.color }} />
@@ -219,6 +255,15 @@ function AnalyticsCard({ icon, value, label, detail }: { icon: ReactNode; value:
       <p className="mt-6 text-3xl font-black tracking-tight">{value}</p>
       <p className="mt-1 font-bold">{label}</p>
       <p className="mt-3 text-sm text-[var(--muted)]">{detail}</p>
+    </div>
+  );
+}
+
+function SpotlightStat({ value, label }: { value: string; label: string }) {
+  return (
+    <div className="rounded-2xl p-4" style={{ background: "rgba(255,253,250,0.62)", border: "1px solid rgba(231,223,209,0.8)" }}>
+      <p className="text-xl font-black">{value}</p>
+      <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-[var(--muted)]">{label}</p>
     </div>
   );
 }
