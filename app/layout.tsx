@@ -6,7 +6,7 @@ import MusicPlayer from "@/components/MusicPlayer";
 import { PlayerProvider } from "@/components/MusicPlayerContext";
 import { LikesProvider } from "@/components/LikesContext";
 import { SessionRestore } from "@/components/SessionRestore";
-import { LuxuryFooter } from "@/components/LuxuryFooter";
+import { ReferenceFooter } from "@/components/ReferenceFooter";
 
 export const metadata: Metadata = {
   title: "ShemenMusic — Church Music & Instrumentals",
@@ -21,10 +21,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <LikesProvider>
             <div style={{ display: "flex", minHeight: "100vh" }}>
               <Sidebar />
-              <div style={{ flex: 1, marginLeft: "192px", marginBottom: "80px", minWidth: 0 }}>
+              <div style={{ flex: 1, marginLeft: "199px", marginBottom: "80px", minWidth: 0 }}>
                 <TopBar />
                 <main style={{ paddingTop: "64px" }}>{children}</main>
-                <LuxuryFooter />
+                <ReferenceFooter />
               </div>
             </div>
             <SessionRestore />

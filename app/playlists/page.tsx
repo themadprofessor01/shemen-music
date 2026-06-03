@@ -1,30 +1,26 @@
-import Link from "next/link";
 import { CollectionCover } from "@/components/CollectionCover";
-import { PageShell } from "@/components/PageShell";
+import Link from "next/link";
 import { playlists } from "@/lib/data";
 
 export default function PlaylistsPage() {
   return (
-    <>
-      <PageShell eyebrow={`${playlists.length} collections`} title="Playlists">
-        Curated worship flows for prayer, Sunday mornings, soaking sessions, and praise gatherings.
-      </PageShell>
-      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="ref-page">
+      <h1 className="ref-title">Playlists</h1>
+      <div className="ref-card-grid mt-10">
         {playlists.map((playlist) => (
           <Link
             key={playlist.id}
             href={`/playlists/${playlist.id}`}
-            className="luxury-hover-card group rounded-2xl"
-            style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+            className="ref-card block"
           >
             <CollectionCover playlist={playlist} />
-            <div className="p-4">
-              <p className="font-semibold">{playlist.title}</p>
-              <p className="text-sm opacity-55 mt-1">{playlist.trackCount} tracks</p>
+            <div className="ref-card-body">
+              <span className="ref-card-title">{playlist.title}</span>
+              <span className="ref-card-subtitle">{playlist.curator}</span>
             </div>
           </Link>
         ))}
       </div>
-    </>
+    </div>
   );
 }

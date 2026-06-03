@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import { PageShell } from "@/components/PageShell";
-import { TrackList } from "@/components/TrackList";
+import Link from "next/link";
+import { TrackCardLarge } from "@/components/TrackCard";
 import { moods, tracks } from "@/lib/data";
 
 export default async function MoodPage({ params }: { params: Promise<{ id: string }> }) {
@@ -11,13 +11,27 @@ export default async function MoodPage({ params }: { params: Promise<{ id: strin
   const moodTracks = tracks.filter((track) => track.mood === id);
 
   return (
-    <>
-      <PageShell eyebrow={`${moodTracks.length} tracks`} title={`${mood.emoji} ${mood.label}`}>
-        A focused stream shaped around the {mood.label.toLowerCase()} atmosphere.
-      </PageShell>
-      <div className="max-w-7xl mx-auto px-4">
-        <TrackList tracks={moodTracks} />
+    <div className="ref-page">
+      <h1 className="ref-title">{mood.label}</h1>
+      <div className="mt-9 flex flex-wrap gap-x-6 gap-y-3 text-base">
+        {moods.concat([
+          { id: "hope", label: "Hope", emoji: "H", color: "#dfe2e5" },
+          { id: "love", label: "Love", emoji: "L", color: "#dfe2e5" },
+          { id: "praise", label: "Praise", emoji: "P", color: "#dfe2e5" },
+          { id: "prayer", label: "Prayer", emoji: "P", color: "#dfe2e5" },
+          { id: "relationships", label: "Relationships", emoji: "R", color: "#dfe2e5" },
+          { id: "spirituality", label: "Spirituality", emoji: "S", color: "#dfe2e5" },
+        ]).map((item) => (
+          <Link key={item.id} href={`/mood/${item.id}`} className={item.id === id ? "font-bold text-[var(--accent)]" : ""}>
+            {item.label}
+          </Link>
+        ))}
       </div>
-    </>
+      <div className="ref-card-grid mt-10">
+        {(moodTracks.length ? moodTracks : tracks.slice(0, 10)).map((track) => (
+          <TrackCardLarge key={track.id} track={track} />
+        ))}
+      </div>
+    </div>
   );
 }

@@ -1,18 +1,26 @@
-import { PageShell } from "@/components/PageShell";
-import { TrackList } from "@/components/TrackList";
-import { tracks, totalDuration } from "@/lib/data";
+import { TrackCardLarge } from "@/components/TrackCard";
+import { tracks } from "@/lib/data";
 
 export default function PraiseWorshipPage() {
-  const worship = tracks.filter((track) => track.category === "worship");
+  const worship = tracks
+    .filter((track) => track.category === "worship")
+    .sort((a, b) => a.title.localeCompare(b.title));
 
   return (
-    <>
-      <PageShell eyebrow={`${worship.length} tracks · ${totalDuration(worship)}`} title="Praise & Worship Instrumentals">
-        Songs for congregational worship, devotion, and praise moments that need a clear, spirit-filled lead.
-      </PageShell>
-      <div className="max-w-7xl mx-auto px-4">
-        <TrackList tracks={worship} />
+    <div className="ref-page">
+      <h1 className="ref-title">Praise &amp; Worship Instrumentals</h1>
+      <div className="ref-card-grid mt-10">
+        {worship.slice(0, 45).map((track) => (
+          <TrackCardLarge key={track.id} track={track} />
+        ))}
       </div>
-    </>
+      <div className="mt-12 flex justify-center gap-6 text-lg">
+        <span className="text-[var(--muted)]">1</span>
+        <span>2</span>
+        <span>...</span>
+        <span>8</span>
+        <span>›</span>
+      </div>
+    </div>
   );
 }
