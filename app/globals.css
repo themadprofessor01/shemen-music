@@ -1,26 +1,64 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ffffff;
-  --foreground-muted: #a8a8a8;
-  --accent: #1a8cff;
-  --accent-dim: #1a8cff1a;
-  --surface: #141414;
-  --surface2: #1e1e1e;
-  --surface3: #282828;
-  --border: #2a2a2a;
-  /* aliases for remote components */
-  --muted: #a8a8a8;
-  --blue: #1a8cff;
-  --blue-soft: #1a8cff1a;
-  --gold: #1a8cff;
+  --background: #f7f4ef;
+  --foreground: #131b24;
+  --foreground-muted: #74706a;
+  --muted: #74706a;
+  --blue: #075d9e;
+  --blue-deep: #083557;
+  --blue-soft: #e7eef5;
+  --premium: #b68a3a;
+  --premium-soft: #f5ead2;
+  --accent: #075d9e;
+  --accent-dim: #075d9e1a;
+  --gold: #075d9e;
+  --surface: #fffdfa;
+  --surface2: #ece7dd;
+  --surface3: #e6ded1;
+  --border: #e7dfd1;
+  --ink: #0c1823;
+  --shadow-soft: 0 28px 70px rgba(33, 26, 16, 0.09);
+  --shadow-card: 0 18px 44px rgba(33, 26, 16, 0.11);
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(circle at top right, rgba(182, 138, 58, 0.16), transparent 34rem),
+    radial-gradient(circle at 18% 12%, rgba(7, 93, 158, 0.08), transparent 28rem),
+    linear-gradient(180deg, #fffdfa 0%, var(--background) 24rem);
   color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 * { box-sizing: border-box; }
+
+.premium-card {
+  background:
+    linear-gradient(145deg, rgba(255, 253, 250, 0.96), rgba(246, 241, 232, 0.9)),
+    radial-gradient(circle at top right, rgba(182, 138, 58, 0.15), transparent 16rem);
+  border: 1px solid rgba(231, 223, 209, 0.92);
+  box-shadow: var(--shadow-soft);
+}
+
+.premium-pill {
+  background: rgba(255, 253, 250, 0.78);
+  color: #76541a;
+  border: 1px solid rgba(182, 138, 58, 0.28);
+  box-shadow: 0 8px 24px rgba(92, 62, 16, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.luxury-skeleton {
+  background:
+    linear-gradient(100deg, rgba(255, 253, 250, 0.5) 0%, rgba(245, 234, 210, 0.86) 42%, rgba(255, 253, 250, 0.5) 78%);
+  background-size: 220% 100%;
+  animation: luxury-shimmer 1.5s ease-in-out infinite;
+  border: 1px solid rgba(231, 223, 209, 0.48);
+  box-shadow: 0 16px 40px rgba(33, 26, 16, 0.07);
+}
+
+@keyframes luxury-shimmer {
+  0% { background-position: 120% 0; }
+  100% { background-position: -120% 0; }
+}
