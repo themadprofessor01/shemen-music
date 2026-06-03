@@ -8,6 +8,7 @@ import { useState } from "react";
 import { LikeButton } from "@/components/LikeButton";
 import { Equalizer } from "@/components/Equalizer";
 import { CoverImage } from "@/components/CoverImage";
+import { ShareButton } from "@/components/ShareButton";
 
 function CoverArt({ track, size }: { track: Track; size: number }) {
   return (
@@ -171,6 +172,7 @@ export function TrackRow({ track, index }: { track: Track; index: number }) {
         <span>{track.size}</span>
         <span className="w-10 text-right">{track.duration}</span>
         <LikeButton trackId={track.id} />
+        <ShareButton track={track} />
       </div>
       <TrackDetailDrawer track={track} open={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </div>
@@ -224,6 +226,7 @@ function TrackDetailDrawer({ track, open, onClose }: { track: Track; open: boole
           <button className="flex-1 rounded-full px-5 py-3 text-sm font-bold text-white" style={{ background: "linear-gradient(135deg, var(--ink), var(--blue-deep))" }} onClick={() => toggle(track)}>
             {active && isPlaying ? "Pause" : "Listen now"}
           </button>
+          <ShareButton track={track} size={18} />
           <a className="h-12 w-12 rounded-full flex items-center justify-center" style={{ background: "var(--premium-soft)", color: "var(--premium)" }} href={track.downloadUrl ?? "#"} aria-label={`Download ${track.title}`}>
             <Download size={18} />
           </a>
