@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 
 const STORAGE_KEY = "shemen_liked_tracks";
 
@@ -17,15 +17,15 @@ const LikesContext = createContext<LikesState>({
 });
 
 export function LikesProvider({ children }: { children: React.ReactNode }) {
-  const [liked, setLiked] = useState<Set<string>>(new Set());
-
-  // Hydrate from localStorage on mount
-  useEffect(() => {
+  const [liked, setLiked] = useState<Set<string>>(() => {
     try {
+      if (typeof window === "undefined") return new Set();
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setLiked(new Set(JSON.parse(stored)));
-    } catch {}
-  }, []);
+      return stored ? new Set(JSON.parse(stored) as string[]) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
 
   const toggle = useCallback((id: string) => {
     setLiked((prev) => {
