@@ -57,7 +57,16 @@ export default function Sidebar() {
         </div>
         <p className="text-xs" style={{ color: "var(--foreground-muted)" }}>@2024 ShemenMusic</p>
       </div>
-    </aside>
+      </aside>
+
+      <nav className="mobile-bottom-nav fixed inset-x-3 bottom-3 z-50 grid grid-cols-5 rounded-[1.35rem] border p-1.5 backdrop-blur-xl" style={{ background: "rgba(255,253,250,0.88)", borderColor: "rgba(231,223,209,0.92)", boxShadow: "0 20px 60px rgba(12,24,35,0.18)" }}>
+        <MobileLink href="/" icon={<Home size={18} />} label="Home" />
+        <MobileLink href="/instrumentals" icon={<Headphones size={18} />} label="Tracks" />
+        <MobileLink href="/playlists" icon={<ListMusic size={18} />} label="Lists" />
+        <MobileLink href="/download" icon={<Download size={18} />} label="Files" />
+        <MobileLink href="/likes" icon={<Heart size={18} />} label="Likes" />
+      </nav>
+    </>
   );
 }
 
@@ -70,6 +79,15 @@ function SideLink({ href, icon, label }: { href: string; icon: React.ReactNode; 
     >
       <span className="flex-shrink-0 mt-0.5" style={{ color: "var(--accent)" }}>{icon}</span>
       <span className="leading-snug">{label}</span>
+    </Link>
+  );
+}
+
+function MobileLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
+  return (
+    <Link href={href} className="flex min-w-0 flex-col items-center justify-center gap-1 rounded-2xl px-1 py-2 text-[10px] font-bold" style={{ color: "var(--foreground-muted)" }}>
+      <span className="text-[var(--accent)]">{icon}</span>
+      <span className="truncate">{label}</span>
     </Link>
   );
 }

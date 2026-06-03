@@ -1,105 +1,185 @@
 "use client";
 
 import { notFound } from "next/navigation";
-import { tracks, getStationSlug, formatPlays } from "@/lib/data";
+import Link from "next/link";
+import { use, useState } from "react";
+import { Download, Heart, MessageSquare, MoreVertical, Play, Plus, Users } from "lucide-react";
+import { CoverImage } from "@/components/CoverImage";
+import { TrackCardLarge } from "@/components/TrackCard";
 import { usePlayer } from "@/components/MusicPlayerContext";
-import { LikeButton } from "@/components/LikeButton";
-import { ShareButton } from "@/components/ShareButton";
-import { Equalizer } from "@/components/Equalizer";
-import { Download, Play, Pause, Users, Clock, HardDrive } from "lucide-react";
-import { use } from "react";
+import { formatPlays, getStationSlug, slugifyArtist, stationDetailFor, tracks } from "@/lib/data";
 
 export default function StationPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
-  const track = tracks.find((t) => getStationSlug(t) === slug);
+  const track = tracks.find((item) => getStationSlug(item) === slug);
   if (!track) notFound();
 
-  return <StationDetail slug={slug} />;
+  const related = tracks.filter((item) => item.id !== track.id && item.artist === track.artist).slice(0, 3);
+  const detail = stationDetailFor(track);
+  const versions = detail.versions ?? [{ title: track.title, artist: track.artist, time: track.duration }];
+
+  return <StationDetail track={track} versions={versions} related={related} />;
 }
 
-function StationDetail({ slug }: { slug: string }) {
-  const track = tracks.find((t) => getStationSlug(t) === slug)!;
+function StationDetail({
+  track,
+  versions,
+  related,
+}: {
+  track: (typeof tracks)[number];
+  versions: { title: string; artist: string; time: string }[];
+  related: (typeof tracks)[number][];
+}) {
   const { currentTrack, isPlaying, toggle, setQueue } = usePlayer();
+  const [tab, setTab] = useState<"overview" | "versions" | "comment">("overview");
   const active = currentTrack?.id === track.id;
-  const coverSrc = track.coverImage || track.imageUrl;
+  const detail = stationDetailFor(track);
 
   function handlePlay() {
-    setQueue(tracks);
+    setQueue([track, ...related]);
     toggle(track);
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="flex flex-col sm:flex-row gap-8">
-        {/* Cover art */}
-        <div
-          className="flex-shrink-0 rounded-2xl overflow-hidden shadow-xl"
-          style={{ width: 240, height: 240, background: track.coverColor }}
-        >
-          {coverSrc && (
-            <img src={coverSrc} alt={track.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          )}
-        </div>
-
-        {/* Info */}
-        <div className="flex-1 min-w-0">
-          <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: "var(--muted)" }}>
-            {track.category === "worship" ? "Praise & Worship" : "Instrumental"}
-          </p>
-          <h1 className="text-3xl font-black leading-tight" style={{ color: "var(--foreground)" }}>{track.title}</h1>
-          <p className="mt-2 text-lg" style={{ color: "var(--muted)" }}>{track.artist}</p>
-
-          {/* Stats row */}
-          <div className="flex items-center flex-wrap gap-4 mt-4 text-sm" style={{ color: "var(--muted)" }}>
-            <span className="flex items-center gap-1"><Users size={14} />{formatPlays(track.plays)} plays</span>
-            <span className="flex items-center gap-1"><Clock size={14} />{track.duration}</span>
-            <span className="flex items-center gap-1"><HardDrive size={14} />{track.size}</span>
+    <div className="px-4 py-9 sm:px-8 lg:px-14">
+      <section className="rounded-[2rem] p-6 sm:p-8" style={{ background: "rgba(255,253,250,0.78)", border: "1px solid var(--border)", boxShadow: "var(--shadow-card)" }}>
+        <div className="grid gap-8 md:grid-cols-[270px_1fr]">
+          <div className="h-[270px] w-[270px] overflow-hidden rounded-[1.7rem]" style={{ background: "#dfe2e5", boxShadow: "0 24px 70px rgba(12,24,35,0.2)" }}>
+            <CoverImage src={track.coverImage || track.imageUrl} alt={track.title} coverColor={track.coverColor} size={540} />
           </div>
-
-          {/* Action buttons */}
-          <div className="flex items-center flex-wrap gap-3 mt-6">
-            <button
-              onClick={handlePlay}
-              className="flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold text-white transition-opacity hover:opacity-85"
-              style={{ background: "linear-gradient(135deg, var(--ink), var(--blue-deep))" }}
-            >
-              {active && isPlaying
-                ? <><Equalizer trackId={track.id} size={14} /> Pause</>
-                : <><Play size={14} style={{ marginLeft: 1 }} /> Play</>
-              }
-            </button>
-            {track.downloadUrl && (
-              <a
-                href={track.downloadUrl}
-                className="flex items-center gap-2 px-5 py-3 rounded-full text-sm font-semibold transition-opacity hover:opacity-85"
-                style={{ background: "var(--surface2)", border: "1px solid var(--border)", color: "var(--foreground)" }}
-              >
-                <Download size={14} /> Download
-              </a>
-            )}
-            <LikeButton trackId={track.id} size={18} />
-            <ShareButton track={track} size={18} />
+          <div className="flex flex-col justify-center">
+            <Link href={`/artist/${slugifyArtist(track.artist)}`} className="text-sm font-bold uppercase tracking-[0.16em] text-[var(--premium)]">
+              {track.artist}
+            </Link>
+            <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">{track.title}</h1>
+            <p className="mt-4 max-w-2xl leading-7 text-[var(--muted)]">{detail.description}</p>
+            <p className="mt-2 text-base text-[var(--muted)]">
+              {track.category === "worship" ? "Praise & Worship" : "Instrumentals"} <span className="px-1">-</span> Album <span className="px-1">-</span> {versions.length} Tracks <span className="px-1">-</span> {track.duration} <span className="px-1">-</span> {detail.albumYear}
+            </p>
+            <div className="mt-5 flex items-center gap-5 text-[var(--muted)]">
+              <button className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg" style={{ background: "linear-gradient(135deg, var(--ink), var(--blue-deep))" }} onClick={handlePlay} aria-label={`Play ${track.title}`}>
+                <Play size={18} style={{ marginLeft: 2 }} />
+              </button>
+              <span className="flex items-center gap-1 font-semibold"><Users size={15} />{active && isPlaying ? "Playing" : formatPlays(track.plays)}</span>
+              <Heart size={18} />
+              <span>14</span>
+              <MessageSquare size={17} />
+              <Download size={16} />
+              <MoreVertical size={17} className="ml-auto" />
+            </div>
           </div>
         </div>
+
+        <div className="mt-8 border-t" style={{ borderColor: "var(--border)" }}>
+          {versions.map((version, index) => (
+            <div key={version.title} className="grid grid-cols-[28px_30px_1fr_auto] items-center gap-4 border-b px-3 py-4" style={{ borderColor: "var(--border)" }}>
+              <span className="text-sm text-[var(--muted)]">{index + 1}</span>
+              <Plus size={18} className="text-[var(--muted)]" />
+              <div className="min-w-0">
+                <p className="truncate font-medium">{version.title}</p>
+                <p className="truncate text-sm text-[var(--muted)]">{version.artist}</p>
+              </div>
+              <div className="flex items-center gap-5 text-sm text-[var(--muted)]">
+                <Download size={15} />
+                <Heart size={16} />
+                <span>{version.time}</span>
+                <MoreVertical size={15} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="mt-8 flex flex-wrap gap-2 rounded-full border p-1" style={{ background: "rgba(255,253,250,0.72)", borderColor: "var(--border)" }}>
+        {[
+          ["overview", detail.lyrics ? "Lyrics" : "Overview"],
+          ["versions", "Versions"],
+          ["comment", "Comment"],
+        ].map(([value, label]) => (
+          <button
+            key={value}
+            className="rounded-full px-5 py-2 text-sm font-bold"
+            style={{ background: tab === value ? "var(--premium-soft)" : "transparent", color: tab === value ? "var(--premium)" : "var(--foreground-muted)" }}
+            onClick={() => setTab(value as "overview" | "versions" | "comment")}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
-      {/* Waveform placeholder */}
-      <div className="mt-10 p-6 rounded-2xl" style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}>
-        <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "var(--muted)" }}>Waveform</p>
-        <div className="flex items-end gap-0.5 h-16">
-          {Array.from({ length: 80 }, (_, i) => {
-            const seed = track.id.split("").reduce((s, c) => s + c.charCodeAt(0), 0);
-            const h = 8 + ((seed + i * 13) % 50);
-            return (
-              <span
-                key={i}
-                className="flex-1 rounded-sm"
-                style={{ height: h, background: active && isPlaying ? "var(--accent)" : "rgba(12,24,35,0.18)" }}
-              />
-            );
-          })}
+      {tab === "overview" && <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_300px]">
+        <article className="rounded-[2rem] p-6 text-[15px] leading-7 text-[#4a4d52] whitespace-pre-line sm:p-10" style={{ background: "rgba(255,253,250,0.62)", border: "1px solid var(--border)" }}>
+          {detail.lyrics ?? detail.description}
+          <p className="mt-8 text-[var(--muted)]">{detail.date}</p>
+          <div className="mt-5 flex gap-2">
+            {detail.tags.map((tag) => (
+              <span key={tag} className="rounded-full border px-4 py-1 text-sm font-bold" style={{ background: "var(--surface2)", borderColor: "var(--border)" }}>{tag}</span>
+            ))}
+          </div>
+        </article>
+
+        <aside>
+          <div className="rounded-[2rem] p-9 text-white" style={{ background: "linear-gradient(135deg, var(--ink), var(--blue-deep))", boxShadow: "var(--shadow-card)" }}>
+            <h2 className="text-2xl font-black">Follow ShemenMusic</h2>
+            <p className="mt-6 text-sm font-semibold leading-6">Stay connected with your favorite artists, tracks streamed directly to your devices.</p>
+            <div className="mt-8 flex justify-between text-xl text-white/80">
+              <span>◎</span><span>f</span><span>X</span><span>◉</span>
+            </div>
+          </div>
+          <div className="mt-6 rounded-2xl p-4 text-center font-semibold text-[var(--premium)]" style={{ background: "var(--premium-soft)", border: "1px solid rgba(182,138,58,0.22)" }}>
+            ShemenMusic 2024
+          </div>
+        </aside>
+      </div>}
+
+      {tab === "versions" && (
+        <section className="mt-8 rounded-[2rem] p-5 sm:p-7" style={{ background: "rgba(255,253,250,0.72)", border: "1px solid var(--border)", boxShadow: "var(--shadow-card)" }}>
+          <h2 className="text-2xl font-black tracking-tight">Available Versions</h2>
+          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">Reference-style track versions and download access, presented as a premium release table.</p>
+          <div className="mt-6 grid gap-3">
+            {versions.map((version, index) => (
+              <div key={version.title} className="grid gap-4 rounded-2xl border p-4 sm:grid-cols-[36px_1fr_auto]" style={{ background: "var(--surface2)", borderColor: "var(--border)" }}>
+                <span className="flex h-9 w-9 items-center justify-center rounded-full text-sm font-black text-[var(--premium)]" style={{ background: "var(--premium-soft)" }}>{index + 1}</span>
+                <div className="min-w-0">
+                  <p className="truncate font-bold">{version.title}</p>
+                  <p className="truncate text-sm text-[var(--muted)]">{version.artist}</p>
+                </div>
+                <div className="flex items-center gap-4 text-sm font-bold text-[var(--muted)]">
+                  <Download size={15} />
+                  <span>{version.time}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section className="mt-10">
+        <h2 className="text-2xl font-black tracking-tight">Discover More</h2>
+        <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {(related.length ? related : tracks.slice(0, 3)).map((item) => (
+            <TrackCardLarge key={item.id} track={item} />
+          ))}
         </div>
-      </div>
+      </section>
+
+      {tab === "comment" && <section className="mt-10 border-t pt-8" style={{ borderColor: "var(--border)" }}>
+        <h2 className="text-2xl font-black tracking-tight">Comment</h2>
+        <div className="grid grid-cols-[42px_1fr] gap-4">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#707070] text-white">○</div>
+          <form className="grid gap-4">
+            <p className="text-sm text-[var(--muted)]">Your email address will not be published. Required fields are marked <span className="text-red-500">*</span></p>
+            <textarea className="h-32 rounded-2xl border p-3 outline-none" style={{ background: "var(--surface2)", borderColor: "var(--border)" }} />
+            <div className="grid gap-4 md:grid-cols-3">
+              <label className="text-sm text-[var(--muted)]">Name *<input className="mt-2 h-10 w-full rounded-xl border px-3" style={{ background: "var(--surface2)", borderColor: "var(--border)" }} /></label>
+              <label className="text-sm text-[var(--muted)]">Email *<input className="mt-2 h-10 w-full rounded-xl border px-3" style={{ background: "var(--surface2)", borderColor: "var(--border)" }} /></label>
+              <label className="text-sm text-[var(--muted)]">Website<input className="mt-2 h-10 w-full rounded-xl border px-3" style={{ background: "var(--surface2)", borderColor: "var(--border)" }} /></label>
+            </div>
+            <label className="flex items-center gap-2 text-sm text-[var(--muted)]"><input type="checkbox" className="h-4 w-4" />Save my name, email, and website in this browser for the next time I comment.</label>
+            <button className="w-fit rounded-full px-6 py-3 text-sm font-bold text-white" style={{ background: "linear-gradient(135deg, var(--ink), var(--blue-deep))" }}>Comment</button>
+          </form>
+        </div>
+      </section>}
     </div>
   );
 }

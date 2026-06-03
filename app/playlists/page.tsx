@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { CollectionCover } from "@/components/CollectionCover";
 import { PageShell } from "@/components/PageShell";
+import Link from "next/link";
 import { playlists } from "@/lib/data";
 
 export default function PlaylistsPage() {

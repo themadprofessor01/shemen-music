@@ -22,6 +22,39 @@
   --shadow-card: 0 18px 44px rgba(33, 26, 16, 0.11);
 }
 
+.dark {
+  --background: #0c1823;
+  --foreground: #e8e4de;
+  --foreground-muted: #8d9ba8;
+  --muted: #8d9ba8;
+  --blue: #5aabdc;
+  --blue-deep: #2a6d9a;
+  --blue-soft: #0f2030;
+  --premium: #c9a054;
+  --premium-soft: #1c130a;
+  --accent: #5aabdc;
+  --accent-dim: #5aabdc1a;
+  --gold: #c9a054;
+  --surface: #0e1d2b;
+  --surface2: #172232;
+  --surface3: #1e2e3e;
+  --border: #1e2e3e;
+  --ink: #e8e4de;
+  --shadow-soft: 0 28px 70px rgba(0, 0, 0, 0.45);
+  --shadow-card: 0 18px 44px rgba(0, 0, 0, 0.4);
+}
+
+.dark {
+  --logo-filter: brightness(0) invert(1);
+}
+
+.dark body {
+  background:
+    radial-gradient(circle at top right, rgba(182, 138, 58, 0.08), transparent 34rem),
+    radial-gradient(circle at 18% 12%, rgba(7, 93, 158, 0.14), transparent 28rem),
+    linear-gradient(180deg, #0e1d2b 0%, #0c1823 100%);
+}
+
 body {
   background:
     radial-gradient(circle at top right, rgba(182, 138, 58, 0.16), transparent 34rem),
@@ -32,6 +65,37 @@ body {
 }
 
 * { box-sizing: border-box; }
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-content {
+  flex: 1;
+  min-width: 0;
+  margin-left: 192px;
+  margin-bottom: 80px;
+}
+
+.app-main {
+  padding-top: 64px;
+}
+
+.desktop-sidebar {
+  display: flex;
+}
+
+.mobile-bottom-nav {
+  display: none;
+}
+
+.top-bar {
+  left: 192px;
+  background: rgba(255, 253, 250, 0.86);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(18px);
+}
 
 .premium-card {
   background:
@@ -148,5 +212,44 @@ body {
   .luxury-hover-card::after,
   .luxury-hover-reveal {
     transition: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  body {
+    background:
+      radial-gradient(circle at 70% 0%, rgba(182, 138, 58, 0.16), transparent 22rem),
+      linear-gradient(180deg, #fffdfa 0%, var(--background) 18rem);
+  }
+
+  .app-shell {
+    display: block;
+  }
+
+  .app-content {
+    margin-left: 0;
+    margin-bottom: 132px;
+  }
+
+  .desktop-sidebar {
+    display: none;
+  }
+
+  .mobile-bottom-nav {
+    display: grid;
+  }
+
+  .top-bar {
+    left: 0;
+    height: 60px;
+    background: rgba(255, 253, 250, 0.78);
+  }
+
+  .app-main {
+    padding-top: 60px;
+  }
+
+  .luxury-hover-card:hover {
+    transform: none;
   }
 }

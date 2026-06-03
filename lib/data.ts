@@ -27,6 +27,7 @@ export type Playlist = {
   curator: string;
   trackCount: number;
   coverColor: string;
+  description?: string;
 };
 
 export type Mood = {

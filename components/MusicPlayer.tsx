@@ -33,8 +33,8 @@ export default function MusicPlayer() {
       <div
         className="motion-rise mx-auto flex max-w-5xl flex-col gap-3 rounded-[1.6rem] border px-4 py-3 sm:flex-row sm:items-center sm:gap-5"
         style={{
-          background: "rgba(255,253,250,0.78)",
-          borderColor: "rgba(231,223,209,0.88)",
+          background: "color-mix(in srgb, var(--surface) 86%, transparent)",
+          borderColor: "var(--border)",
           boxShadow: "0 24px 70px rgba(12,24,35,0.2)",
           backdropFilter: "blur(24px)",
         }}
@@ -63,7 +63,7 @@ export default function MusicPlayer() {
           </div>
         </div>
 
-        <div className="flex flex-col items-center gap-2 sm:flex-shrink-0">
+        <div className="flex flex-col items-stretch gap-2 sm:flex-shrink-0 sm:items-center">
           <div className="flex items-center gap-4">
             <button onClick={skipPrev} className="opacity-50 hover:opacity-100 transition-opacity" style={{ color: "var(--foreground)" }}>
               <SkipBack size={18} />
@@ -82,7 +82,7 @@ export default function MusicPlayer() {
           </div>
 
           {/* Progress bar */}
-          <div className="flex items-center gap-2 w-64 max-w-full">
+          <div className="flex w-full items-center gap-2 sm:w-64 sm:max-w-full">
             <span className="text-xs opacity-40 w-7 text-right" style={{ color: "var(--foreground)" }}>{fmt(currentTime)}</span>
             <input
               type="range"
@@ -98,7 +98,7 @@ export default function MusicPlayer() {
         </div>
 
         {/* Volume + close */}
-        <div className="flex items-center gap-3 flex-shrink-0">
+        <div className="hidden items-center gap-3 flex-shrink-0 sm:flex">
           <button onClick={() => setMuted(!muted)} className="opacity-50 hover:opacity-100 transition-opacity" style={{ color: "var(--foreground)" }}>
             {muted ? <VolumeX size={17} /> : <Volume2 size={17} />}
           </button>
