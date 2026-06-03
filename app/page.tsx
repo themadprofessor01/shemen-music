@@ -1,6 +1,6 @@
 import { formatPlays, tracks, playlists, moods, totalDuration } from "@/lib/data";
 import { TrackCardLarge } from "@/components/TrackCard";
-import { Crown, Download, Lock, SlidersHorizontal, Sparkles, Wand2 } from "lucide-react";
+import { Activity, ArrowUpRight, BarChart3, Crown, Download, Lock, SlidersHorizontal, Sparkles, Users, Wand2 } from "lucide-react";
 
 import Link from "next/link";
 import type { ReactNode } from "react";
