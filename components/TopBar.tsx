@@ -2,8 +2,11 @@
 
 import { Search, User } from "lucide-react";
 import Link from "next/link";
+import { useSearch } from "@/components/SearchContext";
 
 export default function TopBar() {
+  const { query, setQuery } = useSearch();
+
   return (
     <header
       className="fixed top-0 right-0 z-30 h-16 flex items-center gap-4 px-6"
@@ -18,7 +21,9 @@ export default function TopBar() {
         <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "var(--foreground-muted)" }} />
         <input
           type="text"
-          placeholder="Search..."
+          placeholder="Search tracks, artists..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
           className="w-full rounded-full text-sm py-2 pl-9 pr-4 outline-none"
           style={{
             background: "var(--surface2)",
