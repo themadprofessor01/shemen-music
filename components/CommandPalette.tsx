@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Disc3, ListMusic, Search, Sparkles, X } from "lucide-react";
+import { Disc3, ListMusic, Mic2, Search, Sparkles, X } from "lucide-react";
 import Link from "next/link";
-import { moods, playlists, tracks } from "@/lib/data";
+import { artistProfiles, moods, playlists, tracks } from "@/lib/data";
 
 type Result = {
   href: string;
   title: string;
   meta: string;
-  type: "Track" | "Mood" | "Playlist";
+  type: "Track" | "Mood" | "Playlist" | "Artist";
 };
 
 export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
@@ -50,6 +50,12 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
         meta: `${playlist.trackCount} tracks`,
         type: "Playlist" as const,
       })),
+      ...artistProfiles.map((artist) => ({
+        href: `/artists/${artist.id}`,
+        title: artist.name,
+        meta: artist.role,
+        type: "Artist" as const,
+      })),
     ];
 
     if (!normalized) return all.slice(0, 8);
@@ -89,7 +95,7 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
                 onClick={() => onOpenChange(false)}
               >
                 <span className="h-11 w-11 rounded-2xl flex items-center justify-center" style={{ background: "var(--blue-soft)", color: "var(--blue)" }}>
-                  {item.type === "Track" ? <Disc3 size={18} /> : item.type === "Playlist" ? <ListMusic size={18} /> : <Sparkles size={18} />}
+                  {item.type === "Track" ? <Disc3 size={18} /> : item.type === "Playlist" ? <ListMusic size={18} /> : item.type === "Artist" ? <Mic2 size={18} /> : <Sparkles size={18} />}
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-bold">{item.title}</span>

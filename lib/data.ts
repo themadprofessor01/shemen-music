@@ -33,6 +33,17 @@ export type Mood = {
   imageUrl?: string;
 };
 
+export type ArtistProfile = {
+  id: string;
+  name: string;
+  role: string;
+  location: string;
+  description: string;
+  imageUrl: string;
+  signatureTrackId: string;
+  palette: string;
+};
+
 const BASE = "https://shemenmusic.com/three";
 const UPL = `${BASE}/wp-content/uploads`;
 
@@ -80,6 +91,24 @@ export const moods: Mood[] = [
   { id: "flow", label: "Flow", emoji: "🌊", color: "#0277bd" },
   { id: "honour", label: "Honour", emoji: "👑", color: "#827717" },
 ];
+
+export const artistProfiles: ArtistProfile[] = [
+  {
+    id: "the-living-waters-singers",
+    name: "The Living Waters Singers",
+    role: "Featured worship collective",
+    location: "Accra, Ghana",
+    description:
+      "A worship collective with a rich instrumental catalogue shaped for prayer rooms, church teams, and studio-ready service moments.",
+    imageUrl: `${UPL}/2025/11/living-waters.webp`,
+    signatureTrackId: "f3",
+    palette: "linear-gradient(135deg, #0c1823 0%, #12445d 52%, #b68a3a 100%)",
+  },
+];
+
+export function tracksByArtist(artistName: string): Track[] {
+  return tracks.filter((track) => track.artist === artistName);
+}
 
 export function formatPlays(n: number): string {
   if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
