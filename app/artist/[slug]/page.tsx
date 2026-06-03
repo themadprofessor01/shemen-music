@@ -1,11 +1,17 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { PageShell } from "@/components/PageShell";
-import { artists, slugifyArtist, tracks } from "@/lib/data";
+import { artists, artistProfiles, slugifyArtist, tracks } from "@/lib/data";
 import { TrackCardLarge } from "@/components/TrackCard";
 
 export default async function ArtistPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+
+  // If there's a premium artist profile matching this slug, redirect to it
+  const profile = artistProfiles.find((p) => slugifyArtist(p.name) === slug || p.id === slug);
+  if (profile) redirect(`/artists/${profile.id}`);
+
+  // Otherwise fall back to simple layout
   const artist = artists.find((item) => item.slug === slug);
   const artistTracks = tracks.filter((track) => slugifyArtist(track.artist).includes(slug) || slugifyArtist(track.artist.split("&")[0].trim()) === slug);
 

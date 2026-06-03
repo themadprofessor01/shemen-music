@@ -33,8 +33,8 @@ export default function MusicPlayer() {
       <div
         className="motion-rise mx-auto flex max-w-5xl flex-col gap-3 rounded-[1.6rem] border px-4 py-3 sm:flex-row sm:items-center sm:gap-5"
         style={{
-          background: "rgba(255,253,250,0.78)",
-          borderColor: "rgba(231,223,209,0.88)",
+          background: "color-mix(in srgb, var(--surface) 86%, transparent)",
+          borderColor: "var(--border)",
           boxShadow: "0 24px 70px rgba(12,24,35,0.2)",
           backdropFilter: "blur(24px)",
         }}

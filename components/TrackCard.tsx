@@ -200,7 +200,7 @@ function TrackDetailDrawer({ track, open, onClose }: { track: Track; open: boole
   return (
     <div className="fixed inset-0 z-[80] flex justify-end" role="dialog" aria-modal="true" aria-label={`${track.title} details`}>
       <button className="absolute inset-0 bg-[rgba(12,24,35,0.34)]" aria-label="Close track details" onClick={onClose} />
-      <aside className="relative h-full w-full max-w-md overflow-y-auto p-5 sm:p-6" style={{ background: "rgba(255,253,250,0.94)", borderLeft: "1px solid var(--border)", boxShadow: "-24px 0 70px rgba(12,24,35,0.18)", backdropFilter: "blur(24px)" }}>
+      <aside className="relative h-full w-full max-w-md overflow-y-auto p-5 sm:p-6" style={{ background: "color-mix(in srgb, var(--surface) 96%, transparent)", borderLeft: "1px solid var(--border)", boxShadow: "-24px 0 70px rgba(12,24,35,0.18)", backdropFilter: "blur(24px)" }}>
         <div className="flex items-center justify-between">
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--premium)]">Studio Detail</p>
           <button className="h-10 w-10 rounded-full flex items-center justify-center" style={{ background: "var(--surface2)" }} onClick={onClose} aria-label="Close">
