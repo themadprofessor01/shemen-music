@@ -251,18 +251,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="border-t pt-12 pb-8 mt-16 text-xs text-[var(--muted)]" style={{ borderColor: "var(--border)" }}>
-        <p>@ Copyright 2024 ShemenMusic. All Rights Reserved</p>
-        <div className="flex flex-wrap gap-3 mt-7 text-[var(--foreground)]">
-          <Link href="/download">Service Terms</Link>
-          <span>•</span>
-          <Link href="/download">Cookie Warnings</Link>
-          <span>•</span>
-          <Link href="/download">Support</Link>
-          <span>•</span>
-          <Link href="/download">Feedback</Link>
-        </div>
-      </footer>
     </div>
   );
 }
