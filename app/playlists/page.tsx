@@ -1,5 +1,5 @@
-import { ListMusic } from "lucide-react";
 import Link from "next/link";
+import { CollectionCover } from "@/components/CollectionCover";
 import { PageShell } from "@/components/PageShell";
 import { playlists } from "@/lib/data";
 
@@ -17,9 +17,7 @@ export default function PlaylistsPage() {
             className="rounded-2xl overflow-hidden group transition-transform hover:scale-[1.02]"
             style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
           >
-            <div className="h-36 flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${playlist.coverColor}88, ${playlist.coverColor}22)` }}>
-              <ListMusic size={34} style={{ color: playlist.coverColor }} />
-            </div>
+            <CollectionCover playlist={playlist} />
             <div className="p-4">
               <p className="font-semibold">{playlist.title}</p>
               <p className="text-sm opacity-55 mt-1">{playlist.trackCount} tracks</p>

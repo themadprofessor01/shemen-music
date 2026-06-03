@@ -30,6 +30,7 @@ export type Mood = {
   label: string;
   emoji: string;
   color: string;
+  imageUrl?: string;
 };
 
 const BASE = "https://shemenmusic.com/three";
