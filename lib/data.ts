@@ -15,6 +15,7 @@ export type Track = {
   coverImage?: string;
   downloadUrl?: string;
   stationUrl?: string;
+  lyrics?: string;
 };
 
 export type Playlist = {
