@@ -58,10 +58,11 @@ export function TrackCardLarge({ track }: { track: Track }) {
             </span>
           </button>
         </div>
-        <div className="p-3">
-          <p className="font-semibold text-sm truncate" style={{ color: "var(--foreground)" }}>{track.title}</p>
-          <p className="text-xs mt-0.5 truncate" style={{ color: "var(--foreground-muted)" }}>{track.artist}</p>
-        </div>
+      <div className="p-3">
+        <p className="font-semibold text-sm truncate" style={{ color: "var(--foreground)" }}>{track.title}</p>
+        <p className="text-xs mt-0.5 truncate" style={{ color: "var(--foreground-muted)" }}>{track.artist}</p>
+        <WaveformPreview trackId={track.id} className="mt-3" />
+      </div>
         {active && (
           <div className="absolute top-3 right-3 w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--accent)" }} />
         )}
@@ -114,6 +115,7 @@ export function TrackCardGrid({ track }: { track: Track }) {
       <div className="p-3">
         <p className="font-semibold text-xs truncate" style={{ color: active ? "var(--accent)" : "var(--foreground)" }}>{track.title}</p>
         <p className="text-xs mt-0.5 truncate" style={{ color: "var(--foreground-muted)" }}>{track.artist}</p>
+        <WaveformPreview trackId={track.id} className="mt-3" compact />
         <div className="flex items-center gap-2 mt-1.5 text-xs" style={{ color: "var(--foreground-muted)" }}>
           <span className="flex items-center gap-1"><Users size={10} />{formatPlays(track.plays)}</span>
         </div>
@@ -209,6 +211,7 @@ function TrackDetailDrawer({ track, open, onClose }: { track: Track; open: boole
 
         <div className="mt-6 rounded-3xl p-5" style={{ background: "rgba(245,234,210,0.38)", border: "1px solid rgba(182,138,58,0.18)" }}>
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--premium)]">Available assets</p>
+          <WaveformPreview trackId={track.id} className="mt-5" />
           <div className="mt-4 grid grid-cols-2 gap-2 text-sm font-semibold">
             <span>Master WAV</span>
             <span>Stem Pack</span>
@@ -226,6 +229,30 @@ function TrackDetailDrawer({ track, open, onClose }: { track: Track; open: boole
           </a>
         </div>
       </aside>
+    </div>
+  );
+}
+
+function WaveformPreview({ trackId, compact = false, className = "" }: { trackId: string; compact?: boolean; className?: string }) {
+  const seed = trackId.split("").reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  const bars = Array.from({ length: compact ? 18 : 28 }, (_, index) => {
+    const value = ((seed + index * 11) % 17) + (index % 3) * 4;
+    return compact ? 5 + (value % 15) : 7 + (value % 22);
+  });
+
+  return (
+    <div className={`flex items-center gap-1 ${className}`} aria-hidden="true">
+      {bars.map((height, index) => (
+        <span
+          key={index}
+          className="w-1 rounded-full"
+          style={{
+            height,
+            background: index < bars.length * 0.42 ? "var(--premium)" : "rgba(12,24,35,0.14)",
+            opacity: index < bars.length * 0.42 ? 0.9 : 0.78,
+          }}
+        />
+      ))}
     </div>
   );
 }
