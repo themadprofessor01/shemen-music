@@ -63,7 +63,7 @@ export default function HomePage() {
                 }}
               >
                 <div className="relative aspect-square">
-                  <Image src={track.imageUrl} alt="" fill sizes="(min-width: 1024px) 28vw, 70vw" className="object-cover" priority={index === 1} />
+                  <img src={track.imageUrl || track.coverImage} alt={track.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
                 <div className="bg-white/92 p-4">
                   <p className="truncate font-bold text-[var(--ink)]">{track.title}</p>
