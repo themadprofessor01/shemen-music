@@ -1,6 +1,6 @@
-import { tracks, playlists, moods } from "@/lib/data";
+import { formatPlays, tracks, playlists, moods, totalDuration } from "@/lib/data";
 import { TrackCardLarge } from "@/components/TrackCard";
-import { ArrowUpRight, Download, Lock, SlidersHorizontal, Wand2 } from "lucide-react";
+import { Activity, ArrowUpRight, BarChart3, Download, Lock, SlidersHorizontal, Sparkles, Users, Wand2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -24,6 +24,8 @@ function SectionHeader({ title, href }: { title: string; href?: string }) {
 export default function HomePage() {
   const featured = tracks.filter((track) => track.featured);
   const trending = tracks.filter((track) => track.trending);
+  const totalPlays = tracks.reduce((sum, track) => sum + track.plays, 0);
+  const instrumentalCount = tracks.filter((track) => track.category === "instrumental").length;
 
   return (
     <div className="px-4 py-9 sm:px-8 lg:px-14 space-y-14">
@@ -77,6 +79,26 @@ export default function HomePage() {
         <PremiumFeature icon={<Download size={18} />} title="Studio-grade files" label="WAV, MP3, stems" />
         <PremiumFeature icon={<SlidersHorizontal size={18} />} title="Prepared for teams" label="Keys, tempos, service flow" />
         <PremiumFeature icon={<Wand2 size={18} />} title="Editorial discovery" label="Curated moods and moments" />
+      </section>
+
+      <section className="relative overflow-hidden rounded-[2rem] p-5 sm:p-6 lg:p-7" style={{ background: "linear-gradient(135deg, rgba(255,253,250,0.92), rgba(242,236,226,0.86))", border: "1px solid var(--border)", boxShadow: "var(--shadow-soft)" }}>
+        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[var(--premium-soft)] blur-3xl" />
+        <div className="relative flex flex-col gap-6">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--premium)]">Listening Intelligence</p>
+              <h2 className="mt-1 text-2xl font-black tracking-tight">Analytics</h2>
+            </div>
+            <p className="max-w-md text-sm leading-6 text-[var(--muted)]">A calm overview of catalogue quality, engagement, and worship-team readiness.</p>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <AnalyticsCard icon={<BarChart3 size={18} />} value={formatPlays(totalPlays)} label="Total plays" detail="+18% from last cycle" />
+            <AnalyticsCard icon={<Activity size={18} />} value={`${trending.length}/${tracks.length}`} label="Trending now" detail="High rotation catalogue" />
+            <AnalyticsCard icon={<Sparkles size={18} />} value={totalDuration(tracks)} label="Curated runtime" detail="Ready for service prep" />
+            <AnalyticsCard icon={<Users size={18} />} value={`${instrumentalCount}`} label="Instrumental masters" detail="Studio-grade arrangements" />
+          </div>
+        </div>
       </section>
 
       <section>
@@ -181,6 +203,22 @@ function PremiumFeature({ icon, title, label }: { icon: ReactNode; title: string
         <p className="font-bold truncate">{title}</p>
         <p className="text-sm text-[var(--muted)] truncate">{label}</p>
       </div>
+    </div>
+  );
+}
+
+function AnalyticsCard({ icon, value, label, detail }: { icon: ReactNode; value: string; label: string; detail: string }) {
+  return (
+    <div className="rounded-3xl p-5" style={{ background: "rgba(255,253,250,0.76)", border: "1px solid rgba(231,223,209,0.84)", boxShadow: "0 14px 34px rgba(33,26,16,0.07)" }}>
+      <div className="flex items-center justify-between gap-4">
+        <span className="h-11 w-11 rounded-2xl flex items-center justify-center text-[var(--premium)]" style={{ background: "rgba(245,234,210,0.72)" }}>
+          {icon}
+        </span>
+        <span className="h-2 w-2 rounded-full" style={{ background: "var(--premium)" }} />
+      </div>
+      <p className="mt-6 text-3xl font-black tracking-tight">{value}</p>
+      <p className="mt-1 font-bold">{label}</p>
+      <p className="mt-3 text-sm text-[var(--muted)]">{detail}</p>
     </div>
   );
 }
