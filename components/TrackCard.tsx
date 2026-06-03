@@ -1,6 +1,6 @@
 "use client";
 
-import { Crown, Play, Pause, Users } from "lucide-react";
+import { Play, Pause, Users } from "lucide-react";
 import { usePlayer } from "@/components/MusicPlayerContext";
 import type { Track } from "@/lib/data";
 import { formatPlays } from "@/lib/data";
@@ -18,9 +18,8 @@ export function TrackCardLarge({ track }: { track: Track }) {
     >
       <div className="relative aspect-square overflow-hidden bg-[var(--surface2)]">
         <Image src={track.imageUrl} alt="" fill sizes="(min-width: 1280px) 20vw, (min-width: 768px) 33vw, 50vw" className="object-cover transition-transform duration-300 group-hover:scale-105" />
-        <div className="absolute left-3 top-3 premium-pill inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide">
-          <Crown size={11} />
-          Premium
+        <div className="absolute left-3 top-3 premium-pill inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em]">
+          Studio
         </div>
         <div
           className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
@@ -35,7 +34,7 @@ export function TrackCardLarge({ track }: { track: Track }) {
       <div className="p-4 min-w-0">
         <p className="font-medium text-base truncate">{track.title}</p>
         <p className="text-sm mt-0.5 truncate text-[var(--muted)]">{track.artist}</p>
-        <p className="mt-3 text-xs font-semibold text-[var(--premium)]">WAV + stems available</p>
+        <p className="mt-3 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--premium)]">Master quality</p>
       </div>
 
       {active && (

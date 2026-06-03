@@ -1,28 +1,30 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4f7fb;
-  --foreground: #17202a;
-  --muted: #6f7a86;
-  --blue: #0878cb;
-  --blue-deep: #075a9c;
-  --blue-soft: #e5f2ff;
-  --premium: #c9962f;
-  --premium-soft: #fff4d8;
+  --background: #f7f4ef;
+  --foreground: #131b24;
+  --muted: #74706a;
+  --blue: #075d9e;
+  --blue-deep: #083557;
+  --blue-soft: #e7eef5;
+  --premium: #b68a3a;
+  --premium-soft: #f5ead2;
   --gold: #0878cb;
   --gold-dim: #0878cb22;
   --gold-soft: #0878cb12;
-  --surface: #ffffff;
-  --surface2: #f0f2f4;
-  --border: #e3e9ef;
-  --shadow-soft: 0 18px 45px rgba(24, 50, 78, 0.08);
-  --shadow-card: 0 12px 28px rgba(24, 50, 78, 0.1);
+  --surface: #fffdfa;
+  --surface2: #ece7dd;
+  --border: #e7dfd1;
+  --ink: #0c1823;
+  --shadow-soft: 0 28px 70px rgba(33, 26, 16, 0.09);
+  --shadow-card: 0 18px 44px rgba(33, 26, 16, 0.11);
 }
 
 body {
   background:
-    radial-gradient(circle at top right, rgba(8, 120, 203, 0.1), transparent 30rem),
-    linear-gradient(180deg, #fbfdff 0%, var(--background) 18rem);
+    radial-gradient(circle at top right, rgba(182, 138, 58, 0.16), transparent 34rem),
+    radial-gradient(circle at 18% 12%, rgba(7, 93, 158, 0.08), transparent 28rem),
+    linear-gradient(180deg, #fffdfa 0%, var(--background) 24rem);
   color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -39,16 +41,18 @@ button, a {
 
 .premium-card {
   background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.94), rgba(246, 250, 255, 0.88)),
-    radial-gradient(circle at top right, rgba(201, 150, 47, 0.16), transparent 16rem);
-  border: 1px solid rgba(227, 233, 239, 0.9);
+    linear-gradient(145deg, rgba(255, 253, 250, 0.96), rgba(246, 241, 232, 0.9)),
+    radial-gradient(circle at top right, rgba(182, 138, 58, 0.15), transparent 16rem);
+  border: 1px solid rgba(231, 223, 209, 0.92);
   box-shadow: var(--shadow-soft);
 }
 
 .premium-pill {
-  background: linear-gradient(135deg, #fff8df, #f2d28a);
-  color: #5b3b08;
-  box-shadow: inset 0 0 0 1px rgba(153, 103, 17, 0.16);
+  background: rgba(255, 253, 250, 0.78);
+  color: #76541a;
+  border: 1px solid rgba(182, 138, 58, 0.28);
+  box-shadow: 0 8px 24px rgba(92, 62, 16, 0.08);
+  backdrop-filter: blur(12px);
 }
 
 ::-webkit-scrollbar { width: 5px; }
