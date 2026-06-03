@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Headphones, Download, Home, ListMusic, Heart, Moon, Music2, Mail, Sun } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -25,14 +26,17 @@ export default function Sidebar() {
       style={{ background: "var(--surface)", borderRight: "1px solid var(--border)" }}
     >
       {/* Logo */}
-      <div className="px-5 py-5">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "var(--accent)" }}>
-            <Music2 size={16} className="text-white" />
-          </div>
-          <span className="font-bold text-base leading-tight" style={{ color: "var(--foreground)" }}>
-            shemen<span style={{ color: "var(--accent)" }}>MUSIC</span>
-          </span>
+      <div className="px-4 py-5">
+        <Link href="/">
+          <Image
+            src="/logo.png"
+            alt="ShemenMusic"
+            width={140}
+            height={20}
+            className="w-full max-w-[140px] h-auto"
+            style={{ filter: dark ? "brightness(0) invert(1)" : "none" }}
+            priority
+          />
         </Link>
       </div>
 
