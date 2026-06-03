@@ -5,6 +5,8 @@ export type Track = {
   duration: string;
   plays: number;
   size: string;
+  category: "instrumental" | "worship";
+  imageUrl: string;
   mood?: string;
   featured?: boolean;
   trending?: boolean;
@@ -28,6 +30,7 @@ export type Mood = {
   label: string;
   emoji: string;
   color: string;
+  imageUrl?: string;
 };
 
 const BASE = "https://shemenmusic.com/three";
@@ -36,13 +39,15 @@ const UPL = `${BASE}/wp-content/uploads`;
 export const tracks: Track[] = [
   // Featured — The Living Waters Singers
   {
-    id: "f1",
+    id: "1",
     title: "Rose Of Sharon",
     artist: "The Living Waters Singers",
-    duration: "5:24",
-    plays: 3200,
-    size: "7.8 MB",
-    mood: "beloved",
+    duration: "6:42",
+    plays: 1240,
+    size: "9.2 MB",
+    category: "worship",
+    imageUrl: "https://i0.wp.com/shemenmusic.com/three/wp-content/uploads/2025/11/Rose-Of-Sharon_Inst_NoBVs-mp3-image.webp?fit=768%2C768&ssl=1",
+    mood: "anointing",
     featured: true,
     coverColor: "#c2185b",
     coverColor2: "#ad1457",
@@ -51,12 +56,14 @@ export const tracks: Track[] = [
     downloadUrl: `${BASE}/station/rose-of-sharon/stream`,
   },
   {
-    id: "f2",
+    id: "2",
     title: "No Ordinary Water",
     artist: "The Living Waters Singers",
-    duration: "6:10",
-    plays: 2800,
-    size: "8.9 MB",
+    duration: "5:18",
+    plays: 980,
+    size: "7.6 MB",
+    category: "instrumental",
+    imageUrl: "https://i0.wp.com/shemenmusic.com/three/wp-content/uploads/2025/11/No-Ordinary-Water_Inst_NoBVs-mp3-image.webp?fit=768%2C768&ssl=1",
     mood: "flow",
     featured: true,
     coverColor: "#0277bd",
@@ -66,27 +73,14 @@ export const tracks: Track[] = [
     downloadUrl: `${BASE}/station/no-ordinary-water/stream`,
   },
   {
-    id: "f3",
+    id: "3",
     title: "Living Waters",
     artist: "The Living Waters Singers",
-    duration: "7:02",
-    plays: 4100,
-    size: "10.2 MB",
-    mood: "flow",
-    featured: true,
-    coverColor: "#e65100",
-    coverColor2: "#bf360c",
-    coverImage: `${UPL}/2025/11/living-waters.webp`,
-    stationUrl: `${BASE}/station/living-waters/`,
-    downloadUrl: `${BASE}/station/living-waters/stream`,
-  },
-  {
-    id: "f4",
-    title: "Jesus You're So Cool",
-    artist: "The Living Waters Singers",
-    duration: "4:48",
-    plays: 5300,
-    size: "6.9 MB",
+    duration: "7:05",
+    plays: 1560,
+    size: "10.1 MB",
+    category: "worship",
+    imageUrl: "https://i0.wp.com/shemenmusic.com/three/wp-content/uploads/2025/11/living-waters.webp?fit=768%2C768&ssl=1",
     mood: "honour",
     featured: true,
     coverColor: "#00838f",
@@ -96,27 +90,14 @@ export const tracks: Track[] = [
     downloadUrl: `${BASE}/station/jesus-youre-so-cool/stream`,
   },
   {
-    id: "f5",
-    title: "Jesus Is The Door",
-    artist: "The Living Waters Singers",
-    duration: "6:35",
-    plays: 3900,
-    size: "9.5 MB",
-    mood: "honour",
-    featured: true,
-    coverColor: "#f57f17",
-    coverColor2: "#e65100",
-    coverImage: `${UPL}/2025/11/jesus-is-the-door.webp`,
-    stationUrl: `${BASE}/station/jesus-is-the-door/`,
-    downloadUrl: `${BASE}/station/jesus-is-the-door/stream`,
-  },
-  {
-    id: "f6",
-    title: "I've Found It",
-    artist: "The Living Waters Singers",
-    duration: "5:15",
-    plays: 2600,
-    size: "7.5 MB",
+    id: "4",
+    title: "Blocked My View Instrumental",
+    artist: "First Love Music & Keziah",
+    duration: "8:30",
+    plays: 2100,
+    size: "12.3 MB",
+    category: "instrumental",
+    imageUrl: "https://i0.wp.com/shemenmusic.com/three/wp-content/uploads/2024/08/arise-mp3-image-scaled.jpg?fit=300%2C300&ssl=1",
     mood: "anointing",
     featured: true,
     coverColor: "#2e7d32",
@@ -126,73 +107,14 @@ export const tracks: Track[] = [
     downloadUrl: `${BASE}/station/ive-found-it/stream`,
   },
   {
-    id: "f7",
-    title: "Go Church",
-    artist: "The Living Waters Singers",
-    duration: "4:30",
-    plays: 3100,
-    size: "6.5 MB",
-    mood: "dancing",
-    featured: true,
-    coverColor: "#6a1b9a",
-    coverColor2: "#4a148c",
-    coverImage: `${UPL}/2025/11/go-church.webp`,
-    stationUrl: `${BASE}/station/go-church/`,
-    downloadUrl: `${BASE}/station/go-church/stream`,
-  },
-  {
-    id: "f8",
-    title: "Give Your Life To The Lord",
-    artist: "The Living Waters Singers",
-    duration: "7:20",
-    plays: 2900,
-    size: "10.6 MB",
-    mood: "anointing",
-    featured: true,
-    coverColor: "#b71c1c",
-    coverColor2: "#7f0000",
-    coverImage: `${UPL}/2025/11/Give-Your-Life-To-The-Lord_Inst_NoBVs-mp3-image.webp`,
-    stationUrl: `${BASE}/station/give-your-life-to-the-lord/`,
-    downloadUrl: `${BASE}/station/give-your-life-to-the-lord/stream`,
-  },
-  {
-    id: "f9",
-    title: "First Love Love First",
-    artist: "The Living Waters Singers",
-    duration: "5:55",
-    plays: 2400,
-    size: "8.5 MB",
-    mood: "beloved",
-    featured: true,
-    coverColor: "#283593",
-    coverColor2: "#1a237e",
-    coverImage: `${UPL}/2025/11/first-love-love-first.webp`,
-    stationUrl: `${BASE}/station/first-love-love-first/`,
-    downloadUrl: `${BASE}/station/first-love-love-first/stream`,
-  },
-  {
-    id: "f10",
-    title: "1234 Jesus",
-    artist: "The Living Waters Singers",
-    duration: "3:58",
-    plays: 4700,
-    size: "5.7 MB",
-    mood: "dancing",
-    featured: true,
-    coverColor: "#d84315",
-    coverColor2: "#bf360c",
-    coverImage: `${UPL}/2025/11/1234-Jesus_Inst_NoBVs-mp3-image.webp`,
-    stationUrl: `${BASE}/station/1234-jesus-2/`,
-    downloadUrl: `${BASE}/station/1234-jesus-2/stream`,
-  },
-  // Trending
-  {
-    id: "t1",
-    title: "I Am The Way, The Truth, The Life (Official Instrumental)",
-    artist: "First Love Music",
-    duration: "8:14",
-    plays: 12400,
-    size: "11.9 MB",
+    id: "5",
+    title: "He's Waiting",
+    artist: "MINISTRY MUSIC INSTRUMENTALS",
+    duration: "9:15",
+    plays: 870,
+    size: "13.4 MB",
+    category: "instrumental",
+    imageUrl: "https://i0.wp.com/shemenmusic.com/three/wp-content/uploads/2024/08/Were-Not-Close-Anymore.jpg?fit=300%2C300&ssl=1",
     mood: "honour",
     trending: true,
     coverColor: "#e64a19",
@@ -202,12 +124,39 @@ export const tracks: Track[] = [
     downloadUrl: `${BASE}/station/i-am-the-way-the-truth-the-life-official-instrumental/stream`,
   },
   {
-    id: "t2",
-    title: "Jesus Prayed 31",
-    artist: "First Love Music & Aida",
-    duration: "5:24",
-    plays: 8900,
-    size: "7.8 MB",
+    id: "6",
+    title: "Use It Or Lose It 213",
+    artist: "Georlynn",
+    duration: "4:55",
+    plays: 1340,
+    size: "7.1 MB",
+    category: "worship",
+    imageUrl: "https://i0.wp.com/shemenmusic.com/three/wp-content/uploads/2024/08/Forsake-The-World.jpg?fit=300%2C300&ssl=1",
+    mood: "dancing",
+    trending: true,
+    coverColor: "#d97706",
+  },
+  {
+    id: "7",
+    title: "Jesus, Lord To Me",
+    artist: "Alvin Slaughter",
+    duration: "6:20",
+    plays: 990,
+    size: "9.0 MB",
+    category: "worship",
+    imageUrl: "https://i0.wp.com/shemenmusic.com/three/wp-content/uploads/2024/08/Artboard-6-3.png?fit=300%2C300&ssl=1",
+    mood: "beloved",
+    coverColor: "#6d28d9",
+  },
+  {
+    id: "8",
+    title: "I Like The Way You Like Me 148",
+    artist: "Georlynn",
+    duration: "5:48",
+    plays: 1780,
+    size: "8.4 MB",
+    category: "worship",
+    imageUrl: "https://i0.wp.com/shemenmusic.com/three/wp-content/uploads/2024/08/I-Wish.jpg?fit=300%2C300&ssl=1",
     mood: "anointing",
     trending: true,
     coverColor: "#00695c",
@@ -498,14 +447,29 @@ export const playlists: Playlist[] = [
 ];
 
 export const moods: Mood[] = [
-  { id: "anointing", label: "Anointing", emoji: "🕊️", color: "#7b1fa2" },
-  { id: "beloved", label: "Beloved", emoji: "💛", color: "#f57f17" },
-  { id: "dancing", label: "Dancing", emoji: "🕺", color: "#c62828" },
-  { id: "flow", label: "Flow", emoji: "🌊", color: "#0277bd" },
-  { id: "honour", label: "Honour", emoji: "👑", color: "#827717" },
+  { id: "anointing", label: "Anointing", emoji: "🕊️", color: "#d6bd38", imageUrl: "https://i0.wp.com/shemenmusic.com/three/wp-content/uploads/2024/08/Artboard-17-6.png?resize=1080%2C1080&ssl=1" },
+  { id: "beloved", label: "Belovedosing", emoji: "💛", color: "#d8dde2" },
+  { id: "dancing", label: "Dancing", emoji: "🕺", color: "#5d91dd", imageUrl: "https://i0.wp.com/shemenmusic.com/three/wp-content/uploads/2024/08/Artboard-19-6.png?resize=1080%2C1080&ssl=1" },
+  { id: "flow", label: "FLOW", emoji: "🌊", color: "#d8dde2" },
+  { id: "honour", label: "Honour", emoji: "👑", color: "#8aa2bd", imageUrl: "https://i0.wp.com/shemenmusic.com/three/wp-content/uploads/2024/08/Artboard-21-4.png?resize=1080%2C1080&ssl=1" },
 ];
 
 export function formatPlays(n: number): string {
   if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
   return String(n);
+}
+
+export function totalDuration(trackList: Track[]): string {
+  const minutes = trackList.reduce((sum, track) => {
+    const [m, s] = track.duration.split(":").map(Number);
+    return sum + m + s / 60;
+  }, 0);
+
+  if (minutes >= 60) {
+    const hours = Math.floor(minutes / 60);
+    const remaining = Math.round(minutes % 60);
+    return `${hours}h ${remaining}m`;
+  }
+
+  return `${Math.round(minutes)}m`;
 }

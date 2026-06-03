@@ -1,9 +1,10 @@
 "use client";
 
-import { Play, Pause, Users } from "lucide-react";
+import { Crown, Play, Pause, Users } from "lucide-react";
 import { usePlayer } from "@/components/MusicPlayerContext";
 import type { Track } from "@/lib/data";
 import { formatPlays } from "@/lib/data";
+import Image from "next/image";
 
 function CoverArt({ track, size }: { track: Track; size: number }) {
   const bg = `linear-gradient(135deg, ${track.coverColor}, ${track.coverColor2 ?? track.coverColor + "88"})`;
@@ -28,34 +29,34 @@ export function TrackCardLarge({ track }: { track: Track }) {
 
   return (
     <div
-      className="relative flex-shrink-0 rounded-2xl overflow-hidden cursor-pointer group transition-transform hover:scale-[1.02]"
-      style={{ width: 200, background: "var(--surface2)", border: `1px solid var(--border)` }}
+      className="relative rounded-2xl overflow-hidden cursor-pointer group transition-all hover:-translate-y-1"
+      style={{ background: "var(--surface)", border: "1px solid rgba(227,233,239,0.95)", boxShadow: "var(--shadow-card)" }}
       onClick={() => toggle(track)}
     >
-      {/* Cover art */}
-      <div className="relative flex items-center justify-center" style={{ height: 200, overflow: "hidden" }}>
-        <CoverArt track={track} size={200} />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div
-            className="w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all group-hover:scale-110"
-            style={{ background: active ? "var(--accent)" : "rgba(0,0,0,0.45)" }}
-          >
-            {active && isPlaying ? (
-              <Pause size={22} className="text-white" />
-            ) : (
-              <Play size={22} className="text-white" style={{ marginLeft: 2 }} />
-            )}
-          </div>
+      <div className="relative aspect-square overflow-hidden bg-[var(--surface2)]">
+        <Image src={track.imageUrl} alt="" fill sizes="(min-width: 1280px) 20vw, (min-width: 768px) 33vw, 50vw" className="object-cover transition-transform duration-300 group-hover:scale-105" />
+        <div className="absolute left-3 top-3 premium-pill inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide">
+          <Crown size={11} />
+          Premium
+        </div>
+        <div
+          className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+          style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.38))" }}
+        >
+          <span className="h-12 w-12 rounded-full flex items-center justify-center bg-white/90 text-[var(--blue)] shadow-lg">
+            {active && isPlaying ? <Pause size={21} /> : <Play size={21} fill="currentColor" style={{ marginLeft: 2 }} />}
+          </span>
         </div>
       </div>
 
-      <div className="p-3">
-        <p className="font-semibold text-sm truncate" style={{ color: "var(--foreground)" }}>{track.title}</p>
-        <p className="text-xs mt-0.5 truncate" style={{ color: "var(--foreground-muted)" }}>{track.artist}</p>
+      <div className="p-4 min-w-0">
+        <p className="font-medium text-base truncate">{track.title}</p>
+        <p className="text-sm mt-0.5 truncate text-[var(--muted)]">{track.artist}</p>
+        <p className="mt-3 text-xs font-semibold text-[var(--premium)]">WAV + stems available</p>
       </div>
 
       {active && (
-        <div className="absolute top-3 right-3 w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--accent)" }} />
+        <div className="absolute top-3 right-3 w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--blue)" }} />
       )}
     </div>
   );
@@ -120,8 +121,8 @@ export function TrackRow({ track, index }: { track: Track; index: number }) {
     <div
       className="flex items-center gap-4 px-3 py-3 rounded-xl cursor-pointer group transition-colors"
       style={{
-        background: active ? "var(--accent-dim)" : "transparent",
-        border: active ? "1px solid var(--accent)" : "1px solid transparent",
+        background: active ? "var(--blue-soft)" : "transparent",
+        border: active ? "1px solid var(--blue)" : "1px solid transparent",
       }}
       onMouseEnter={(e) => { if (!active) (e.currentTarget as HTMLElement).style.background = "var(--surface2)"; }}
       onMouseLeave={(e) => { if (!active) (e.currentTarget as HTMLElement).style.background = "transparent"; }}
@@ -131,23 +132,23 @@ export function TrackRow({ track, index }: { track: Track; index: number }) {
         <span className="group-hover:hidden text-sm" style={{ color: "var(--foreground-muted)" }}>{index + 1}</span>
         <button className="hidden group-hover:flex items-center justify-center w-full">
           {active && isPlaying ? (
-            <Pause size={16} style={{ color: "var(--accent)" }} />
+            <Pause size={16} style={{ color: "var(--blue)" }} />
           ) : (
-            <Play size={16} style={{ color: "var(--accent)", marginLeft: 2 }} />
+            <Play size={16} style={{ color: "var(--blue)", marginLeft: 2 }} />
           )}
         </button>
       </div>
 
-      <div className="w-9 h-9 rounded-lg flex-shrink-0 overflow-hidden">
-        <CoverArt track={track} size={36} />
-      </div>
+      <Image src={track.imageUrl} alt="" width={44} height={44} className="w-11 h-11 rounded object-cover flex-shrink-0" />
 
+      {/* Info */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium truncate" style={{ color: active ? "var(--accent)" : "var(--foreground)" }}>{track.title}</p>
-        <p className="text-xs truncate" style={{ color: "var(--foreground-muted)" }}>{track.artist}</p>
+        <p className="text-sm font-medium truncate" style={{ color: active ? "var(--blue)" : "var(--foreground)" }}>{track.title}</p>
+        <p className="text-xs truncate text-[var(--muted)]">{track.artist}</p>
       </div>
 
-      <div className="hidden sm:flex items-center gap-4 text-xs flex-shrink-0" style={{ color: "var(--foreground-muted)" }}>
+      {/* Meta */}
+      <div className="hidden sm:flex items-center gap-4 text-xs flex-shrink-0 text-[var(--muted)]">
         <span className="flex items-center gap-1"><Users size={11} />{formatPlays(track.plays)}</span>
         <span>{track.size}</span>
         <span className="w-10 text-right">{track.duration}</span>
