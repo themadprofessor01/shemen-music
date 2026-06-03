@@ -16,13 +16,13 @@ export function TrackList({ tracks }: { tracks: Track[] }) {
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between">
+      <div className="flex items-center justify-between mb-4">
         <p className="text-sm" style={{ color: "var(--muted)" }}>
           {tracks.length} track{tracks.length !== 1 ? "s" : ""}
         </p>
         <PlayAllButton tracks={tracks} />
       </div>
-      <div className="overflow-hidden rounded border bg-white" style={{ borderColor: "var(--border)" }}>
+      <div className="rounded overflow-hidden divide-y" style={{ background: "var(--surface)", border: "1px solid var(--border)" }}>
         {tracks.map((track, index) => (
           <TrackRow key={track.id} track={track} index={index} />
         ))}

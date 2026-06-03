@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { PageShell } from "@/components/PageShell";
 import { artists, slugifyArtist, tracks } from "@/lib/data";
 import { TrackCardLarge } from "@/components/TrackCard";
 
@@ -11,35 +12,46 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
   if (!artist && !artistTracks.length) notFound();
 
   const name = artist?.name ?? artistTracks[0]?.artist ?? slug;
+  const artistLinks = artists.concat([
+    { slug: "alvin-slaughter", name: "Alvin Slaughter" },
+    { slug: "benny-hinn", name: "Benny Hinn" },
+    { slug: "brooklyn-tabernacle-choir", name: "Brooklyn Tabernacle Choir" },
+    { slug: "chris-tomlin", name: "Chris Tomlin" },
+    { slug: "don-moen", name: "Don Moen" },
+  ]);
 
   return (
-    <div className="ref-page">
-      <h1 className="ref-title">{name}</h1>
-
-      <section className="mt-9">
-        <div className="flex flex-wrap gap-x-6 gap-y-3 text-base">
-          {artists.concat([
-            { slug: "alvin-slaughter", name: "Alvin Slaughter" },
-            { slug: "benny-hinn", name: "Benny Hinn" },
-            { slug: "brooklyn-tabernacle-choir", name: "Brooklyn Tabernacle Choir" },
-            { slug: "chris-tomlin", name: "Chris Tomlin" },
-            { slug: "don-moen", name: "Don Moen" },
-          ]).map((item) => (
-            <Link key={item.slug} href={`/artist/${item.slug}`} className={item.slug === slug ? "font-bold text-[var(--accent)]" : "text-[var(--foreground)]"}>
+    <>
+      <PageShell eyebrow={`${artistTracks.length || 10} tracks`} title={name} />
+      <div className="px-4 pb-14 sm:px-8 lg:px-14">
+        <section className="rounded-[2rem] p-5" style={{ background: "rgba(255,253,250,0.72)", border: "1px solid var(--border)", boxShadow: "var(--shadow-card)" }}>
+          <div className="flex flex-wrap gap-3">
+            {artistLinks.map((item) => (
+              <Link
+                key={item.slug}
+                href={`/artist/${item.slug}`}
+                className="rounded-full border px-4 py-2 text-sm font-bold transition-opacity hover:opacity-80"
+                style={{
+                  borderColor: item.slug === slug ? "rgba(182,138,58,0.45)" : "var(--border)",
+                  background: item.slug === slug ? "var(--premium-soft)" : "var(--surface2)",
+                  color: item.slug === slug ? "var(--premium)" : "var(--foreground-muted)",
+                }}
+              >
               {item.name}
-            </Link>
-          ))}
-        </div>
-      </section>
+              </Link>
+            ))}
+          </div>
+        </section>
 
-      <section className="mt-10">
-        <h2 className="ref-section-title">Tracks</h2>
-        <div className="ref-card-grid">
-          {(artistTracks.length ? artistTracks : tracks.slice(0, 10)).map((track) => (
-            <TrackCardLarge key={track.id} track={track} />
-          ))}
-        </div>
-      </section>
-    </div>
+        <section className="mt-10">
+          <h2 className="text-2xl font-black tracking-tight">Tracks</h2>
+          <div className="mt-5 grid grid-cols-2 gap-5 md:grid-cols-3 xl:grid-cols-5">
+            {(artistTracks.length ? artistTracks : tracks.slice(0, 10)).map((track) => (
+              <TrackCardLarge key={track.id} track={track} />
+            ))}
+          </div>
+        </section>
+      </div>
+    </>
   );
 }

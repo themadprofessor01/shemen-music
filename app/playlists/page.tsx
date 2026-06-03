@@ -1,26 +1,30 @@
 import { CollectionCover } from "@/components/CollectionCover";
+import { PageShell } from "@/components/PageShell";
 import Link from "next/link";
 import { playlists } from "@/lib/data";
 
 export default function PlaylistsPage() {
   return (
-    <div className="ref-page">
-      <h1 className="ref-title">Playlists</h1>
-      <div className="ref-card-grid mt-10">
+    <>
+      <PageShell eyebrow={`${playlists.length} curated collections`} title="Playlists" />
+      <div className="px-4 pb-14 sm:px-8 lg:px-14">
+        <div className="grid grid-cols-2 gap-5 md:grid-cols-3 xl:grid-cols-5">
         {playlists.map((playlist) => (
           <Link
             key={playlist.id}
             href={`/playlists/${playlist.id}`}
-            className="ref-card block"
+            className="luxury-hover-card block overflow-hidden rounded-2xl"
+            style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}
           >
             <CollectionCover playlist={playlist} />
-            <div className="ref-card-body">
-              <span className="ref-card-title">{playlist.title}</span>
-              <span className="ref-card-subtitle">{playlist.curator}</span>
+            <div className="p-4">
+              <span className="block truncate text-sm font-bold">{playlist.title}</span>
+              <span className="mt-1 block truncate text-xs" style={{ color: "var(--foreground-muted)" }}>{playlist.curator}</span>
             </div>
           </Link>
         ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -10,11 +10,11 @@ export function PageShell({
   children?: ReactNode;
 }) {
   return (
-    <div className="ref-page pb-0">
-      <header>
-        {eyebrow && <p className="mb-4 text-sm" style={{ color: "var(--muted)" }}>{eyebrow}</p>}
-        <h1 className="ref-title">{title}</h1>
-        {children && <div className="mt-7 max-w-2xl text-base leading-7 text-[var(--muted)]">{children}</div>}
+    <div className="px-4 py-9 sm:px-8 lg:px-14 space-y-8">
+      <header className="space-y-3">
+        {eyebrow && <p className="text-sm font-semibold" style={{ color: "var(--accent)" }}>{eyebrow}</p>}
+        <h1 className="text-4xl sm:text-5xl font-black tracking-tight">{title}</h1>
+        {children && <div className="max-w-2xl text-sm sm:text-base leading-7 opacity-65">{children}</div>}
       </header>
     </div>
   );

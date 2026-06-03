@@ -8,7 +8,7 @@ interface Props {
 }
 
 export function CoverImage({ src, alt, coverColor, size, className = "", style = {} }: Props) {
-  const fallbackBg = coverColor ? "#dfe2e5" : "#dfe2e5";
+  const fallbackBg = `linear-gradient(135deg, ${coverColor}, ${coverColor}88)`;
 
   if (!src) {
     return <div style={{ width: "100%", height: "100%", background: fallbackBg, ...style }} className={className} />;
