@@ -104,7 +104,11 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
               </Link>
             ))}
             {!results.length && (
-              <div className="px-3 py-10 text-center text-sm text-[var(--muted)]">No matching tracks or collections.</div>
+              <div className="m-3 rounded-[1.4rem] border px-5 py-10 text-center" style={{ borderColor: "var(--border)", background: "rgba(245,234,210,0.34)" }}>
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--premium)]">No Match</p>
+                <p className="mt-2 text-lg font-black">Nothing surfaced for this search.</p>
+                <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-[var(--muted)]">Try a song title, artist, mood, or playlist name from the catalogue.</p>
+              </div>
             )}
           </div>
         </div>

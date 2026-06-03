@@ -31,7 +31,7 @@ export default function MusicPlayer() {
       className="fixed inset-x-0 bottom-4 z-50 px-4"
     >
       <div
-        className="mx-auto flex max-w-5xl flex-col gap-3 rounded-[1.6rem] border px-4 py-3 sm:flex-row sm:items-center sm:gap-5"
+        className="motion-rise mx-auto flex max-w-5xl flex-col gap-3 rounded-[1.6rem] border px-4 py-3 sm:flex-row sm:items-center sm:gap-5"
         style={{
           background: "rgba(255,253,250,0.78)",
           borderColor: "rgba(231,223,209,0.88)",
@@ -51,10 +51,11 @@ export default function MusicPlayer() {
               {Array.from({ length: 24 }).map((_, index) => (
                 <span
                   key={index}
-                  className="w-1 rounded-full"
+                  className={`w-1 rounded-full ${isPlaying ? "motion-eq" : ""}`}
                   style={{
                     height: 5 + ((index * 7) % 18),
                     background: index * 4 < progress ? "var(--premium)" : "rgba(12,24,35,0.13)",
+                    animationDelay: `${index * 34}ms`,
                   }}
                 />
               ))}
