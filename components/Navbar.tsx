@@ -4,17 +4,19 @@ import { useState } from "react";
 import { Download, Headphones, Heart, ListMusic, Menu, Search, Sparkles, User, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { CommandPalette } from "@/components/CommandPalette";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 h-16 border-b" style={{ background: "rgba(255,255,255,0.86)", borderColor: "var(--border)", backdropFilter: "blur(18px)" }}>
         <div className="h-full px-4 md:px-6 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
-            <button className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-black/5" aria-label="Open menu">
-              <Menu size={20} />
+            <button className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-black/5" onClick={() => setMobileOpen((open) => !open)} aria-label="Open menu">
+              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
             <Link href="/" className="flex items-center gap-2 min-w-0">
               <Image
@@ -27,10 +29,15 @@ export default function Navbar() {
             </Link>
           </div>
 
-          <label className="hidden sm:flex items-center gap-3 h-11 flex-1 max-w-xl rounded-full px-4 shadow-sm" style={{ background: "rgba(244,247,251,0.9)", border: "1px solid var(--border)" }}>
-            <input className="min-w-0 flex-1 bg-transparent outline-none text-sm" placeholder="Search..." />
+          <button
+            className="hidden sm:flex items-center gap-3 h-11 flex-1 max-w-xl rounded-full px-4 text-left shadow-sm"
+            style={{ background: "rgba(244,247,251,0.9)", border: "1px solid var(--border)", color: "var(--muted)" }}
+            onClick={() => setSearchOpen(true)}
+          >
+            <span className="min-w-0 flex-1 text-sm">Search...</span>
+            <span className="rounded-full border px-2 py-0.5 text-[10px] font-bold" style={{ borderColor: "var(--border)" }}>/</span>
             <Search size={17} />
-          </label>
+          </button>
 
           <div className="hidden md:flex items-center gap-4 text-sm">
             <Link href="/likes" className="hover:text-[var(--blue)]">Sign In</Link>
@@ -40,8 +47,8 @@ export default function Navbar() {
             </Link>
           </div>
 
-          <button className="md:hidden h-9 w-9 rounded-full flex items-center justify-center" onClick={() => setMobileOpen((o) => !o)} aria-label="Toggle menu">
-            {mobileOpen ? <X size={22} /> : <Search size={20} />}
+          <button className="md:hidden h-9 w-9 rounded-full flex items-center justify-center" onClick={() => setSearchOpen(true)} aria-label="Open search">
+            <Search size={20} />
           </button>
         </div>
       </header>
@@ -95,6 +102,7 @@ export default function Navbar() {
           </div>
         </div>
       )}
+      <CommandPalette open={searchOpen} onOpenChange={setSearchOpen} />
     </>
   );
 }

@@ -1,7 +1,7 @@
-import { formatPlays, tracks, playlists, moods, totalDuration } from "@/lib/data";
+import { artistProfiles, formatPlays, tracks, tracksByArtist, playlists, moods, totalDuration } from "@/lib/data";
 import { CollectionCover } from "@/components/CollectionCover";
 import { TrackCardLarge } from "@/components/TrackCard";
-import { Activity, ArrowUpRight, BarChart3, Download, SlidersHorizontal, Sparkles, Users, Wand2 } from "lucide-react";
+import { Activity, ArrowUpRight, BarChart3, Download, Mic2, Music2, SlidersHorizontal, Sparkles, Users, Wand2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -27,6 +27,10 @@ export default function HomePage() {
   const trending = tracks.filter((track) => track.trending);
   const totalPlays = tracks.reduce((sum, track) => sum + track.plays, 0);
   const instrumentalCount = tracks.filter((track) => track.category === "instrumental").length;
+  const featuredArtist = artistProfiles[0];
+  const artistTracks = tracksByArtist(featuredArtist.name);
+  const artistPlays = artistTracks.reduce((sum, track) => sum + track.plays, 0);
+  const signatureTrack = tracks.find((track) => track.id === featuredArtist.signatureTrackId) ?? artistTracks[0];
 
   return (
     <div className="px-4 py-9 sm:px-8 lg:px-14 space-y-14">
@@ -102,6 +106,42 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="grid overflow-hidden rounded-[2rem] lg:grid-cols-[0.95fr_1.05fr]" style={{ background: featuredArtist.palette, boxShadow: "var(--shadow-card)" }}>
+        <div className="relative min-h-[360px]">
+          <Image src={featuredArtist.imageUrl} alt="" fill sizes="(min-width: 1024px) 38vw, 100vw" className="object-cover opacity-88" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0c1823] via-[#0c1823]/35 to-transparent" />
+          <div className="absolute bottom-6 left-6 right-6">
+            <p className="inline-flex rounded-full border border-white/16 bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur">Featured Artist</p>
+            <h2 className="mt-4 text-4xl font-black tracking-tight text-white">{featuredArtist.name}</h2>
+            <p className="mt-2 text-sm font-semibold text-white/70">{featuredArtist.role}</p>
+          </div>
+        </div>
+
+        <div className="flex flex-col justify-between gap-9 p-6 text-white sm:p-8 lg:p-10">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/60">{featuredArtist.location}</p>
+            <h2 className="mt-4 max-w-xl text-4xl font-black leading-none tracking-tight">A signature catalogue with studio polish and worship-room gravity.</h2>
+            <p className="mt-5 max-w-xl leading-7 text-white/70">{featuredArtist.description}</p>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-3">
+            <ArtistMetric icon={<Music2 size={16} />} value={`${artistTracks.length}`} label="Releases" />
+            <ArtistMetric icon={<Users size={16} />} value={formatPlays(artistPlays)} label="Plays" />
+            <ArtistMetric icon={<Mic2 size={16} />} value={signatureTrack?.title ?? "Living Waters"} label="Signature" />
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <Link href={`/artists/${featuredArtist.id}`} className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-[#0c1823] shadow-xl shadow-black/20">
+              View artist profile
+              <ArrowUpRight size={16} />
+            </Link>
+            <Link href="/instrumentals" className="inline-flex items-center gap-2 rounded-full border border-white/18 px-5 py-3 text-sm font-bold text-white/86">
+              Browse songs
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <section className="grid lg:grid-cols-[0.82fr_1.18fr] gap-6 items-stretch">
         <div className="relative min-h-[360px] overflow-hidden rounded-[2rem]" style={{ boxShadow: "var(--shadow-card)" }}>
           <Image src={featured[0].imageUrl} alt="" fill sizes="(min-width: 1024px) 34vw, 100vw" className="object-cover" />
@@ -170,15 +210,18 @@ export default function HomePage() {
             <Link
               key={mood.id}
               href={`/mood/${mood.id}`}
-              className="rounded-2xl overflow-hidden transition-all hover:-translate-y-1"
+              className="luxury-hover-card group rounded-2xl"
               style={{ background: "var(--surface)", border: "1px solid var(--border)", boxShadow: "var(--shadow-card)" }}
             >
               {mood.imageUrl ? (
                 <div className="relative aspect-square w-full">
                   <Image src={mood.imageUrl} alt="" fill sizes="(min-width: 1280px) 20vw, (min-width: 768px) 33vw, 50vw" className="object-cover" />
+                  <div className="absolute inset-x-4 bottom-4 rounded-full bg-black/42 px-3 py-2 text-center text-[10px] font-bold uppercase tracking-[0.16em] text-white/82 opacity-0 backdrop-blur transition-opacity group-hover:opacity-100">Open mood</div>
                 </div>
               ) : (
-                <div className="aspect-square w-full" style={{ background: mood.color }} />
+                <div className="relative aspect-square w-full" style={{ background: mood.color }}>
+                  <div className="absolute inset-x-4 bottom-4 rounded-full bg-black/24 px-3 py-2 text-center text-[10px] font-bold uppercase tracking-[0.16em] text-white/82 opacity-0 backdrop-blur transition-opacity group-hover:opacity-100">Open mood</div>
+                </div>
               )}
               <div className="p-4">
                 <p className="font-medium">{mood.label}</p>
@@ -195,7 +238,7 @@ export default function HomePage() {
             <Link
               key={playlist.id}
               href={`/playlists/${playlist.id}`}
-              className="rounded-2xl overflow-hidden transition-all hover:-translate-y-1"
+              className="luxury-hover-card group rounded-2xl"
               style={{ background: "var(--surface)", border: "1px solid var(--border)", boxShadow: "var(--shadow-card)" }}
             >
               <CollectionCover playlist={playlist} />
@@ -250,6 +293,18 @@ function AnalyticsCard({ icon, value, label, detail }: { icon: ReactNode; value:
       <p className="mt-6 text-3xl font-black tracking-tight">{value}</p>
       <p className="mt-1 font-bold">{label}</p>
       <p className="mt-3 text-sm text-[var(--muted)]">{detail}</p>
+    </div>
+  );
+}
+
+function ArtistMetric({ icon, value, label }: { icon: ReactNode; value: string; label: string }) {
+  return (
+    <div className="rounded-2xl border border-white/12 bg-white/10 p-4 backdrop-blur">
+      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/14 text-white">
+        {icon}
+      </span>
+      <p className="mt-4 truncate text-xl font-black">{value}</p>
+      <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-white/56">{label}</p>
     </div>
   );
 }
