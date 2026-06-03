@@ -23,6 +23,9 @@ export function CollectionCover({ playlist }: { playlist: Playlist }) {
         <p>{playlist.trackCount}</p>
         <p>tracks</p>
       </div>
+      <div className="luxury-hover-reveal absolute inset-x-5 bottom-16 translate-y-2 rounded-full border border-white/14 bg-white/10 px-3 py-2 text-center text-[10px] font-bold uppercase tracking-[0.16em] text-white/74 opacity-0 backdrop-blur transition-all">
+        Preview collection
+      </div>
     </div>
   );
 }

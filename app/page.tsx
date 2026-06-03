@@ -210,15 +210,18 @@ export default function HomePage() {
             <Link
               key={mood.id}
               href={`/mood/${mood.id}`}
-              className="rounded-2xl overflow-hidden transition-all hover:-translate-y-1"
+              className="luxury-hover-card group rounded-2xl"
               style={{ background: "var(--surface)", border: "1px solid var(--border)", boxShadow: "var(--shadow-card)" }}
             >
               {mood.imageUrl ? (
                 <div className="relative aspect-square w-full">
                   <Image src={mood.imageUrl} alt="" fill sizes="(min-width: 1280px) 20vw, (min-width: 768px) 33vw, 50vw" className="object-cover" />
+                  <div className="absolute inset-x-4 bottom-4 rounded-full bg-black/42 px-3 py-2 text-center text-[10px] font-bold uppercase tracking-[0.16em] text-white/82 opacity-0 backdrop-blur transition-opacity group-hover:opacity-100">Open mood</div>
                 </div>
               ) : (
-                <div className="aspect-square w-full" style={{ background: mood.color }} />
+                <div className="relative aspect-square w-full" style={{ background: mood.color }}>
+                  <div className="absolute inset-x-4 bottom-4 rounded-full bg-black/24 px-3 py-2 text-center text-[10px] font-bold uppercase tracking-[0.16em] text-white/82 opacity-0 backdrop-blur transition-opacity group-hover:opacity-100">Open mood</div>
+                </div>
               )}
               <div className="p-4">
                 <p className="font-medium">{mood.label}</p>
@@ -235,7 +238,7 @@ export default function HomePage() {
             <Link
               key={playlist.id}
               href={`/playlists/${playlist.id}`}
-              className="rounded-2xl overflow-hidden transition-all hover:-translate-y-1"
+              className="luxury-hover-card group rounded-2xl"
               style={{ background: "var(--surface)", border: "1px solid var(--border)", boxShadow: "var(--shadow-card)" }}
             >
               <CollectionCover playlist={playlist} />

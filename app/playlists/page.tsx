@@ -14,7 +14,7 @@ export default function PlaylistsPage() {
           <Link
             key={playlist.id}
             href={`/playlists/${playlist.id}`}
-            className="rounded-2xl overflow-hidden group transition-transform hover:scale-[1.02]"
+            className="luxury-hover-card group rounded-2xl"
             style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
           >
             <CollectionCover playlist={playlist} />
