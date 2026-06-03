@@ -19,6 +19,10 @@ export type Track = {
   downloadUrl?: string;
   stationUrl?: string;
   lyrics?: string;
+  description?: string;
+  albumYear?: number;
+  date?: string;
+  tags?: string[];
 };
 
 export type Playlist = {
@@ -5935,3 +5939,5 @@ export function slugifyArtist(name: string): string { return name.toLowerCase().
 export function getStationSlug(track: Track): string { return track.id; }
 
 export const artists = artistProfiles;
+
+export function stationDetailFor(idOrTrack: string | Track): Track | undefined { const id = typeof idOrTrack === "string" ? idOrTrack : idOrTrack.id; return tracks.find((t) => t.id === id); }

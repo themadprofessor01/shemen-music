@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Headphones, Download, ListMusic, Heart, Music2, Mail } from "lucide-react";
+import { Headphones, Download, Home, ListMusic, Heart, Music2, Mail } from "lucide-react";
 
 export default function Sidebar() {
   return (
+    <>
     <aside
       className="hidden md:flex fixed top-0 left-0 bottom-0 w-48 flex-col z-40 overflow-y-auto"
       style={{ background: "var(--surface)", borderRight: "1px solid var(--border)" }}
