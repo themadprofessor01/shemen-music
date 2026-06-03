@@ -33,6 +33,12 @@ export type Mood = {
   imageUrl?: string;
 };
 
+export type Artist = {
+  slug: string;
+  name: string;
+  bio?: string;
+};
+
 const BASE = "https://shemenmusic.com/three";
 const UPL = `${BASE}/wp-content/uploads`;
 
@@ -80,6 +86,35 @@ export const moods: Mood[] = [
   { id: "flow", label: "Flow", emoji: "🌊", color: "#0277bd" },
   { id: "honour", label: "Honour", emoji: "👑", color: "#827717" },
 ];
+
+export const artists: Artist[] = [
+  { slug: "the-living-waters-singers", name: "The Living Waters Singers", bio: "A spirit-filled worship collective known for deeply anointed instrumentals and praise recordings." },
+  { slug: "first-love-music", name: "First Love Music", bio: "First Love Music creates modern worship songs rooted in deep intimacy with God." },
+  { slug: "ministry-music-instrumentals", name: "MINISTRY MUSIC INSTRUMENTALS", bio: "Ministry-focused instrumental tracks crafted for church services and prayer rooms." },
+  { slug: "andrae-crouch", name: "Andraé Crouch", bio: "Gospel music pioneer whose songs have shaped generations of worshippers worldwide." },
+  { slug: "aseda", name: "Aseda", bio: "Aseda brings heartfelt gospel praise with rich vocal arrangements." },
+  { slug: "georlynn", name: "Georlynn", bio: "Georlynn is a gifted worship vocalist known for her anointed gospel delivery." },
+  { slug: "keziah", name: "Keziah", bio: "Keziah crafts intimate worship experiences that draw listeners into God's presence." },
+  { slug: "clint-brown", name: "Clint Brown", bio: "Clint Brown is a renowned gospel artist and worship leader with decades of ministry." },
+  { slug: "tommy-walker", name: "Tommy Walker", bio: "Tommy Walker is a worship songwriter whose songs are sung in congregations worldwide." },
+  { slug: "aida", name: "Aida", bio: "Aida brings powerful vocals and anointed worship to First Love Music collaborations." },
+];
+
+export function slugifyArtist(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[àáâãäå]/g, "a")
+    .replace(/[éèêë]/g, "e")
+    .replace(/[&]/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+export function getStationSlug(track: Track): string | null {
+  if (!track.stationUrl) return null;
+  const m = track.stationUrl.match(/\/station\/([^/]+)\/?$/);
+  return m ? m[1] : null;
+}
 
 export function formatPlays(n: number): string {
   if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;

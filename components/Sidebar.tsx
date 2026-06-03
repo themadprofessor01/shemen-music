@@ -31,7 +31,7 @@ export default function Sidebar() {
         </p>
         <nav className="flex flex-col gap-0.5">
           <SideLink href="/instrumentals" icon={<Headphones size={15} />} label="Instrumentals" />
-          <SideLink href="/worship" icon={<Music2 size={15} />} label="Praise & Worship Instrumentals" />
+          <SideLink href="/praise-worship-instrumentals" icon={<Music2 size={15} />} label="Praise & Worship" />
           <SideLink href="/download" icon={<Download size={15} />} label="Download Everything" />
         </nav>
       </div>
