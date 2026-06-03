@@ -19,6 +19,10 @@ export type Track = {
   downloadUrl?: string;
   stationUrl?: string;
   lyrics?: string;
+  description?: string;
+  albumYear?: number;
+  date?: string;
+  tags?: string[];
 };
 
 export type Playlist = {

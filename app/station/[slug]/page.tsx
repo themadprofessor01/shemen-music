@@ -16,7 +16,7 @@ export default function StationPage({ params }: { params: Promise<{ slug: string
 
   const related = tracks.filter((item) => item.id !== track.id && item.artist === track.artist).slice(0, 3);
   const detail = stationDetailFor(track);
-  const versions = detail.versions ?? [{ title: track.title, artist: track.artist, time: track.duration }];
+  const versions = [{ title: track.title, artist: track.artist, time: track.duration }];
 
   return <StationDetail track={track} versions={versions} related={related} />;
 }
@@ -59,9 +59,9 @@ function StationDetail({
               {track.artist}
             </Link>
             <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">{track.title}</h1>
-            <p className="mt-4 max-w-2xl leading-7 text-[var(--muted)]">{detail.description}</p>
+            <p className="mt-4 max-w-2xl leading-7 text-[var(--muted)]">{detail?.description ?? ""}</p>
             <p className="mt-2 text-base text-[var(--muted)]">
-              {track.category === "worship" ? "Praise & Worship" : "Instrumentals"} <span className="px-1">-</span> Album <span className="px-1">-</span> {versions.length} Tracks <span className="px-1">-</span> {track.duration} <span className="px-1">-</span> {detail.albumYear}
+              {track.category === "worship" ? "Praise & Worship" : "Instrumentals"} <span className="px-1">-</span> Album <span className="px-1">-</span> {versions.length} Tracks <span className="px-1">-</span> {track.duration} <span className="px-1">-</span> {detail?.albumYear ?? new Date().getFullYear()}
             </p>
             <div className="mt-5 flex items-center gap-5 text-[var(--muted)]">
               <button className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg" style={{ background: "linear-gradient(135deg, var(--ink), var(--blue-deep))" }} onClick={handlePlay} aria-label={`Play ${track.title}`}>
@@ -101,7 +101,7 @@ function StationDetail({
 
       <div className="mt-8 flex flex-wrap gap-2 rounded-full border p-1" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
         {[
-          ["overview", detail.lyrics ? "Lyrics" : "Overview"],
+          ["overview", detail?.lyrics ? "Lyrics" : "Overview"],
           ["versions", "Versions"],
           ["comment", "Comment"],
         ].map(([value, label]) => (
@@ -117,19 +117,12 @@ function StationDetail({
       </div>
 
       {tab === "overview" && <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_300px]">
-        <article className="rounded-[2rem] p-6 text-[15px] leading-7 text-[var(--foreground)] whitespace-pre-line sm:p-10" style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}>
-          {detail.lyrics ?? detail.description}
-          {track.downloadUrl && (
-            <div className="mt-6">
-              <a href={track.downloadUrl} download className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold text-white" style={{ background: "linear-gradient(135deg, var(--ink), var(--blue-deep))" }}>
-                <Download size={14} /> Free Download
-              </a>
-            </div>
-          )}
-          <p className="mt-8 text-[var(--muted)]">{detail.date}</p>
-          <div className="mt-5 flex flex-wrap gap-2">
-            {detail.tags.map((tag) => (
-              <span key={tag} className="rounded-full border px-4 py-1 text-sm font-bold" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>{tag}</span>
+        <article className="rounded-[2rem] p-6 text-[15px] leading-7 text-[#4a4d52] whitespace-pre-line sm:p-10" style={{ background: "rgba(255,253,250,0.62)", border: "1px solid var(--border)" }}>
+          {detail?.lyrics ?? detail?.description ?? "No lyrics available."}
+          <p className="mt-8 text-[var(--muted)]">{detail?.date ?? ""}</p>
+          <div className="mt-5 flex gap-2">
+            {(detail?.tags ?? [track.category, track.mood]).map((tag) => (
+              <span key={tag} className="rounded-full border px-4 py-1 text-sm font-bold" style={{ background: "var(--surface2)", borderColor: "var(--border)" }}>{tag}</span>
             ))}
           </div>
         </article>
