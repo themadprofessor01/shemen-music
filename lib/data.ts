@@ -5935,3 +5935,42 @@ export function slugifyArtist(name: string): string { return name.toLowerCase().
 export function getStationSlug(track: Track): string { return track.id; }
 
 export const artists = artistProfiles;
+
+const MOOD_LABELS: Record<string, string> = {
+  anointing: "Anointing", beloved: "Beloved", dancing: "Dancing", flow: "Flow", honour: "Honour",
+  worship: "Worship", devotion: "Devotion", intercession: "Intercession", celebration: "Celebration",
+  healing: "Healing", hope: "Hope", love: "Love", praise: "Praise", prayer: "Prayer",
+  relationships: "Relationships", spirituality: "Spirituality", thankfulness: "Thankfulness", "the-church": "The Church",
+};
+
+export function stationDetailFor(track: Track): {
+  description: string;
+  lyrics: string | null;
+  date: string;
+  tags: string[];
+  versions?: { title: string; artist: string; time: string }[];
+  albumYear?: string;
+} {
+  const category = track.category === "worship" ? "Praise & Worship" : "Instrumentals";
+  const moodLabel = track.mood ? (MOOD_LABELS[track.mood] ?? track.mood) : "Worship";
+  return {
+    description: `${track.title} by ${track.artist} is an anointed ${category.toLowerCase()} track in the ${moodLabel} mood — available for streaming and free download.`,
+    lyrics: track.lyrics ?? null,
+    date: "2025",
+    albumYear: "2025",
+    tags: [track.artist.split(" & ")[0], moodLabel].filter(Boolean),
+    versions: [{ title: track.title, artist: track.artist, time: track.duration }],
+  };
+}
+
+export function tracksForPlaylist(playlist: Playlist): Track[] {
+  const moodMap: Record<string, string[]> = {
+    p1: ["anointing", "worship", "spirituality"],
+    p2: ["prayer", "intercession"],
+    p3: ["flow", "devotion"],
+    p4: ["dancing", "celebration", "praise"],
+  };
+  const moods = moodMap[playlist.id] ?? [];
+  if (!moods.length) return tracks.slice(0, playlist.trackCount);
+  return tracks.filter((t) => moods.includes(t.mood ?? "")).slice(0, playlist.trackCount);
+}
