@@ -7,6 +7,7 @@ import { formatPlays } from "@/lib/data";
 import Image from "next/image";
 import { useState } from "react";
 import { LikeButton } from "@/components/LikeButton";
+import { Equalizer } from "@/components/Equalizer";
 
 function CoverArt({ track, size }: { track: Track; size: number }) {
   const bg = `linear-gradient(135deg, ${track.coverColor}, ${track.coverColor}88)`;
@@ -146,21 +147,23 @@ export function TrackRow({ track, index }: { track: Track; index: number }) {
       onMouseLeave={(e) => { if (!active) (e.currentTarget as HTMLElement).style.background = "transparent"; }}
       onClick={() => setDrawerOpen(true)}
     >
-      <div className="w-8 text-center flex-shrink-0">
-        <span className="group-hover:hidden text-sm" style={{ color: "var(--foreground-muted)" }}>{index + 1}</span>
-        <button
-          className="hidden group-hover:flex items-center justify-center w-full"
-          onClick={(event) => {
-            event.stopPropagation();
-            toggle(track);
-          }}
-        >
-          {active && isPlaying ? (
-            <Pause size={16} style={{ color: "var(--accent)" }} />
-          ) : (
-            <Play size={16} style={{ color: "var(--accent)", marginLeft: 2 }} />
-          )}
-        </button>
+      <div className="w-8 text-center flex-shrink-0 flex items-center justify-center">
+        {active && isPlaying ? (
+          <Equalizer trackId={track.id} size={16} />
+        ) : (
+          <>
+            <span className="group-hover:hidden text-sm" style={{ color: "var(--foreground-muted)" }}>{index + 1}</span>
+            <button
+              className="hidden group-hover:flex items-center justify-center w-full"
+              onClick={(event) => {
+                event.stopPropagation();
+                toggle(track);
+              }}
+            >
+              <Play size={16} style={{ color: "var(--accent)", marginLeft: 2 }} />
+            </button>
+          </>
+        )}
       </div>
       <div className="w-9 h-9 rounded-lg flex-shrink-0 overflow-hidden">
         <CoverArt track={track} size={36} />
