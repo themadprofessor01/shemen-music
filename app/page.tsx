@@ -34,8 +34,8 @@ export default function HomePage() {
 
   return (
     <div className="px-4 py-9 sm:px-8 lg:px-14 space-y-14">
-      <header className="relative overflow-hidden rounded-[2rem] p-6 sm:p-9 lg:p-12 min-h-[460px]" style={{ background: "linear-gradient(135deg, #0c1823 0%, #123655 54%, #0b1520 100%)", boxShadow: "0 34px 90px rgba(12,24,35,0.24)" }}>
-        <div className="absolute inset-0 opacity-40" style={{ background: "radial-gradient(circle at 70% 20%, rgba(230, 194, 119, 0.24), transparent 22rem)" }} />
+      <header className="motion-rise relative overflow-hidden rounded-[2rem] p-6 sm:p-9 lg:p-12 min-h-[460px]" style={{ background: "linear-gradient(135deg, #0c1823 0%, #123655 54%, #0b1520 100%)", boxShadow: "0 34px 90px rgba(12,24,35,0.24)" }}>
+        <div className="motion-ambient absolute inset-0 opacity-40" style={{ background: "radial-gradient(circle at 70% 20%, rgba(230, 194, 119, 0.24), transparent 22rem)" }} />
         <div className="relative grid lg:grid-cols-[0.92fr_1.08fr] gap-10 items-center h-full">
           <div className="text-white">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white/75">
@@ -80,14 +80,14 @@ export default function HomePage() {
         </div>
       </header>
 
-      <section className="grid md:grid-cols-3 gap-4">
+      <section className="motion-rise grid md:grid-cols-3 gap-4" style={{ animationDelay: "90ms" }}>
         <PremiumFeature icon={<Download size={18} />} title="Studio-grade files" label="WAV, MP3, stems" />
         <PremiumFeature icon={<SlidersHorizontal size={18} />} title="Prepared for teams" label="Keys, tempos, service flow" />
         <PremiumFeature icon={<Wand2 size={18} />} title="Editorial discovery" label="Curated moods and moments" />
       </section>
 
-      <section className="relative overflow-hidden rounded-[2rem] p-5 sm:p-6 lg:p-7" style={{ background: "linear-gradient(135deg, rgba(255,253,250,0.92), rgba(242,236,226,0.86))", border: "1px solid var(--border)", boxShadow: "var(--shadow-soft)" }}>
-        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[var(--premium-soft)] blur-3xl" />
+      <section className="motion-rise relative overflow-hidden rounded-[2rem] p-5 sm:p-6 lg:p-7" style={{ animationDelay: "130ms", background: "linear-gradient(135deg, rgba(255,253,250,0.92), rgba(242,236,226,0.86))", border: "1px solid var(--border)", boxShadow: "var(--shadow-soft)" }}>
+        <div className="motion-ambient absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[var(--premium-soft)] blur-3xl" />
         <div className="relative flex flex-col gap-6">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -106,7 +106,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="grid overflow-hidden rounded-[2rem] lg:grid-cols-[0.95fr_1.05fr]" style={{ background: featuredArtist.palette, boxShadow: "var(--shadow-card)" }}>
+      <section className="motion-rise grid overflow-hidden rounded-[2rem] lg:grid-cols-[0.95fr_1.05fr]" style={{ animationDelay: "170ms", background: featuredArtist.palette, boxShadow: "var(--shadow-card)" }}>
         <div className="relative min-h-[360px]">
           <Image src={featuredArtist.imageUrl} alt="" fill sizes="(min-width: 1024px) 38vw, 100vw" className="object-cover opacity-88" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0c1823] via-[#0c1823]/35 to-transparent" />
