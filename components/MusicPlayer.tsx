@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, X } from "lucide-react";
 import { usePlayer } from "@/components/MusicPlayerContext";
+import Image from "next/image";
 
 export default function MusicPlayer() {
   const { currentTrack, isPlaying, play, pause } = usePlayer();
@@ -25,10 +26,7 @@ export default function MusicPlayer() {
       <div className="max-w-7xl mx-auto flex items-center gap-4">
         {/* Track info */}
         <div className="flex items-center gap-3 flex-1 min-w-0">
-          <div
-            className="w-10 h-10 rounded-lg flex-shrink-0"
-            style={{ background: `linear-gradient(135deg, ${currentTrack.coverColor}, ${currentTrack.coverColor}88)` }}
-          />
+          <Image src={currentTrack.imageUrl} alt="" width={40} height={40} className="w-10 h-10 rounded object-cover flex-shrink-0" />
           <div className="min-w-0">
             <p className="text-sm font-semibold truncate" style={{ color: "var(--foreground)" }}>{currentTrack.title}</p>
             <p className="text-xs opacity-50 truncate" style={{ color: "var(--foreground)" }}>{currentTrack.artist}</p>

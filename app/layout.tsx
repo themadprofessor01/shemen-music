@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <PlayerProvider>
           <Navbar />
-          <main className="pt-16 pb-28 min-h-screen">{children}</main>
+          <main className="pt-16 md:pl-52 pb-28 min-h-screen">{children}</main>
           <MusicPlayer />
         </PlayerProvider>
       </body>
