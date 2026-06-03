@@ -1,29 +1,29 @@
-import Link from "next/link";
 import { CollectionCover } from "@/components/CollectionCover";
 import { PageShell } from "@/components/PageShell";
+import Link from "next/link";
 import { playlists } from "@/lib/data";
 
 export default function PlaylistsPage() {
   return (
     <>
-      <PageShell eyebrow={`${playlists.length} collections`} title="Playlists">
-        Curated worship flows for prayer, Sunday mornings, soaking sessions, and praise gatherings.
-      </PageShell>
-      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <PageShell eyebrow={`${playlists.length} curated collections`} title="Playlists" />
+      <div className="px-4 pb-14 sm:px-8 lg:px-14">
+        <div className="grid grid-cols-2 gap-5 md:grid-cols-3 xl:grid-cols-5">
         {playlists.map((playlist) => (
           <Link
             key={playlist.id}
             href={`/playlists/${playlist.id}`}
-            className="luxury-hover-card group rounded-2xl"
-            style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+            className="luxury-hover-card block overflow-hidden rounded-2xl"
+            style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}
           >
             <CollectionCover playlist={playlist} />
             <div className="p-4">
-              <p className="font-semibold">{playlist.title}</p>
-              <p className="text-sm opacity-55 mt-1">{playlist.trackCount} tracks</p>
+              <span className="block truncate text-sm font-bold">{playlist.title}</span>
+              <span className="mt-1 block truncate text-xs" style={{ color: "var(--foreground-muted)" }}>{playlist.curator}</span>
             </div>
           </Link>
         ))}
+        </div>
       </div>
     </>
   );

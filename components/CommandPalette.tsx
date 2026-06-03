@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Disc3, ListMusic, Mic2, Search, Sparkles, X } from "lucide-react";
 import Link from "next/link";
-import { artistProfiles, moods, playlists, tracks } from "@/lib/data";
+import { artistProfiles, getStationSlug, moods, playlists, tracks } from "@/lib/data";
 
 type Result = {
   href: string;
@@ -33,7 +33,7 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
     const normalized = query.trim().toLowerCase();
     const all: Result[] = [
       ...tracks.map((track) => ({
-        href: track.stationUrl ?? "/instrumentals",
+        href: getStationSlug(track) ? `/station/${getStationSlug(track)}` : "/instrumentals",
         title: track.title,
         meta: track.artist,
         type: "Track" as const,
