@@ -5865,3 +5865,72 @@ export function totalDuration(list: Track[]): string {
   const m = Math.floor((total % 3600) / 60);
   return h > 0 ? `${h}h ${m}m` : `${m}m`;
 }
+
+export function tracksByArtist(name: string): Track[] {
+  return tracks.filter((t) => t.artist.toLowerCase().includes(name.toLowerCase()));
+}
+
+export type ArtistProfile = {
+  slug: string;
+  bio?: string;
+  id: string;
+  name: string;
+  description: string;
+  location: string;
+  role: string;
+  imageUrl: string;
+  palette: string;
+  signatureTrackId: string;
+};
+
+export const artistProfiles: ArtistProfile[] = [
+  {
+    id: "the-living-waters-singers",
+    slug: "the-living-waters-singers",
+    name: "The Living Waters Singers",
+    description: "A worship collective behind some of the most anointed instrumental recordings in the ShemenMusic catalogue.",
+    location: "Africa",
+    role: "Worship Collective",
+    imageUrl: "https://shemenmusic.com/three/wp-content/uploads/2025/11/Rose-Of-Sharon_Inst_NoBVs-mp3-image.webp",
+    palette: "linear-gradient(135deg, #0277bd 0%, #01579b 100%)",
+    signatureTrackId: "rose-of-sharon-official-instrumental-with-bvs",
+  },
+  {
+    id: "first-love-music",
+    slug: "first-love-music",
+    name: "First Love Music",
+    description: "Prolific worship music ministry producing hundreds of original gospel instrumentals for churches and worship teams worldwide.",
+    location: "Ghana",
+    role: "Music Ministry",
+    imageUrl: "https://shemenmusic.com/three/wp-content/uploads/2025/08/i-am-the-way.jpg",
+    palette: "linear-gradient(135deg, #6d28d9 0%, #4c1d95 100%)",
+    signatureTrackId: "i-am-the-way-the-truth-the-life-official-instrumental",
+  },
+  {
+    id: "georlynn",
+    slug: "georlynn",
+    name: "Georlynn",
+    description: "Soulful worship vocalist and songwriter whose tracks consistently top the ShemenMusic trending charts.",
+    location: "Ghana",
+    role: "Vocalist & Songwriter",
+    imageUrl: "https://shemenmusic.com/three/wp-content/uploads/2025/11/living-waters.webp",
+    palette: "linear-gradient(135deg, #d97706 0%, #b45309 100%)",
+    signatureTrackId: "go-to-church-194",
+  },
+  {
+    id: "keziah",
+    slug: "keziah",
+    name: "Keziah",
+    description: "Powerhouse worship artist delivering anthems of faith and dedication — a favourite for intimate worship moments.",
+    location: "Ghana",
+    role: "Worship Artist",
+    imageUrl: "https://shemenmusic.com/three/wp-content/uploads/2025/11/jesus-youre-so-cool.webp",
+    palette: "linear-gradient(135deg, #0369a1 0%, #075985 100%)",
+    signatureTrackId: "everybody-needs-a-little-help-184",
+  },
+];
+
+export function slugifyArtist(name: string): string { return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
+export function getStationSlug(track: Track): string { return track.id; }
+
+export const artists = artistProfiles;

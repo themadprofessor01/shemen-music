@@ -29,7 +29,7 @@ export function TrackCardLarge({ track }: { track: Track }) {
   return (
     <>
       <div
-        className="relative flex-shrink-0 rounded-2xl overflow-hidden cursor-pointer group transition-transform hover:scale-[1.02]"
+        className="luxury-hover-card relative flex-shrink-0 rounded-2xl cursor-pointer group"
         style={{ width: 200, background: "var(--surface2)", border: "1px solid var(--border)" }}
         onClick={() => setDrawerOpen(true)}
       >
@@ -54,11 +54,19 @@ export function TrackCardLarge({ track }: { track: Track }) {
               )}
             </span>
           </button>
+          <div className="absolute inset-x-3 bottom-3 flex items-center justify-between rounded-full border border-white/18 bg-black/42 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-white/82 opacity-0 backdrop-blur transition-opacity group-hover:opacity-100">
+            <span>Preview</span>
+            <span>{track.duration}</span>
+          </div>
         </div>
       <div className="p-3">
         <p className="font-semibold text-sm truncate" style={{ color: "var(--foreground)" }}>{track.title}</p>
         <p className="text-xs mt-0.5 truncate" style={{ color: "var(--foreground-muted)" }}>{track.artist}</p>
         <WaveformPreview trackId={track.id} className="mt-3" />
+        <div className="mt-3 flex items-center justify-between text-[11px] font-semibold text-[var(--muted)] opacity-0 transition-opacity group-hover:opacity-100">
+          <span>{formatPlays(track.plays)} plays</span>
+          <span>{track.size}</span>
+        </div>
       </div>
         {active && (
           <div className="absolute top-3 right-3 w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--accent)" }} />
@@ -76,7 +84,7 @@ export function TrackCardGrid({ track }: { track: Track }) {
 
   return (
     <div
-      className="relative rounded-xl overflow-hidden cursor-pointer group transition-transform hover:scale-[1.02]"
+      className="luxury-hover-card relative rounded-xl cursor-pointer group"
       style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}
       onClick={() => setDrawerOpen(true)}
     >
@@ -108,6 +116,10 @@ export function TrackCardGrid({ track }: { track: Track }) {
             </div>
           </div>
         )}
+        <div className="absolute inset-x-2 bottom-2 flex items-center justify-between rounded-full bg-black/46 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-white/82 opacity-0 backdrop-blur transition-opacity group-hover:opacity-100">
+          <span>Preview</span>
+          <span>{track.duration}</span>
+        </div>
       </div>
       <div className="p-3">
         <p className="font-semibold text-xs truncate" style={{ color: active ? "var(--accent)" : "var(--foreground)" }}>{track.title}</p>
