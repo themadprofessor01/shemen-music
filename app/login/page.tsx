@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
-import { Music2 } from "lucide-react";
 
 export default function LoginPage() {
   const [mode, setMode] = useState<"signin" | "register">("signin");
@@ -14,13 +14,15 @@ export default function LoginPage() {
         style={{ background: "var(--surface)", border: "1px solid var(--border)", boxShadow: "0 24px 60px rgba(12,24,35,0.12)" }}
       >
         {/* Logo */}
-        <div className="flex items-center gap-2 justify-center mb-8">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "var(--accent)" }}>
-            <Music2 size={18} className="text-white" />
-          </div>
-          <span className="font-bold text-lg" style={{ color: "var(--foreground)" }}>
-            shemen<span style={{ color: "var(--accent)" }}>MUSIC</span>
-          </span>
+        <div className="flex justify-center mb-8">
+          <Image
+            src="https://shemenmusic.com/three/wp-content/uploads/2022/07/NewLogo2022.png"
+            alt="ShemenMusic"
+            width={160}
+            height={23}
+            className="h-8 w-auto object-contain"
+            style={{ filter: "var(--logo-filter, none)" }}
+          />
         </div>
 
         {/* Tabs */}

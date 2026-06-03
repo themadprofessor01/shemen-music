@@ -14,7 +14,7 @@ export default function TopBar() {
         className="fixed top-0 right-0 z-30 h-16 flex items-center gap-4 px-6"
         style={{
           left: "192px",
-          background: "rgba(255,253,250,0.86)",
+          background: "color-mix(in srgb, var(--surface) 86%, transparent)",
           borderBottom: "1px solid var(--border)",
           backdropFilter: "blur(18px)",
         }}
@@ -35,14 +35,14 @@ export default function TopBar() {
 
         <div className="flex items-center gap-3 ml-auto flex-shrink-0">
           <Link
-            href="/signin"
+            href="/login"
             className="text-sm font-medium hover:opacity-80 transition-opacity"
             style={{ color: "var(--foreground-muted)" }}
           >
             Sign In
           </Link>
           <Link
-            href="/signup"
+            href="/login"
             className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold transition-opacity hover:opacity-90"
             style={{ background: "linear-gradient(135deg, var(--blue), var(--blue-deep))", color: "#ffffff" }}
           >
