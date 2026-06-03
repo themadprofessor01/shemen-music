@@ -1,78 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4f7fb;
-  --foreground: #17202a;
-  --muted: #6f7a86;
-  --blue: #0878cb;
-  --blue-deep: #075a9c;
-  --blue-soft: #e5f2ff;
-  --premium: #c9962f;
-  --premium-soft: #fff4d8;
-  --gold: #0878cb;
-  --gold-dim: #0878cb22;
-  --gold-soft: #0878cb12;
-  --surface: #ffffff;
-  --surface2: #f0f2f4;
-  --border: #e3e9ef;
-  --shadow-soft: 0 18px 45px rgba(24, 50, 78, 0.08);
-  --shadow-card: 0 12px 28px rgba(24, 50, 78, 0.1);
+  --background: #0a0a0a;
+  --foreground: #ffffff;
+  --foreground-muted: #a8a8a8;
+  --accent: #1a8cff;
+  --accent-dim: #1a8cff1a;
+  --surface: #141414;
+  --surface2: #1e1e1e;
+  --surface3: #282828;
+  --border: #2a2a2a;
+  /* aliases for remote components */
+  --muted: #a8a8a8;
+  --blue: #1a8cff;
+  --blue-soft: #1a8cff1a;
+  --gold: #1a8cff;
 }
 
 body {
-  background:
-    radial-gradient(circle at top right, rgba(8, 120, 203, 0.1), transparent 30rem),
-    linear-gradient(180deg, #fbfdff 0%, var(--background) 18rem);
+  background: var(--background);
   color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 * { box-sizing: border-box; }
-
-a, button, input {
-  font: inherit;
-}
-
-button, a {
-  -webkit-tap-highlight-color: transparent;
-}
-
-.premium-card {
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.94), rgba(246, 250, 255, 0.88)),
-    radial-gradient(circle at top right, rgba(201, 150, 47, 0.16), transparent 16rem);
-  border: 1px solid rgba(227, 233, 239, 0.9);
-  box-shadow: var(--shadow-soft);
-}
-
-.premium-pill {
-  background: linear-gradient(135deg, #fff8df, #f2d28a);
-  color: #5b3b08;
-  box-shadow: inset 0 0 0 1px rgba(153, 103, 17, 0.16);
-}
-
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 2px; }
-
-input[type="range"] {
-  -webkit-appearance: none;
-  appearance: none;
-  background: transparent;
-  cursor: pointer;
-  width: 100%;
-}
-input[type="range"]::-webkit-slider-runnable-track {
-  background: var(--blue-soft);
-  height: 3px;
-  border-radius: 2px;
-}
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 11px;
-  height: 11px;
-  background: var(--blue);
-  border-radius: 50%;
-  margin-top: -4px;
-}

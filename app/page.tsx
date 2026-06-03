@@ -1,7 +1,7 @@
 import { tracks, playlists, moods } from "@/lib/data";
 import { TrackCardLarge } from "@/components/TrackCard";
 import { Crown, Download, Lock, SlidersHorizontal, Sparkles, Wand2 } from "lucide-react";
-import Image from "next/image";
+
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -90,7 +90,7 @@ export default function HomePage() {
             >
               {mood.imageUrl ? (
                 <div className="relative aspect-square w-full">
-                  <Image src={mood.imageUrl} alt="" fill sizes="(min-width: 1280px) 20vw, (min-width: 768px) 33vw, 50vw" className="object-cover" />
+                  <img src={mood.imageUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
               ) : (
                 <div className="aspect-square w-full" style={{ background: mood.color }} />

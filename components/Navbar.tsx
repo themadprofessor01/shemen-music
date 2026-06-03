@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Crown, Download, Headphones, Heart, ListMusic, Menu, Search, Sparkles, User, X } from "lucide-react";
-import Image from "next/image";
+
 import Link from "next/link";
 
 export default function Navbar() {
@@ -17,13 +17,7 @@ export default function Navbar() {
               <Menu size={20} />
             </button>
             <Link href="/" className="flex items-center gap-2 min-w-0">
-              <Image
-                src="https://i0.wp.com/shemenmusic.com/three/wp-content/uploads/2022/07/NewLogo2022.png?fit=3000%2C424&ssl=1"
-                alt="ShemenMusic"
-                width={190}
-                height={27}
-                className="h-7 w-auto max-w-44 object-contain"
-              />
+              <img src="https://shemenmusic.com/three/wp-content/uploads/2022/07/NewLogo2022.png" alt="ShemenMusic" style={{ height: 27, width: "auto", maxWidth: 176 }} />
             </Link>
           </div>
 

@@ -15,8 +15,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <PlayerProvider>
-          <Navbar />
-          <main className="pt-16 md:pl-52 pb-28 min-h-screen">{children}</main>
+          <div style={{ display: "flex", minHeight: "100vh" }}>
+            <Sidebar />
+            <div style={{ flex: 1, marginLeft: "192px", marginBottom: "80px", minWidth: 0 }}>
+              <TopBar />
+              <main style={{ paddingTop: "64px" }}>{children}</main>
+            </div>
+          </div>
           <MusicPlayer />
         </PlayerProvider>
       </body>
