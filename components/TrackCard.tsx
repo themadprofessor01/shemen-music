@@ -6,10 +6,11 @@ import type { Track } from "@/lib/data";
 import { formatPlays } from "@/lib/data";
 import Image from "next/image";
 import { useState } from "react";
+import { LikeButton } from "@/components/LikeButton";
 
 function CoverArt({ track, size }: { track: Track; size: number }) {
   const bg = `linear-gradient(135deg, ${track.coverColor}, ${track.coverColor}88)`;
-  const src = track.imageUrl;
+  const src = track.coverImage || track.imageUrl;
   if (src) {
     return (
       <Image
@@ -116,8 +117,9 @@ export function TrackCardGrid({ track }: { track: Track }) {
         <p className="font-semibold text-xs truncate" style={{ color: active ? "var(--accent)" : "var(--foreground)" }}>{track.title}</p>
         <p className="text-xs mt-0.5 truncate" style={{ color: "var(--foreground-muted)" }}>{track.artist}</p>
         <WaveformPreview trackId={track.id} className="mt-3" compact />
-        <div className="flex items-center gap-2 mt-1.5 text-xs" style={{ color: "var(--foreground-muted)" }}>
+        <div className="flex items-center justify-between mt-1.5 text-xs" style={{ color: "var(--foreground-muted)" }}>
           <span className="flex items-center gap-1"><Users size={10} />{formatPlays(track.plays)}</span>
+          <LikeButton trackId={track.id} size={13} />
         </div>
       </div>
       {active && (
@@ -171,6 +173,7 @@ export function TrackRow({ track, index }: { track: Track; index: number }) {
         <span className="flex items-center gap-1"><Users size={11} />{formatPlays(track.plays)}</span>
         <span>{track.size}</span>
         <span className="w-10 text-right">{track.duration}</span>
+        <LikeButton trackId={track.id} />
       </div>
       <TrackDetailDrawer track={track} open={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </div>
