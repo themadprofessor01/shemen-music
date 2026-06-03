@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, X } from "lucide-react";
 import { usePlayer } from "@/components/MusicPlayerContext";
-import Image from "next/image";
 
 function fmt(secs: number) {
   if (!secs || isNaN(secs)) return "0:00";
