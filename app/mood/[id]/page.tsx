@@ -1,42 +1,75 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { PageShell } from "@/components/PageShell";
-import { TrackCardLarge } from "@/components/TrackCard";
-import { moods, tracks } from "@/lib/data";
+import { tracks, moods } from "@/lib/data";
+import { TrackList } from "@/components/TrackList";
 
-export default async function MoodPage({ params }: { params: Promise<{ id: string }> }) {
+export function generateStaticParams() {
+  return moods.map((m) => ({ id: m.id }));
+}
+
+export default async function MoodPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
-  const mood = moods.find((item) => item.id === id);
+  const mood = moods.find((m) => m.id === id);
   if (!mood) notFound();
 
-  const moodTracks = tracks.filter((track) => track.mood === id);
+  const moodTracks = tracks.filter((t) => t.mood === id);
+  const otherMoods = moods.filter((m) => m.id !== id);
 
   return (
-    <>
-      <PageShell eyebrow={`${moodTracks.length || 10} tracks`} title={mood.label} />
-      <div className="px-4 pb-14 sm:px-8 lg:px-14">
-        <div className="flex flex-wrap gap-3">
-          {moods.map((item) => (
-            <Link
-              key={item.id}
-              href={`/mood/${item.id}`}
-              className="rounded-full border px-4 py-2 text-sm font-bold transition-opacity hover:opacity-80"
-              style={{
-                borderColor: item.id === id ? "rgba(182,138,58,0.45)" : "var(--border)",
-                background: item.id === id ? "var(--premium-soft)" : "var(--surface2)",
-                color: item.id === id ? "var(--premium)" : "var(--foreground-muted)",
-              }}
-            >
-              {item.label}
-            </Link>
-          ))}
+    <div className="px-4 py-9 sm:px-8 lg:px-14">
+      <header className="space-y-3 mb-8">
+        <p className="text-sm font-semibold" style={{ color: "var(--accent)" }}>
+          {moodTracks.length} track{moodTracks.length !== 1 ? "s" : ""}
+        </p>
+        <h1 className="text-4xl sm:text-5xl font-black tracking-tight">
+          {mood.emoji} {mood.label}
+        </h1>
+      </header>
+
+      <div className="flex flex-col lg:flex-row gap-10">
+        {/* Main track list */}
+        <div className="flex-1 min-w-0">
+          <TrackList tracks={moodTracks} />
         </div>
-        <div className="mt-8 grid grid-cols-2 gap-5 md:grid-cols-3 xl:grid-cols-5">
-          {(moodTracks.length ? moodTracks : tracks.slice(0, 10)).map((track) => (
-            <TrackCardLarge key={track.id} track={track} />
-          ))}
-        </div>
+
+        {/* Sidebar: Other Moods */}
+        <aside className="lg:w-[200px] shrink-0">
+          <h2
+            className="text-xs font-bold uppercase tracking-widest mb-4"
+            style={{ color: "var(--foreground-muted)" }}
+          >
+            Other Moods
+          </h2>
+          <ul className="space-y-1">
+            {otherMoods.map((m) => {
+              const count = tracks.filter((t) => t.mood === m.id).length;
+              return (
+                <li key={m.id}>
+                  <Link
+                    href={`/mood/${m.id}`}
+                    className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-[var(--surface2)]"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span>{m.emoji}</span>
+                      <span className="font-medium">{m.label}</span>
+                    </span>
+                    <span
+                      className="text-xs tabular-nums"
+                      style={{ color: "var(--foreground-muted)" }}
+                    >
+                      {count}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </aside>
       </div>
-    </>
+    </div>
   );
 }

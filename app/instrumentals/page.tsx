@@ -1,74 +1,143 @@
-"use client";
-
-import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Suspense } from "react";
+import Link from "next/link";
 import { PageShell } from "@/components/PageShell";
-import { CatalogInsights } from "@/components/CatalogInsights";
-import { TrackCardLarge } from "@/components/TrackCard";
-import { tracks } from "@/lib/data";
+import { PlayAllButton } from "@/components/PlayAllButton";
+import { TrackRow } from "@/components/TrackCard";
+import { tracks, totalDuration } from "@/lib/data";
+import { MoodFilter } from "./MoodFilter";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 20;
 
-export default function InstrumentalsPage() {
-  const [page, setPage] = useState(1);
-  const instrumentals = tracks
-    .filter((track) => track.category === "instrumental")
-    .sort((a, b) => a.title.localeCompare(b.title));
+export default async function InstrumentalsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ mood?: string; page?: string }>;
+}) {
+  const { mood, page: pageParam } = await searchParams;
+  const currentPage = Math.max(1, parseInt(pageParam ?? "1", 10));
 
-  const totalPages = Math.ceil(instrumentals.length / PAGE_SIZE);
-  const pageTracks = instrumentals.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const instrumentals = tracks.filter((t) => t.category === "instrumental");
+  const filtered = mood && mood !== "all"
+    ? instrumentals.filter((t) => t.mood === mood)
+    : instrumentals;
 
-  function goTo(p: number) {
-    setPage(p);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const pageTracks = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  return (
+    <div className="max-w-5xl mx-auto px-4 pb-16">
+      {/* Hero header */}
+      <PageShell
+        eyebrow={`${instrumentals.length} tracks · ${totalDuration(instrumentals)}`}
+        title="Instrumentals"
+      >
+        All Instrumental tracks
+      </PageShell>
+
+      {/* Filter bar + Play All row */}
+      <div className="flex flex-col gap-4 px-4 sm:px-8 lg:px-14 -mt-2">
+        <Suspense fallback={<div className="h-9" />}>
+          <MoodFilter />
+        </Suspense>
+        <div className="flex items-center justify-between">
+          <p className="text-sm" style={{ color: "var(--foreground-muted)" }}>
+            {filtered.length} track{filtered.length !== 1 ? "s" : ""}
+            {mood && mood !== "all" ? ` · ${mood}` : ""}
+          </p>
+          <PlayAllButton tracks={pageTracks} />
+        </div>
+      </div>
+
+      {/* Track list */}
+      <div className="mt-4 px-4 sm:px-8 lg:px-14 divide-y" style={{ borderColor: "var(--border)" }}>
+        {pageTracks.length === 0 ? (
+          <p className="py-12 text-center text-sm" style={{ color: "var(--foreground-muted)" }}>
+            No tracks found for this filter.
+          </p>
+        ) : (
+          pageTracks.map((track, i) => (
+            <TrackRow
+              key={track.id}
+              track={track}
+              index={(currentPage - 1) * PAGE_SIZE + i}
+            />
+          ))
+        )}
+      </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          basePath="/instrumentals"
+          mood={mood}
+        />
+      )}
+    </div>
+  );
+}
+
+function Pagination({
+  currentPage,
+  totalPages,
+  basePath,
+  mood,
+}: {
+  currentPage: number;
+  totalPages: number;
+  basePath: string;
+  mood?: string;
+}) {
+  function href(page: number) {
+    const params = new URLSearchParams();
+    if (mood && mood !== "all") params.set("mood", mood);
+    if (page > 1) params.set("page", String(page));
+    const qs = params.toString();
+    return `${basePath}${qs ? `?${qs}` : ""}`;
+  }
+
+  // Build page number list with ellipsis
+  const pages: (number | "...")[] = [];
+  for (let p = 1; p <= totalPages; p++) {
+    if (p === 1 || p === totalPages || (p >= currentPage - 1 && p <= currentPage + 1)) {
+      pages.push(p);
+    } else if (pages[pages.length - 1] !== "...") {
+      pages.push("...");
+    }
   }
 
   return (
-    <>
-      <PageShell eyebrow={`${instrumentals.length} official tracks`} title="Instrumentals">
-        All Instrumental tracks
-      </PageShell>
-      <div className="px-4 pb-14 sm:px-8 lg:px-14">
-        <CatalogInsights tracks={instrumentals} label="Instrumental archive" />
-        <div className="mt-8 grid grid-cols-2 gap-5 md:grid-cols-3 xl:grid-cols-5">
-          {pageTracks.map((track) => (
-            <TrackCardLarge key={track.id} track={track} />
-          ))}
-        </div>
-        <div className="mt-12 flex items-center justify-center gap-2 text-sm font-bold">
-          <button
-            onClick={() => goTo(page - 1)}
-            disabled={page === 1}
-            className="flex h-10 w-10 items-center justify-center rounded-full border transition-opacity disabled:opacity-30"
-            style={{ borderColor: "var(--border)", background: "var(--surface2)", color: "var(--foreground-muted)" }}
+    <nav className="mt-10 flex items-center justify-center gap-1.5 flex-wrap px-4" aria-label="Pagination">
+      {pages.map((p, i) =>
+        p === "..." ? (
+          <span key={`ellipsis-${i}`} className="px-2 text-sm" style={{ color: "var(--foreground-muted)" }}>
+            …
+          </span>
+        ) : (
+          <Link
+            key={p}
+            href={href(p)}
+            className="h-9 min-w-[2.25rem] flex items-center justify-center rounded-lg px-3 text-sm font-semibold transition-colors"
+            style={{
+              background: p === currentPage ? "var(--accent)" : "var(--surface2)",
+              color: p === currentPage ? "#fff" : "var(--foreground)",
+              border: p === currentPage ? "1px solid var(--accent)" : "1px solid var(--border)",
+            }}
           >
-            <ChevronLeft size={16} />
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <button
-              key={p}
-              onClick={() => goTo(p)}
-              className="flex h-10 min-w-10 items-center justify-center rounded-full border px-3 transition-all"
-              style={{
-                borderColor: p === page ? "transparent" : "var(--border)",
-                background: p === page ? "linear-gradient(135deg, var(--ink), var(--blue-deep))" : "var(--surface2)",
-                color: p === page ? "#fff" : "var(--foreground-muted)",
-                boxShadow: p === page ? "0 4px 12px rgba(12,24,35,0.25)" : "none",
-              }}
-            >
-              {p}
-            </button>
-          ))}
-          <button
-            onClick={() => goTo(page + 1)}
-            disabled={page === totalPages}
-            className="flex h-10 w-10 items-center justify-center rounded-full border transition-opacity disabled:opacity-30"
-            style={{ borderColor: "var(--border)", background: "var(--surface2)", color: "var(--foreground-muted)" }}
-          >
-            <ChevronRight size={16} />
-          </button>
-        </div>
-      </div>
-    </>
+            {p}
+          </Link>
+        )
+      )}
+      {currentPage < totalPages && (
+        <Link
+          href={href(currentPage + 1)}
+          className="h-9 flex items-center justify-center rounded-lg px-4 text-sm font-semibold ml-1 transition-opacity hover:opacity-80"
+          style={{ background: "var(--surface2)", border: "1px solid var(--border)", color: "var(--foreground)" }}
+        >
+          Older posts →
+        </Link>
+      )}
+    </nav>
   );
 }

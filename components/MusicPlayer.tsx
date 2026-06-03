@@ -28,7 +28,7 @@ export default function MusicPlayer() {
 
   return (
     <div
-      className="fixed inset-x-0 bottom-4 z-50 px-4"
+      className="fixed inset-x-0 bottom-16 md:bottom-4 z-50 px-3 md:px-4"
     >
       <div
         className="motion-rise mx-auto flex max-w-5xl flex-col gap-3 rounded-[1.6rem] border px-4 py-3 sm:flex-row sm:items-center sm:gap-5"
