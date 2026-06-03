@@ -4,8 +4,6 @@ import Sidebar from "@/components/Sidebar";
 import TopBar from "@/components/TopBar";
 import MusicPlayer from "@/components/MusicPlayer";
 import { PlayerProvider } from "@/components/MusicPlayerContext";
-import { SearchProvider } from "@/components/SearchContext";
-import SearchOverlay from "@/components/SearchOverlay";
 import { LikesProvider } from "@/components/LikesContext";
 import { SessionRestore } from "@/components/SessionRestore";
 
@@ -20,7 +18,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <PlayerProvider>
           <LikesProvider>
-          <SearchProvider>
             <div style={{ display: "flex", minHeight: "100vh" }}>
               <Sidebar />
               <div style={{ flex: 1, marginLeft: "192px", marginBottom: "80px", minWidth: 0 }}>
@@ -29,9 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
             </div>
             <SessionRestore />
-            <SearchOverlay />
             <MusicPlayer />
-          </SearchProvider>
           </LikesProvider>
         </PlayerProvider>
       </body>

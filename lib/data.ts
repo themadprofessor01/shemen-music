@@ -100,6 +100,98 @@ export const artists: Artist[] = [
   { slug: "aida", name: "Aida", bio: "Aida brings powerful vocals and anointed worship to First Love Music collaborations." },
 ];
 
+export type ArtistProfile = {
+  id: string;
+  name: string;
+  description: string;
+  role: string;
+  location: string;
+  palette: string;
+  imageUrl: string;
+  signatureTrackId?: string;
+};
+
+export const artistProfiles: ArtistProfile[] = [
+  {
+    id: "the-living-waters-singers",
+    name: "The Living Waters Singers",
+    description: "A spirit-filled worship collective whose deeply anointed instrumentals carry the presence of God into any service, prayer room, or devotional space.",
+    role: "Worship Collective",
+    location: "USA",
+    palette: "linear-gradient(135deg, #0c3547 0%, #0277bd 100%)",
+    imageUrl: `${UPL}/2025/11/living-waters.webp`,
+    signatureTrackId: "f3",
+  },
+  {
+    id: "first-love-music",
+    name: "First Love Music",
+    description: "First Love Music crafts modern worship songs rooted in deep intimacy with God, blending heartfelt lyrics with anointed arrangements.",
+    role: "Worship Ministry",
+    location: "Ghana",
+    palette: "linear-gradient(135deg, #1a3a4a 0%, #e64a19 100%)",
+    imageUrl: `${UPL}/2025/08/i-am-the-way.jpg`,
+    signatureTrackId: "t1",
+  },
+  {
+    id: "ministry-music-instrumentals",
+    name: "MINISTRY MUSIC INSTRUMENTALS",
+    description: "Ministry-focused instrumental tracks crafted for church services and prayer rooms, providing a solid musical foundation for worship leaders.",
+    role: "Instrumental Ministry",
+    location: "USA",
+    palette: "linear-gradient(135deg, #1a237e 0%, #4a148c 100%)",
+    imageUrl: `${UPL}/2024/08/Artboard-9-2.png`,
+    signatureTrackId: "t7",
+  },
+  {
+    id: "andrae-crouch",
+    name: "Andraé Crouch",
+    description: "Gospel music pioneer whose timeless songs have shaped generations of worshippers worldwide. His recordings remain essential for any church music library.",
+    role: "Gospel Pioneer",
+    location: "USA",
+    palette: "linear-gradient(135deg, #263238 0%, #37474f 100%)",
+    imageUrl: `${UPL}/2024/08/Artboard-11-2.png`,
+    signatureTrackId: "t9",
+  },
+  {
+    id: "aseda",
+    name: "Aseda",
+    description: "Aseda brings heartfelt gospel praise with rich vocal arrangements that stir the soul and invite congregational participation.",
+    role: "Gospel Artist",
+    location: "Ghana",
+    palette: "linear-gradient(135deg, #880e4f 0%, #ad1457 100%)",
+    imageUrl: `${UPL}/2024/08/The-More-I-Love-the-Less-I-Be-Loved-.jpg`,
+    signatureTrackId: "t5",
+  },
+  {
+    id: "clint-brown",
+    name: "Clint Brown",
+    description: "Clint Brown is a renowned gospel artist and worship leader with decades of ministry, whose songs are beloved in churches worldwide.",
+    role: "Gospel Artist & Worship Leader",
+    location: "USA",
+    palette: "linear-gradient(135deg, #311b92 0%, #4527a0 100%)",
+    imageUrl: `${UPL}/2024/03/ShemenMUSIC-Clint-Brown-Hallowed-Be-Thy-Name-mp3-image.jpg`,
+    signatureTrackId: "t12",
+  },
+  {
+    id: "tommy-walker",
+    name: "Tommy Walker",
+    description: "Tommy Walker is a worship songwriter whose anointed songs are sung in congregations worldwide, known for creating space for authentic encounters with God.",
+    role: "Worship Songwriter",
+    location: "USA",
+    palette: "linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%)",
+    imageUrl: `${UPL}/2024/08/i-believe-i-believe-mp3-image-scaled.jpg`,
+    signatureTrackId: "t15",
+  },
+];
+
+export function tracksByArtist(artistName: string): Track[] {
+  const normalized = artistName.toLowerCase();
+  return tracks.filter((t) =>
+    t.artist.toLowerCase().includes(normalized) ||
+    normalized.includes(t.artist.toLowerCase().split(" ")[0].toLowerCase())
+  );
+}
+
 export function slugifyArtist(name: string): string {
   return name
     .toLowerCase()
