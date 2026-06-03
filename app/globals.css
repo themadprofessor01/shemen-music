@@ -1,12 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0f0f0f;
-  --foreground: #f5f5f5;
-  --gold: #d4a84b;
-  --gold-dim: #d4a84b33;
-  --surface: #1a1a1a;
-  --surface2: #242424;
+  --background: #0a0a0a;
+  --foreground: #ffffff;
+  --foreground-muted: #a8a8a8;
+  --accent: #1a8cff;
+  --accent-dim: #1a8cff1a;
+  --surface: #141414;
+  --surface2: #1e1e1e;
+  --surface3: #282828;
   --border: #2a2a2a;
 }
 
@@ -18,9 +20,9 @@ body {
 
 * { box-sizing: border-box; }
 
-::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 2px; }
 
 input[type="range"] {
   -webkit-appearance: none;
@@ -30,7 +32,7 @@ input[type="range"] {
   width: 100%;
 }
 input[type="range"]::-webkit-slider-runnable-track {
-  background: var(--gold-dim);
+  background: var(--surface3);
   height: 3px;
   border-radius: 2px;
 }
@@ -39,7 +41,7 @@ input[type="range"]::-webkit-slider-thumb {
   appearance: none;
   width: 11px;
   height: 11px;
-  background: var(--gold);
+  background: #ffffff;
   border-radius: 50%;
   margin-top: -4px;
 }

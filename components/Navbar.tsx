@@ -13,11 +13,11 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "var(--gold)" }}>
-            <Music2 size={18} className="text-black" />
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "var(--accent)" }}>
+            <Music2 size={18} className="text-white" />
           </div>
           <span style={{ color: "var(--foreground)" }}>
-            Shemen<span style={{ color: "var(--gold)" }}>Music</span>
+            Shemen<span style={{ color: "var(--accent)" }}>Music</span>
           </span>
         </Link>
 
@@ -83,7 +83,7 @@ function DropItem({ href, icon, label }: { href: string; icon: React.ReactNode; 
       className="flex items-center gap-2 px-3 py-2 rounded-lg hover:opacity-80 transition-opacity text-sm"
       style={{ color: "var(--foreground)" }}
     >
-      <span style={{ color: "var(--gold)" }}>{icon}</span>
+      <span style={{ color: "var(--accent)" }}>{icon}</span>
       {label}
     </Link>
   );

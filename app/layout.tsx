@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import Sidebar from "@/components/Sidebar";
+import TopBar from "@/components/TopBar";
 import MusicPlayer from "@/components/MusicPlayer";
 import { PlayerProvider } from "@/components/MusicPlayerContext";
 
@@ -14,8 +15,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <PlayerProvider>
-          <Navbar />
-          <main className="pt-16 pb-28 min-h-screen">{children}</main>
+          <div style={{ display: "flex", minHeight: "100vh" }}>
+            <Sidebar />
+            <div style={{ flex: 1, marginLeft: "192px", marginBottom: "80px", minWidth: 0 }}>
+              <TopBar />
+              <main style={{ paddingTop: "64px" }}>{children}</main>
+            </div>
+          </div>
           <MusicPlayer />
         </PlayerProvider>
       </body>

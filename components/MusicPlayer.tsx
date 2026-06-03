@@ -17,7 +17,7 @@ export default function MusicPlayer() {
     <div
       className="fixed bottom-0 left-0 right-0 z-50 border-t px-4 py-3"
       style={{
-        background: "rgba(15,15,15,0.95)",
+        background: "rgba(15,15,15,0.97)",
         backdropFilter: "blur(20px)",
         borderColor: "var(--border)",
       }}
@@ -44,9 +44,9 @@ export default function MusicPlayer() {
             <button
               onClick={() => (isPlaying ? pause() : play(currentTrack))}
               className="w-9 h-9 rounded-full flex items-center justify-center transition-opacity hover:opacity-80"
-              style={{ background: "var(--gold)" }}
+              style={{ background: "var(--accent)" }}
             >
-              {isPlaying ? <Pause size={16} className="text-black" /> : <Play size={16} className="text-black" style={{ marginLeft: 2 }} />}
+              {isPlaying ? <Pause size={16} className="text-white" /> : <Play size={16} className="text-white" style={{ marginLeft: 2 }} />}
             </button>
             <button className="opacity-50 hover:opacity-100 transition-opacity" style={{ color: "var(--foreground)" }}>
               <SkipForward size={18} />
