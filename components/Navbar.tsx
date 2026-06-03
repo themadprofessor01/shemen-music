@@ -40,14 +40,13 @@ export default function Navbar() {
         </div>
       </header>
 
-      <aside className="hidden md:flex fixed left-0 top-16 bottom-0 w-52 border-r flex-col justify-between px-6 py-7 text-sm" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
+      <aside className="hidden md:flex fixed left-0 top-16 bottom-0 w-52 border-r flex-col justify-between px-6 py-7 text-sm" style={{ background: "rgba(255,253,250,0.86)", borderColor: "var(--border)", backdropFilter: "blur(18px)" }}>
         <div className="space-y-8">
           <Link href="/download" className="premium-card block rounded-2xl p-4">
-            <span className="premium-pill inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide">
-              <Crown size={12} />
-              Premium
+            <span className="premium-pill inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em]">
+              Studio
             </span>
-            <p className="mt-3 text-sm font-bold leading-5">Unlock studio downloads and worship tools.</p>
+            <p className="mt-3 text-sm font-bold leading-5">Master files, stems, and service-ready tools.</p>
           </Link>
           <NavGroup title="Browse">
             <DropItem href="/instrumentals" icon={<Headphones size={15} />} label="Instrumentals" />
