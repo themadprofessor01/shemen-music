@@ -1,9 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { Headphones, Download, Home, ListMusic, Heart, Music2, Mail } from "lucide-react";
+import { Headphones, Download, Home, ListMusic, Heart, Moon, Music2, Mail, Sun } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function Sidebar() {
+  const [dark, setDark] = useState(false);
+
+  useEffect(() => {
+    setDark(document.documentElement.classList.contains("dark"));
+  }, []);
+
+  function toggleDark() {
+    const next = !dark;
+    setDark(next);
+    document.documentElement.classList.toggle("dark", next);
+    localStorage.setItem("theme", next ? "dark" : "light");
+  }
+
   return (
     <>
     <aside
@@ -56,7 +70,11 @@ export default function Sidebar() {
           <Link href="/terms" className="hover:opacity-80">Terms</Link>
           <Link href="/privacy" className="hover:opacity-80">Privacy</Link>
         </div>
-        <p className="text-xs" style={{ color: "var(--foreground-muted)" }}>@2024 ShemenMusic</p>
+        <button onClick={toggleDark} className="flex items-center gap-2 text-xs hover:opacity-80 transition-opacity" style={{ color: "var(--foreground-muted)" }}>
+          {dark ? <Sun size={13} /> : <Moon size={13} />}
+          {dark ? "Light mode" : "Dark mode"}
+        </button>
+        <p className="text-xs" style={{ color: "var(--foreground-muted)" }}>@2025 ShemenMusic</p>
       </div>
       </aside>
 
