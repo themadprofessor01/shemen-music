@@ -93,7 +93,7 @@ export default function DownloadPage() {
               className="text-xs font-semibold px-3 py-1 rounded-full border"
               style={{ borderColor: "var(--border)", color: "var(--foreground-muted)" }}
             >
-              527 tracks
+              {worshipTracks.length} tracks
             </span>
           </div>
 

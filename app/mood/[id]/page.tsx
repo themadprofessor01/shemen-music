@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { tracks, moods } from "@/lib/data";
-import { PageShell } from "@/components/PageShell";
 import { TrackList } from "@/components/TrackList";
 
 export function generateStaticParams() {

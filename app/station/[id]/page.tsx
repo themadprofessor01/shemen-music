@@ -38,29 +38,6 @@ function WaveformBars({ trackId }: { trackId: string }) {
   );
 }
 
-function StatPill({
-  icon,
-  value,
-  label,
-}: {
-  icon: React.ReactNode;
-  value: string | number;
-  label: string;
-}) {
-  return (
-    <div
-      className="flex items-center gap-2 rounded-full px-4 py-2 text-sm"
-      style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}
-    >
-      <span style={{ color: "var(--foreground-muted)" }}>{icon}</span>
-      <span className="font-semibold" style={{ color: "var(--foreground)" }}>
-        {value}
-      </span>
-      <span style={{ color: "var(--foreground-muted)" }}>{label}</span>
-    </div>
-  );
-}
-
 function TagPill({ label, color }: { label: string; color: string }) {
   return (
     <span

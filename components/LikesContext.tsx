@@ -19,12 +19,24 @@ const LikesContext = createContext<LikesState>({
 export function LikesProvider({ children }: { children: React.ReactNode }) {
   const [liked, setLiked] = useState<Set<string>>(new Set());
 
-  // Hydrate from localStorage on mount
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setLiked(new Set(JSON.parse(stored)));
-    } catch {}
+    let cancelled = false;
+
+    queueMicrotask(() => {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (!stored || cancelled) return;
+
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          setLiked(new Set(parsed.filter((id): id is string => typeof id === "string")));
+        }
+      } catch {}
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const toggle = useCallback((id: string) => {
