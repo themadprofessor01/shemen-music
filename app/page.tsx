@@ -1,6 +1,7 @@
 import { formatPlays, tracks, playlists, moods, totalDuration } from "@/lib/data";
+import { CollectionCover } from "@/components/CollectionCover";
 import { TrackCardLarge } from "@/components/TrackCard";
-import { Activity, ArrowUpRight, BarChart3, Download, Lock, SlidersHorizontal, Sparkles, Users, Wand2 } from "lucide-react";
+import { Activity, ArrowUpRight, BarChart3, Download, SlidersHorizontal, Sparkles, Users, Wand2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -197,13 +198,7 @@ export default function HomePage() {
               className="rounded-2xl overflow-hidden transition-all hover:-translate-y-1"
               style={{ background: "var(--surface)", border: "1px solid var(--border)", boxShadow: "var(--shadow-card)" }}
             >
-              <div className="aspect-square relative overflow-hidden" style={{ background: "linear-gradient(145deg, #e7edf3, #cfd8e1)" }}>
-                <div className="absolute inset-5 rounded-3xl border border-white/70" />
-                <div className="absolute bottom-5 left-5 premium-pill inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em]">
-                  <Lock size={11} />
-                  Private Set
-                </div>
-              </div>
+              <CollectionCover playlist={playlist} />
               <div className="p-4">
                 <p className="font-medium truncate">{playlist.title}</p>
                 <p className="text-sm text-[var(--muted)]">{playlist.trackCount} tracks</p>
