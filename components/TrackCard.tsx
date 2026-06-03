@@ -4,26 +4,20 @@ import { Download, Pause, Play, Users, X } from "lucide-react";
 import { usePlayer } from "@/components/MusicPlayerContext";
 import type { Track } from "@/lib/data";
 import { formatPlays } from "@/lib/data";
-import Image from "next/image";
 import { useState } from "react";
 import { LikeButton } from "@/components/LikeButton";
 import { Equalizer } from "@/components/Equalizer";
+import { CoverImage } from "@/components/CoverImage";
 
 function CoverArt({ track, size }: { track: Track; size: number }) {
-  const bg = `linear-gradient(135deg, ${track.coverColor}, ${track.coverColor}88)`;
-  const src = track.coverImage || track.imageUrl;
-  if (src) {
-    return (
-      <Image
-        src={src}
-        alt=""
-        width={size}
-        height={size}
-        className="block h-full w-full object-cover"
-      />
-    );
-  }
-  return <div style={{ width: "100%", height: "100%", background: bg }} />;
+  return (
+    <CoverImage
+      src={track.coverImage || track.imageUrl}
+      alt={track.title}
+      coverColor={track.coverColor}
+      size={size}
+    />
+  );
 }
 
 export function TrackCardLarge({ track }: { track: Track }) {
