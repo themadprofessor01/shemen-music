@@ -10,11 +10,11 @@ import {
 } from "react";
 import type { Track } from "@/lib/data";
 
-export type RepeatMode = "none" | "one" | "all";
-
 type PlayerState = {
   currentTrack: Track | null;
   isPlaying: boolean;
+  progress: number;       // 0–100
+  duration: number;       // seconds
   volume: number;         // 0–100
   muted: boolean;
   play: (track: Track) => void;
@@ -28,21 +28,13 @@ type PlayerState = {
   queue: Track[];
   setQueue: (tracks: Track[]) => void;
   preload: (track: Track) => void;
-  getAudio: () => HTMLAudioElement | null;
-  shuffle: boolean;
-  setShuffle: (s: boolean) => void;
-  repeat: RepeatMode;
-  setRepeat: (r: RepeatMode) => void;
 };
-
-// Separate context for rapidly-changing playback position
-// Splitting this prevents all card components from re-rendering on every progress tick
-type ProgressState = { progress: number; duration: number };
-const ProgressContext = createContext<ProgressState>({ progress: 0, duration: 0 });
 
 const PlayerContext = createContext<PlayerState>({
   currentTrack: null,
   isPlaying: false,
+  progress: 0,
+  duration: 0,
   volume: 80,
   muted: false,
   play: () => {},
@@ -56,11 +48,6 @@ const PlayerContext = createContext<PlayerState>({
   queue: [],
   setQueue: () => {},
   preload: () => {},
-  getAudio: () => null,
-  shuffle: false,
-  setShuffle: () => {},
-  repeat: "none",
-  setRepeat: () => {},
 });
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
@@ -74,20 +61,6 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const [volume, setVolumeState] = useState(80);
   const [muted, setMutedState] = useState(false);
   const [queue, setQueue] = useState<Track[]>([]);
-  const [shuffle, setShuffleState] = useState(false);
-  const [repeat, setRepeatState] = useState<RepeatMode>("none");
-  const shuffleRef = useRef(false);
-  const repeatRef = useRef<RepeatMode>("none");
-
-  const setShuffle = useCallback((s: boolean) => {
-    setShuffleState(s);
-    shuffleRef.current = s;
-  }, []);
-
-  const setRepeat = useCallback((r: RepeatMode) => {
-    setRepeatState(r);
-    repeatRef.current = r;
-  }, []);
 
   // Store event handler refs so they can be re-attached after an element swap
   const handlersRef = useRef<{
@@ -127,31 +100,19 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     const onLoadedMetadata = () => setDuration((audioRef.current as HTMLAudioElement).duration);
     const onEnded = () => {
       setProgress(0);
-      // Repeat one: restart immediately
-      if (repeatRef.current === "one") {
-        const el = audioRef.current;
-        if (el) { el.currentTime = 0; el.play().catch(() => {}); }
-        return;
-      }
-      // Auto-advance queue respecting shuffle and repeat-all
+      // Auto-advance queue and update currentTrack so UI shows new song
       setCurrentTrack((cur) => {
         if (!cur) { setIsPlaying(false); return cur; }
         let nextTrack: Track | null = null;
         setQueue((q) => {
           const idx = q.findIndex((t) => t.id === cur.id);
-          if (shuffleRef.current && q.length > 1) {
-            let randIdx = Math.floor(Math.random() * (q.length - 1));
-            if (randIdx >= idx) randIdx++;
-            nextTrack = q[randIdx];
-          } else if (idx >= 0 && idx < q.length - 1) {
+          if (idx >= 0 && idx < q.length - 1) {
             nextTrack = q[idx + 1];
-          } else if (repeatRef.current === "all" && q.length > 0) {
-            nextTrack = q[0];
           }
           return q;
         });
         if (nextTrack) {
-          const src = (nextTrack as Track).downloadUrl ?? (nextTrack as Track).stationUrl ?? "";
+          const src = (nextTrack as Track).audioUrl ?? (nextTrack as Track).downloadUrl ?? (nextTrack as Track).stationUrl ?? "";
           if (src) {
             const el = audioRef.current!;
             el.src = src;
@@ -191,10 +152,8 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     currentTrackIdRef.current = currentTrack?.id ?? null;
   }, [currentTrack]);
 
-  const getAudio = useCallback(() => audioRef.current, []);
-
   const preload = useCallback((track: Track) => {
-    const src = track.downloadUrl ?? track.stationUrl ?? "";
+    const src = track.audioUrl ?? track.downloadUrl ?? track.stationUrl ?? "";
     if (!src || currentTrackIdRef.current === track.id) return;
     if (!preloadRef.current) {
       preloadRef.current = new Audio();
@@ -207,46 +166,31 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const play = useCallback((track: Track) => {
-    const src = track.downloadUrl ?? track.stationUrl ?? "";
+    const src = track.audioUrl ?? track.downloadUrl ?? track.stationUrl ?? "";
     if (!src) return;
 
-    // Track play event for analytics
-    if (currentTrackIdRef.current !== track.id) {
-      try {
-        const statsRaw = localStorage.getItem("shemen_stats") ?? "{}";
-        const stats: Record<string, number> = JSON.parse(statsRaw);
-        stats[track.id] = (stats[track.id] ?? 0) + 1;
-        localStorage.setItem("shemen_stats", JSON.stringify(stats));
-      } catch {}
-      // Fire custom event that Vercel Analytics can pick up via window.va
-      if (typeof window !== "undefined" && (window as Window & { va?: (event: string, props: Record<string, string>) => void }).va) {
-        (window as Window & { va?: (event: string, props: Record<string, string>) => void }).va!("track", { event: "play", trackId: track.id, title: track.title, artist: track.artist });
-      }
-    }
+    setCurrentTrack((cur) => {
+      if (cur?.id !== track.id) {
+        const pre = preloadRef.current;
+        const audio = audioRef.current!;
 
-    // Perform all DOM side-effects synchronously — BEFORE React batches the state update.
-    // If these lived inside a setCurrentTrack updater, React 18 defers them and
-    // audioRef.current?.play() would fire before the new src is assigned.
-    if (currentTrackIdRef.current !== track.id) {
-      const pre = preloadRef.current;
-      const audio = audioRef.current!;
-
-      if (pre && pre.src === src && pre.readyState >= 2) {
-        // Swap preloaded element in as the main player
-        audio.pause();
-        detachHandlers(audio);
-        pre.volume = audio.volume;
-        pre.muted = audio.muted;
-        attachHandlers(pre);
-        preloadRef.current = audio;
-        audioRef.current = pre;
-      } else {
-        audio.src = src;
+        if (pre && pre.src === src && pre.readyState >= 2) {
+          // Swap preloaded element in as the main player so its buffered data is used
+          audio.pause();
+          detachHandlers(audio);
+          pre.volume = audio.volume;
+          pre.muted = audio.muted;
+          attachHandlers(pre);
+          preloadRef.current = audio; // recycle old element as the next preload slot
+          audioRef.current = pre;
+        } else {
+          audio.src = src;
+        }
       }
-    }
+      return track;
+    });
 
     audioRef.current?.play().then(() => setIsPlaying(true)).catch(() => {});
-    setCurrentTrack(track);
   }, [attachHandlers, detachHandlers]);
 
   const pause = useCallback(() => {
@@ -256,7 +200,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
 
   const toggle = useCallback(
     (track: Track) => {
-      if (currentTrackIdRef.current === track.id) {
+      if (currentTrack?.id === track.id) {
         if (isPlaying) {
           audioRef.current?.pause();
           setIsPlaying(false);
@@ -267,7 +211,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         play(track);
       }
     },
-    [isPlaying, play]
+    [currentTrack, isPlaying, play]
   );
 
   const seek = useCallback((pct: number) => {
@@ -288,16 +232,9 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const skipNext = useCallback(() => {
     if (!currentTrack || queue.length === 0) return;
     const idx = queue.findIndex((t) => t.id === currentTrack.id);
-    let next: Track | undefined;
-    if (shuffle) {
-      let randIdx = Math.floor(Math.random() * (queue.length - 1));
-      if (randIdx >= idx) randIdx++;
-      next = queue[randIdx];
-    } else {
-      next = queue[idx + 1] ?? (repeat === "all" ? queue[0] : undefined);
-    }
+    const next = queue[idx + 1];
     if (next) play(next);
-  }, [currentTrack, queue, play, shuffle, repeat]);
+  }, [currentTrack, queue, play]);
 
   const skipPrev = useCallback(() => {
     const audio = audioRef.current;
@@ -319,6 +256,8 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
       value={{
         currentTrack,
         isPlaying,
+        progress,
+        duration,
         volume,
         muted,
         play,
@@ -332,19 +271,11 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         queue,
         setQueue,
         preload,
-        getAudio,
-        shuffle,
-        setShuffle,
-        repeat,
-        setRepeat,
       }}
     >
-      <ProgressContext.Provider value={{ progress, duration }}>
-        {children}
-      </ProgressContext.Provider>
+      {children}
     </PlayerContext.Provider>
   );
 }
 
 export const usePlayer = () => useContext(PlayerContext);
-export const useProgress = () => useContext(ProgressContext);

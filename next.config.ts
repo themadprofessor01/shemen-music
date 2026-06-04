@@ -1,11 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  compress: true,
   images: {
-    formats: ["image/avif", "image/webp"],
-    imageSizes: [36, 64, 128, 200, 256, 384],
-    minimumCacheTTL: 604800,
     remotePatterns: [
       {
         protocol: "https",
@@ -16,10 +12,13 @@ const nextConfig: NextConfig = {
         hostname: "shemenmusic.com",
       },
     ],
+    formats: ["image/avif", "image/webp"],
+    qualities: [70, 75],
+    minimumCacheTTL: 604800,
+    deviceSizes: [375, 640, 750, 828, 1080, 1200],
+    imageSizes: [36, 64, 128, 200, 256, 384],
   },
-  experimental: {
-    optimizePackageImports: ["gsap", "motion", "lucide-react"],
-  },
+  compress: true,
 };
 
 export default nextConfig;

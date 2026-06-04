@@ -35,6 +35,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: `(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})()` }} />
+        {/* Establish connections to audio/image origin early */}
+        <link rel="preconnect" href="https://shemenmusic.com" />
+        <link rel="dns-prefetch" href="https://shemenmusic.com" />
       </head>
       <body className={inter.className}>
         <IntroAnimation />

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import type { Track } from "@/lib/data";
 import { TrackCardLarge, TrackRow } from "@/components/TrackCard";
 
-const BATCH = 40;
+const BATCH = 12;
 
 export function InfiniteTrackGrid({
   tracks,
@@ -59,8 +59,8 @@ export function InfiniteTrackGrid({
         </div>
       ) : (
         <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-          {visible.map((track) => (
-            <TrackCardLarge key={track.id} track={track} />
+          {visible.map((track, i) => (
+            <TrackCardLarge key={track.id} track={track} priority={i < 3} />
           ))}
         </div>
       )}

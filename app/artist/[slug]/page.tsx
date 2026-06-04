@@ -23,7 +23,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
     <>
       <PageShell eyebrow={`${artistTracks.length || 10} tracks`} title={name} />
       <div className="px-4 pb-14 sm:px-8 lg:px-14">
-        <section className="rounded-[2rem] p-5" style={{ background: "rgba(255,253,250,0.72)", border: "1px solid var(--border)", boxShadow: "var(--shadow-card)" }}>
+        <section className="rounded-[2rem] p-5" style={{ background: "var(--surface)", border: "1px solid var(--border)", boxShadow: "var(--shadow-card)" }}>
           <div className="flex flex-wrap gap-3">
             {artists.map((item) => (
               <Link

@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 interface Props {
   src?: string | null;
   alt: string;
@@ -5,9 +7,12 @@ interface Props {
   size: number;
   className?: string;
   style?: React.CSSProperties;
+  priority?: boolean;
+  sizes?: string;
+  quality?: number;
 }
 
-export function CoverImage({ src, alt, coverColor, size, className = "", style = {} }: Props) {
+export function CoverImage({ src, alt, coverColor, size, className = "", style = {}, priority = false, sizes, quality = 70 }: Props) {
   const fallbackBg = `linear-gradient(135deg, ${coverColor}, ${coverColor}88)`;
 
   if (!src) {
@@ -15,18 +20,15 @@ export function CoverImage({ src, alt, coverColor, size, className = "", style =
   }
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%", ...style }} className={className}>
-      <img
+    <div style={{ position: "absolute", inset: 0, background: coverColor, ...style }} className={className}>
+      <Image
         src={src}
         alt={alt}
-        width={size}
-        height={size}
-        style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          display: "block",
-        }}
+        fill
+        sizes={sizes ?? `${size}px`}
+        quality={quality}
+        style={{ objectFit: "cover" }}
+        priority={priority}
       />
     </div>
   );

@@ -4,7 +4,6 @@ import { PageShell } from "@/components/PageShell";
 import { PlayAllButton } from "@/components/PlayAllButton";
 import { InfiniteTrackGrid } from "@/components/InfiniteTrackGrid";
 import { tracks, totalDuration } from "@/lib/data";
-import { MoodFilter } from "./MoodFilter";
 import { ViewToggle } from "./ViewToggle";
 
 export const metadata: Metadata = {
@@ -23,14 +22,11 @@ export const metadata: Metadata = {
 export default async function InstrumentalsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ mood?: string; view?: string }>;
+  searchParams: Promise<{ view?: string }>;
 }) {
-  const { mood, view = "grid" } = await searchParams;
+  const { view = "grid" } = await searchParams;
 
   const instrumentals = tracks.filter((t) => t.category === "instrumental");
-  const filtered = mood && mood !== "all"
-    ? instrumentals.filter((t) => t.mood === mood)
-    : instrumentals;
 
   return (
     <div className="px-4 sm:px-8 lg:px-14 pb-16">
@@ -38,28 +34,22 @@ export default async function InstrumentalsPage({
         eyebrow={`${instrumentals.length} tracks · ${totalDuration(instrumentals)}`}
         title="Instrumentals"
       >
-        All Instrumental tracks
+        Studio-grade instrumentals for worship teams
       </PageShell>
 
-      <div className="flex flex-col gap-4 -mt-2">
-        <Suspense fallback={<div className="h-9" />}>
-          <MoodFilter />
-        </Suspense>
-        <div className="flex items-center justify-between gap-3">
-          <p className="text-sm" style={{ color: "var(--foreground-muted)" }}>
-            {filtered.length} track{filtered.length !== 1 ? "s" : ""}
-            {mood && mood !== "all" ? ` · ${mood}` : ""}
-          </p>
-          <div className="flex items-center gap-2">
-            <PlayAllButton tracks={filtered.slice(0, 40)} />
-            <Suspense fallback={null}>
-              <ViewToggle />
-            </Suspense>
-          </div>
+      <div className="sticky top-16 z-10 -mx-4 sm:-mx-8 lg:-mx-14 px-4 sm:px-8 lg:px-14 py-3 flex items-center justify-between gap-3" style={{ background: "var(--background)", borderBottom: "1px solid var(--border)", backdropFilter: "blur(12px)" }}>
+        <p className="text-sm" style={{ color: "var(--foreground-muted)" }}>
+          {instrumentals.length} track{instrumentals.length !== 1 ? "s" : ""}
+        </p>
+        <div className="flex items-center gap-2">
+          <PlayAllButton tracks={instrumentals.slice(0, 40)} />
+          <Suspense fallback={null}>
+            <ViewToggle />
+          </Suspense>
         </div>
       </div>
 
-      <InfiniteTrackGrid tracks={filtered} view={view as "grid" | "list"} />
+      <InfiniteTrackGrid tracks={instrumentals} view={view as "grid" | "list"} />
     </div>
   );
 }

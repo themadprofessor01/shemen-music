@@ -42,7 +42,7 @@ export function FeaturedScrollSection({ tracks }: { tracks: Track[] }) {
       >
         {tracks.map((track, i) => (
           <div key={track.id} className="min-w-[260px] sm:min-w-[340px] max-w-[420px] flex-1 snap-start">
-            <TrackCardLarge track={track} />
+            <TrackCardLarge track={track} priority={i < 2} />
           </div>
         ))}
       </div>

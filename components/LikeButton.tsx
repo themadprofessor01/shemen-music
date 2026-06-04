@@ -3,7 +3,7 @@
 import { Heart } from "lucide-react";
 import { useLikes } from "@/components/LikesContext";
 
-export function LikeButton({ trackId, size = 15 }: { trackId: string; size?: number }) {
+export function LikeButton({ trackId, size = 15, color }: { trackId: string; size?: number; color?: string }) {
   const { isLiked, toggle } = useLikes();
   const liked = isLiked(trackId);
 
@@ -12,7 +12,7 @@ export function LikeButton({ trackId, size = 15 }: { trackId: string; size?: num
       onClick={(e) => { e.stopPropagation(); toggle(trackId); }}
       className="transition-transform hover:scale-110 active:scale-95"
       aria-label={liked ? "Unlike" : "Like"}
-      style={{ color: liked ? "#e53e3e" : "var(--muted)", lineHeight: 1 }}
+      style={{ color: liked ? "#e53e3e" : (color ?? "var(--muted)"), lineHeight: 1 }}
     >
       <Heart
         size={size}

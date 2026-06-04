@@ -1,50 +1,59 @@
 "use client";
 
-import { Download, ListPlus, Maximize2, Mic, Pause, Play, SkipBack, SkipForward, Users, X } from "lucide-react";
-import { LyricsDisplay } from "@/components/LyricsDisplay";
-import { usePlayer, useProgress } from "@/components/MusicPlayerContext";
+import { Download, Pause, Play, Users, X } from "lucide-react";
+import { usePlayer } from "@/components/MusicPlayerContext";
 import type { Track } from "@/lib/data";
-import { formatPlays, tracks as allTracks } from "@/lib/data";
+import { formatPlays } from "@/lib/data";
 import { useState } from "react";
 import { LikeButton } from "@/components/LikeButton";
 import { Equalizer } from "@/components/Equalizer";
 import { CoverImage } from "@/components/CoverImage";
 import { ShareButton } from "@/components/ShareButton";
-import { KaraokeMode } from "@/components/KaraokeMode";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useMagneticTilt } from "@/hooks/useMagneticTilt";
 
-function CoverArt({ track, size }: { track: Track; size: number }) {
+function CoverArt({ track, size, priority }: { track: Track; size: number; priority?: boolean }) {
   return (
     <CoverImage
       src={track.coverImage || track.imageUrl}
       alt={track.title}
       coverColor={track.coverColor}
       size={size}
+      priority={priority}
     />
   );
 }
 
-export function TrackCardLarge({ track }: { track: Track }) {
-  const { currentTrack, isPlaying, toggle, queue, setQueue } = usePlayer();
+export function TrackCardLarge({ track, priority }: { track: Track; priority?: boolean }) {
+  const { currentTrack, isPlaying, toggle, preload } = usePlayer();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [queued, setQueued] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const active = currentTrack?.id === track.id;
-
-  function addToQueue(e: React.MouseEvent) {
-    e.stopPropagation();
-    setQueue([...queue, track]);
-    setQueued(true);
-    setTimeout(() => setQueued(false), 2000);
-  }
+  const { ref: tiltRef, onMouseMove: tiltMove, onMouseLeave: tiltLeave } = useMagneticTilt(6);
 
   return (
     <>
       <div
+        ref={tiltRef}
         className="luxury-hover-card relative flex-shrink-0 rounded-2xl cursor-pointer group"
         style={{ width: "100%", background: "var(--surface2)", border: "1px solid var(--border)" }}
         onClick={() => setDrawerOpen(true)}
+        onMouseEnter={() => { preload(track); setHovered(true); }}
+        onMouseMove={tiltMove}
+        onMouseLeave={() => { setHovered(false); tiltLeave(); }}
       >
-        <div className="relative flex items-center justify-center" style={{ aspectRatio: "1", overflow: "hidden" }}>
-          <CoverArt track={track} size={200} />
+        <div
+          className="relative"
+          style={{
+            paddingBottom: "100%",
+            overflow: "hidden",
+            boxShadow: hovered ? `0 8px 32px ${track.coverColor}66` : "none",
+            transition: "box-shadow 0.3s ease",
+          }}
+        >
+          <div style={{ position: "absolute", inset: 0 }}>
+            <CoverArt track={track} size={200} priority={priority} />
+          </div>
           <button
             className="absolute inset-0 flex items-center justify-center"
             aria-label={`${active && isPlaying ? "Pause" : "Play"} ${track.title}`}
@@ -68,29 +77,33 @@ export function TrackCardLarge({ track }: { track: Track }) {
             <span>Preview</span>
             <span>{track.duration}</span>
           </div>
+          <div className="absolute top-2 right-2 rounded-full p-1.5" style={{ background: "rgba(0,0,0,0.52)", backdropFilter: "blur(8px)" }}>
+            <LikeButton trackId={track.id} size={15} color="rgba(255,255,255,0.85)" />
+          </div>
         </div>
       <div className="p-3">
         <p className="font-semibold text-sm truncate" style={{ color: "var(--foreground)" }}>{track.title}</p>
         <p className="text-xs mt-0.5 truncate" style={{ color: "var(--foreground-muted)" }}>{track.artist}</p>
         <WaveformPreview trackId={track.id} className="mt-3" />
-        <div className="mt-3 flex items-center justify-between text-[11px] font-semibold text-[var(--muted)]">
+        <div className="mt-2 flex items-center justify-between text-[11px]" style={{ color: "var(--foreground-muted)" }}>
           <span>{formatPlays(track.plays)} plays</span>
           <div className="flex items-center gap-2">
-            <button
-              onClick={addToQueue}
-              title="Add to queue"
-              className="opacity-0 group-hover:opacity-100 transition-opacity hover:text-[var(--accent)]"
-              style={{ color: queued ? "var(--accent)" : "var(--muted)" }}
-            >
-              <ListPlus size={13} />
-            </button>
             <span>{track.duration}</span>
+            {(track.audioUrl ?? track.downloadUrl) && (
+              <a
+                href={track.audioUrl ?? track.downloadUrl ?? "#"}
+                download
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center justify-center w-6 h-6 rounded-full transition-opacity hover:opacity-70"
+                style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
+                aria-label={`Download ${track.title}`}
+              >
+                <Download size={11} />
+              </a>
+            )}
           </div>
         </div>
       </div>
-        {active && (
-          <div className="absolute top-3 right-3 w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--accent)" }} />
-        )}
       </div>
       <TrackDetailDrawer track={track} open={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </>
@@ -98,17 +111,32 @@ export function TrackCardLarge({ track }: { track: Track }) {
 }
 
 export function TrackCardGrid({ track }: { track: Track }) {
-  const { currentTrack, isPlaying, toggle } = usePlayer();
+  const { currentTrack, isPlaying, toggle, preload } = usePlayer();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const active = currentTrack?.id === track.id;
+  const { ref, revealed } = useScrollReveal();
+  const { ref: tiltRef, onMouseMove: tiltMove, onMouseLeave: tiltLeave } = useMagneticTilt(7);
 
   return (
     <div
-      className="luxury-hover-card relative rounded-xl cursor-pointer group"
+      ref={(el) => { (ref as React.MutableRefObject<HTMLDivElement | null>).current = el; (tiltRef as React.MutableRefObject<HTMLDivElement | null>).current = el; }}
+      className={`luxury-hover-card relative rounded-xl cursor-pointer group scroll-reveal${revealed ? " revealed" : ""}`}
       style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}
       onClick={() => setDrawerOpen(true)}
+      onMouseEnter={() => { preload(track); setHovered(true); }}
+      onMouseMove={tiltMove}
+      onMouseLeave={() => { setHovered(false); tiltLeave(); }}
     >
-      <div className="relative" style={{ aspectRatio: "1", overflow: "hidden" }}>
+      <div
+        className="relative"
+        style={{
+          paddingBottom: "100%",
+          overflow: "hidden",
+          boxShadow: hovered ? `0 8px 32px ${track.coverColor}66` : "none",
+          transition: "box-shadow 0.3s ease",
+        }}
+      >
         <CoverArt track={track} size={200} />
         <button
           className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all"
@@ -140,6 +168,9 @@ export function TrackCardGrid({ track }: { track: Track }) {
           <span>Preview</span>
           <span>{track.duration}</span>
         </div>
+        <div className="absolute top-2 right-2 rounded-full p-1.5" style={{ background: "rgba(0,0,0,0.52)", backdropFilter: "blur(8px)" }}>
+          <LikeButton trackId={track.id} size={14} color="rgba(255,255,255,0.85)" />
+        </div>
       </div>
       <div className="p-3">
         <p className="font-semibold text-xs truncate" style={{ color: active ? "var(--accent)" : "var(--foreground)" }}>{track.title}</p>
@@ -147,11 +178,22 @@ export function TrackCardGrid({ track }: { track: Track }) {
         <WaveformPreview trackId={track.id} className="mt-3" compact />
         <div className="flex items-center justify-between mt-1.5 text-xs" style={{ color: "var(--foreground-muted)" }}>
           <span className="flex items-center gap-1"><Users size={10} />{formatPlays(track.plays)}</span>
-          <LikeButton trackId={track.id} size={13} />
+          {(track.audioUrl ?? track.downloadUrl) && (
+            <a
+              href={track.audioUrl ?? track.downloadUrl ?? "#"}
+              download
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center justify-center w-5 h-5 rounded-full transition-opacity hover:opacity-70"
+              style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
+              aria-label={`Download ${track.title}`}
+            >
+              <Download size={10} />
+            </a>
+          )}
         </div>
       </div>
       {active && (
-        <div className="absolute top-2 right-2 w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--accent)" }} />
+        <div className="absolute top-2 left-2 w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--accent)" }} />
       )}
       <TrackDetailDrawer track={track} open={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </div>
@@ -159,26 +201,20 @@ export function TrackCardGrid({ track }: { track: Track }) {
 }
 
 export function TrackRow({ track, index }: { track: Track; index: number }) {
-  const { currentTrack, isPlaying, toggle, queue, setQueue } = usePlayer();
+  const { currentTrack, isPlaying, toggle, preload } = usePlayer();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [queued, setQueued] = useState(false);
   const active = currentTrack?.id === track.id;
-
-  function addToQueue(e: React.MouseEvent) {
-    e.stopPropagation();
-    setQueue([...queue, track]);
-    setQueued(true);
-    setTimeout(() => setQueued(false), 2000);
-  }
+  const { ref, revealed } = useScrollReveal();
 
   return (
     <div
-      className="flex items-center gap-4 px-3 py-3 rounded-xl cursor-pointer group transition-colors"
+      ref={ref as React.RefObject<HTMLDivElement>}
+      className={`flex items-center gap-4 px-3 py-3 rounded-xl cursor-pointer group transition-colors scroll-reveal${revealed ? " revealed" : ""}`}
       style={{
         background: active ? "var(--accent-dim)" : "transparent",
         border: active ? "1px solid var(--accent)" : "1px solid transparent",
       }}
-      onMouseEnter={(e) => { if (!active) (e.currentTarget as HTMLElement).style.background = "var(--surface2)"; }}
+      onMouseEnter={(e) => { preload(track); if (!active) (e.currentTarget as HTMLElement).style.background = "var(--surface2)"; }}
       onMouseLeave={(e) => { if (!active) (e.currentTarget as HTMLElement).style.background = "transparent"; }}
       onClick={() => setDrawerOpen(true)}
     >
@@ -200,47 +236,30 @@ export function TrackRow({ track, index }: { track: Track; index: number }) {
           </>
         )}
       </div>
-      <div className="w-9 h-9 rounded-lg flex-shrink-0 overflow-hidden">
+      <div className="relative w-9 h-9 rounded-lg flex-shrink-0 overflow-hidden">
         <CoverArt track={track} size={36} />
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium truncate" style={{ color: active ? "var(--accent)" : "var(--foreground)" }}>{track.title}</p>
         <p className="text-xs truncate" style={{ color: "var(--foreground-muted)" }}>{track.artist}</p>
       </div>
-      <div className="hidden sm:flex items-center gap-3 text-xs flex-shrink-0" style={{ color: "var(--foreground-muted)" }}>
-        <span className="flex items-center gap-1"><Users size={11} />{formatPlays(track.plays)}</span>
-        <span className="w-10 text-right">{track.duration}</span>
+      <div className="flex items-center gap-3 flex-shrink-0">
         <LikeButton trackId={track.id} />
-        <button
-          onClick={addToQueue}
-          title="Add to queue"
-          className="opacity-0 group-hover:opacity-100 transition-opacity hover:text-[var(--accent)] rounded-md p-1"
-          style={{ color: queued ? "var(--accent)" : "var(--foreground-muted)" }}
-        >
-          <ListPlus size={15} />
-        </button>
-        <ShareButton track={track} />
+        <div className="hidden sm:flex items-center gap-4 text-xs" style={{ color: "var(--foreground-muted)" }}>
+          <span className="flex items-center gap-1"><Users size={11} />{formatPlays(track.plays)}</span>
+          <span>{track.size}</span>
+          <span className="w-10 text-right">{track.duration}</span>
+          <ShareButton track={track} />
+        </div>
       </div>
       <TrackDetailDrawer track={track} open={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </div>
   );
 }
 
-function fmt(secs: number) {
-  if (!secs || isNaN(secs)) return "0:00";
-  const m = Math.floor(secs / 60);
-  const s = Math.floor(secs % 60);
-  return `${m}:${s.toString().padStart(2, "0")}`;
-}
-
-export function TrackDetailDrawer({ track, open, onClose }: { track: Track; open: boolean; onClose: () => void }) {
-  const { currentTrack, isPlaying, toggle, play, setQueue, skipPrev, skipNext, seek } = usePlayer();
-  const { progress, duration } = useProgress();
-  const [karaokeOpen, setKaraokeOpen] = useState(false);
-  const [lyricsFullscreen, setLyricsFullscreen] = useState(false);
+function TrackDetailDrawer({ track, open, onClose }: { track: Track; open: boolean; onClose: () => void }) {
+  const { currentTrack, isPlaying, toggle } = usePlayer();
   const active = currentTrack?.id === track.id;
-
-  const related = allTracks.filter((t) => t.id !== track.id && t.artist === track.artist).slice(0, 5);
 
   if (!open) return null;
 
@@ -256,7 +275,7 @@ export function TrackDetailDrawer({ track, open, onClose }: { track: Track; open
         </div>
 
         <div className="mt-6 overflow-hidden rounded-[1.6rem]" style={{ boxShadow: "var(--shadow-card)" }}>
-          <div className="aspect-square">
+          <div style={{ position: "relative", paddingBottom: "100%", overflow: "hidden" }}>
             <CoverArt track={track} size={440} />
           </div>
         </div>
@@ -266,146 +285,31 @@ export function TrackDetailDrawer({ track, open, onClose }: { track: Track; open
 
         <div className="mt-6 grid grid-cols-3 gap-3">
           <DrawerMetric value={track.duration} label="Runtime" />
+          <DrawerMetric value={track.size} label="File" />
           <DrawerMetric value={formatPlays(track.plays)} label="Plays" />
-          <a
-            href={track.downloadUrl ?? "#"}
-            className="rounded-2xl p-3 flex flex-col items-center justify-center gap-1 text-center"
-            style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
-            aria-label={`Download ${track.title}`}
-          >
-            <Download size={18} style={{ color: "var(--premium)" }} />
-            <p className="text-[10px] font-bold uppercase tracking-[0.14em]" style={{ color: "var(--muted)" }}>Download</p>
-          </a>
         </div>
 
-        <div className="mt-6 rounded-3xl p-5" style={{ background: "rgba(7,93,158,0.12)", border: "1px solid rgba(7,93,158,0.28)" }}>
-          <div className="flex items-center justify-between">
-            <p className="text-xs font-bold uppercase tracking-[0.18em]" style={{ color: "var(--accent)" }}>Lyrics</p>
-            <button
-              onClick={() => setLyricsFullscreen(true)}
-              className="h-7 w-7 rounded-full flex items-center justify-center transition-opacity hover:opacity-80"
-              style={{ background: "rgba(7,93,158,0.22)", color: "var(--accent)" }}
-              aria-label="Fullscreen lyrics"
-            >
-              <Maximize2 size={13} />
-            </button>
-          </div>
-          <LyricsDisplay trackId={track.id} />
+        <div className="mt-6 rounded-3xl p-5" style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--premium)]">Waveform preview</p>
+          <WaveformPreview trackId={track.id} className="mt-5" />
         </div>
-
-        {/* Related tracks */}
-        {related.length > 0 && (
-          <div className="mt-6">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "var(--premium)" }}>More from {track.artist}</p>
-            <div className="flex flex-col gap-1">
-              {related.map((t) => (
-                <button
-                  key={t.id}
-                  onClick={() => { setQueue(allTracks); play(t); }}
-                  className="flex items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors hover:opacity-80"
-                  style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}
-                >
-                  <div className="w-8 h-8 rounded-md overflow-hidden flex-shrink-0">
-                    <CoverImage src={t.coverImage || t.imageUrl} alt={t.title} coverColor={t.coverColor} size={32} />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-xs font-semibold truncate" style={{ color: "var(--foreground)" }}>{t.title}</p>
-                    <p className="text-[10px] truncate" style={{ color: "var(--foreground-muted)" }}>{t.duration}</p>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
 
         <div className="mt-6 flex gap-3">
           <button className="flex-1 rounded-full px-5 py-3 text-sm font-bold text-white" style={{ background: "linear-gradient(135deg, var(--ink), var(--blue-deep))" }} onClick={() => toggle(track)}>
             {active && isPlaying ? "Pause" : "Listen now"}
           </button>
-          {track.lyrics && (
-            <button
-              onClick={() => setKaraokeOpen(true)}
-              className="h-12 w-12 rounded-full flex items-center justify-center flex-shrink-0 transition-opacity hover:opacity-80"
-              style={{ background: "var(--premium-soft)", color: "var(--premium)" }}
-              aria-label="Karaoke mode"
-            >
-              <Mic size={18} />
-            </button>
-          )}
           <ShareButton track={track} size={18} />
+          <a className="h-12 w-12 rounded-full flex items-center justify-center" style={{ background: "var(--premium-soft)", color: "var(--premium)" }} href={track.audioUrl ?? track.downloadUrl ?? "#"} aria-label={`Download ${track.title}`}>
+            <Download size={18} />
+          </a>
         </div>
       </aside>
-
-      {/* Fullscreen lyrics overlay */}
-      {lyricsFullscreen && (
-        <div className="fixed inset-0 z-[250] flex flex-col" style={{ background: "var(--background)" }}>
-          {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 flex-shrink-0" style={{ borderBottom: "1px solid var(--border)" }}>
-            <div>
-              <p className="font-black text-lg">{track.title}</p>
-              <p className="text-sm" style={{ color: "var(--foreground-muted)" }}>{track.artist}</p>
-            </div>
-            <button
-              onClick={() => setLyricsFullscreen(false)}
-              className="h-10 w-10 rounded-full flex items-center justify-center"
-              style={{ background: "var(--surface2)" }}
-              aria-label="Close fullscreen lyrics"
-            >
-              <X size={18} />
-            </button>
-          </div>
-
-          {/* Lyrics */}
-          <div className="flex-1 overflow-hidden px-6">
-            <LyricsDisplay trackId={track.id} height={520} centered />
-          </div>
-
-          {/* Music controls footer */}
-          <div className="flex-shrink-0 px-8 pb-8 pt-4" style={{ borderTop: "1px solid var(--border)" }}>
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-xs opacity-40 w-8 text-right tabular-nums" style={{ color: "var(--foreground)" }}>
-                {fmt(duration > 0 ? (progress / 100) * duration : 0)}
-              </span>
-              <input
-                type="range" min={0} max={100} step={0.1}
-                value={active ? progress : 0}
-                onChange={(e) => { if (active) seek(Number(e.target.value)); }}
-                className="flex-1"
-                style={{ background: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${active ? progress : 0}%, rgba(12,24,35,0.15) ${active ? progress : 0}%, rgba(12,24,35,0.15) 100%)` }}
-              />
-              <span className="text-xs opacity-40 w-8 tabular-nums" style={{ color: "var(--foreground)" }}>
-                {fmt(active ? duration : 0)}
-              </span>
-            </div>
-            <div className="flex items-center justify-center gap-10">
-              <button onClick={skipPrev} className="opacity-60 hover:opacity-100 transition-opacity" style={{ color: "var(--foreground)" }}>
-                <SkipBack size={28} />
-              </button>
-              <button
-                onClick={() => toggle(track)}
-                className="w-16 h-16 rounded-full flex items-center justify-center"
-                style={{ background: "#0c1823", boxShadow: "0 12px 32px rgba(12,24,35,0.3)" }}
-                aria-label={isPlaying && active ? "Pause" : "Play"}
-              >
-                {isPlaying && active
-                  ? <Pause size={26} className="text-white" />
-                  : <Play size={26} className="text-white" style={{ marginLeft: 3 }} />
-                }
-              </button>
-              <button onClick={skipNext} className="opacity-60 hover:opacity-100 transition-opacity" style={{ color: "var(--foreground)" }}>
-                <SkipForward size={28} />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <KaraokeMode track={track} open={karaokeOpen} onClose={() => setKaraokeOpen(false)} />
     </div>
   );
 }
 
 function WaveformPreview({ trackId, compact = false, className = "" }: { trackId: string; compact?: boolean; className?: string }) {
+  const { ref, revealed } = useScrollReveal();
   const seed = trackId.split("").reduce((sum, char) => sum + char.charCodeAt(0), 0);
   const bars = Array.from({ length: compact ? 18 : 28 }, (_, index) => {
     const value = ((seed + index * 11) % 17) + (index % 3) * 4;
@@ -413,7 +317,11 @@ function WaveformPreview({ trackId, compact = false, className = "" }: { trackId
   });
 
   return (
-    <div className={`flex items-center gap-1 ${className}`} aria-hidden="true">
+    <div
+      ref={ref as React.RefObject<HTMLDivElement>}
+      className={`flex items-center gap-1 ${className}`}
+      aria-hidden="true"
+    >
       {bars.map((height, index) => (
         <span
           key={index}
@@ -421,7 +329,10 @@ function WaveformPreview({ trackId, compact = false, className = "" }: { trackId
           style={{
             height,
             background: index < bars.length * 0.42 ? "var(--premium)" : "rgba(12,24,35,0.14)",
-            opacity: index < bars.length * 0.42 ? 0.9 : 0.78,
+            opacity: revealed ? (index < bars.length * 0.42 ? 0.9 : 0.78) : 0,
+            transform: revealed ? "scaleY(1)" : "scaleY(0)",
+            transformOrigin: "bottom",
+            transition: `opacity 0.35s ease ${index * 18}ms, transform 0.4s cubic-bezier(0.22,1,0.36,1) ${index * 18}ms`,
           }}
         />
       ))}
