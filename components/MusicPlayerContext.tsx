@@ -213,3 +213,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
 }
 
 export const usePlayer = () => useContext(PlayerContext);
+export const useProgress = () => {
+  const { progress, duration } = useContext(PlayerContext);
+  return { progress, duration };
+};

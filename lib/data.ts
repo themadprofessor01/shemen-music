@@ -5875,6 +5875,11 @@ export function formatPlays(n: number): string {
   return String(n);
 }
 
+/** Strip trailing catalog numbers like " 194" from display titles */
+export function cleanTitle(title: string): string {
+  return title.replace(/\s+\d+\s*$/, "");
+}
+
 export function totalDuration(list: Track[]): string {
   let total = 0;
   for (const t of list) {
