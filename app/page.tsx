@@ -1,6 +1,7 @@
 import { formatPlays, tracks, playlists, moods, totalDuration } from "@/lib/data";
 import { CollectionCover } from "@/components/CollectionCover";
 import { TrackCardLarge } from "@/components/TrackCard";
+import { AdBanner } from "@/components/AdBanner";
 import { Activity, ArrowUpRight, BarChart3, Download, SlidersHorizontal, Sparkles, Users, Wand2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -169,6 +170,8 @@ export default function HomePage() {
           <span className="h-1.5 w-1.5 rounded-full bg-black/30" />
         </div>
       </section>
+
+      <AdBanner size="leaderboard" />
 
       <section>
         <SectionHeader title="Trending" href="/instrumentals" />

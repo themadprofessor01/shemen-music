@@ -9,6 +9,7 @@ import { SearchProvider } from "@/components/SearchContext";
 import SearchOverlay from "@/components/SearchOverlay";
 import { LikesProvider } from "@/components/LikesContext";
 import { SessionRestore } from "@/components/SessionRestore";
+import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
 
 export const viewport = {
   width: "device-width",
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </div>
               </div>
 
+              <KeyboardShortcuts />
               <SessionRestore />
               <SearchOverlay />
               <MusicPlayer />

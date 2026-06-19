@@ -1,14 +1,15 @@
 "use client";
 
-import { Download, Pause, Play, Users, X } from "lucide-react";
+import { Download, Mic, Pause, Play, Users, X } from "lucide-react";
 import { usePlayer } from "@/components/MusicPlayerContext";
 import type { Track } from "@/lib/data";
-import { formatPlays } from "@/lib/data";
+import { formatPlays, tracks as allTracks } from "@/lib/data";
 import { useState } from "react";
 import { LikeButton } from "@/components/LikeButton";
 import { Equalizer } from "@/components/Equalizer";
 import { CoverImage } from "@/components/CoverImage";
 import { ShareButton } from "@/components/ShareButton";
+import { KaraokeMode } from "@/components/KaraokeMode";
 
 function CoverArt({ track, size }: { track: Track; size: number }) {
   return (
@@ -192,8 +193,11 @@ export function TrackRow({ track, index }: { track: Track; index: number }) {
 }
 
 function TrackDetailDrawer({ track, open, onClose }: { track: Track; open: boolean; onClose: () => void }) {
-  const { currentTrack, isPlaying, toggle } = usePlayer();
+  const { currentTrack, isPlaying, toggle, play, setQueue } = usePlayer();
+  const [karaokeOpen, setKaraokeOpen] = useState(false);
   const active = currentTrack?.id === track.id;
+
+  const related = allTracks.filter((t) => t.id !== track.id && t.artist === track.artist).slice(0, 5);
 
   if (!open) return null;
 
@@ -234,16 +238,52 @@ function TrackDetailDrawer({ track, open, onClose }: { track: Track; open: boole
           </div>
         </div>
 
+        {/* Related tracks */}
+        {related.length > 0 && (
+          <div className="mt-6">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] mb-3" style={{ color: "var(--premium)" }}>More from {track.artist}</p>
+            <div className="flex flex-col gap-1">
+              {related.map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => { setQueue(allTracks); play(t); }}
+                  className="flex items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors hover:opacity-80"
+                  style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}
+                >
+                  <div className="w-8 h-8 rounded-md overflow-hidden flex-shrink-0">
+                    <CoverImage src={t.coverImage || t.imageUrl} alt={t.title} coverColor={t.coverColor} size={32} />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold truncate" style={{ color: "var(--foreground)" }}>{t.title}</p>
+                    <p className="text-[10px] truncate" style={{ color: "var(--foreground-muted)" }}>{t.duration}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="mt-6 flex gap-3">
           <button className="flex-1 rounded-full px-5 py-3 text-sm font-bold text-white" style={{ background: "linear-gradient(135deg, var(--ink), var(--blue-deep))" }} onClick={() => toggle(track)}>
             {active && isPlaying ? "Pause" : "Listen now"}
           </button>
+          {track.lyrics && (
+            <button
+              onClick={() => setKaraokeOpen(true)}
+              className="h-12 w-12 rounded-full flex items-center justify-center flex-shrink-0 transition-opacity hover:opacity-80"
+              style={{ background: "var(--premium-soft)", color: "var(--premium)" }}
+              aria-label="Karaoke mode"
+            >
+              <Mic size={18} />
+            </button>
+          )}
           <ShareButton track={track} size={18} />
           <a className="h-12 w-12 rounded-full flex items-center justify-center" style={{ background: "var(--premium-soft)", color: "var(--premium)" }} href={track.downloadUrl ?? "#"} aria-label={`Download ${track.title}`}>
             <Download size={18} />
           </a>
         </div>
       </aside>
+      <KaraokeMode track={track} open={karaokeOpen} onClose={() => setKaraokeOpen(false)} />
     </div>
   );
 }
