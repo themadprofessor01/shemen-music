@@ -17,11 +17,14 @@ export default async function PlaylistPage({
   const playlist = playlists.find((p) => p.id === id);
   if (!playlist) notFound();
 
-  // Use tracks tagged with matching moods or distribute evenly across playlist index
-  const offset = playlists.findIndex((p) => p.id === id);
-  const playlistTracks = tracks.filter(
-    (_, index) => index % playlists.length === offset || index < 2
-  );
+  // Match tracks by title keywords defined in playlist.songs, fall back to a sample
+  const keywords = (playlist.songs ?? []).map((s) => s.toLowerCase());
+  const matched = keywords.length > 0
+    ? tracks.filter((t) => keywords.some((kw) => t.title.toLowerCase().includes(kw)))
+    : [];
+  const playlistTracks = matched.length >= 4
+    ? matched
+    : tracks.filter((_, i) => i % playlists.length === playlists.findIndex((p) => p.id === id) || i < 2);
 
   return (
     <div>

@@ -32,6 +32,8 @@ export type Playlist = {
   trackCount: number;
   coverColor: string;
   description?: string;
+  /** Keywords matched against track titles to populate the playlist */
+  songs?: string[];
 };
 
 export type Mood = {
@@ -5841,16 +5843,123 @@ export const tracks: Track[] = [
 ];
 
 export const playlists: Playlist[] = [
-  { id: "p1", title: "Songs of the Anointing", curator: "ShemenMusic", trackCount: 12, coverColor: "#7c3aed", description: "Anointed worship for deeper encounters with the Holy Spirit." },
-  { id: "p2", title: "Sunday Morning Worship", curator: "ShemenMusic", trackCount: 8, coverColor: "#0369a1", description: "Perfect instrumentals for Sunday service and congregational worship." },
-  { id: "p3", title: "Soaking Instrumentals", curator: "ShemenMusic", trackCount: 15, coverColor: "#065f46", description: "Peaceful instrumentals for prayer, soaking and devotional moments." },
-  { id: "p4", title: "Praise & Dance", curator: "ShemenMusic", trackCount: 10, coverColor: "#d97706", description: "Upbeat celebration tracks for praise and joyful worship." },
-  { id: "p5", title: "Healing & Restoration", curator: "ShemenMusic", trackCount: 8, coverColor: "#0e7490", description: "Gentle instrumentals for healing, comfort and restoration." },
-  { id: "p6", title: "Intercession & Prayer", curator: "ShemenMusic", trackCount: 10, coverColor: "#4338ca", description: "Deep, atmospheric tracks to accompany intercession and prayer." },
-  { id: "p7", title: "Love & Devotion", curator: "ShemenMusic", trackCount: 12, coverColor: "#be185d", description: "Tender worship expressions of love and wholehearted devotion." },
-  { id: "p8", title: "Living Waters Collection", curator: "ShemenMusic", trackCount: 10, coverColor: "#0277bd", description: "Premium recordings from The Living Waters Singers catalogue." },
-  { id: "p9", title: "Hope & Encouragement", curator: "ShemenMusic", trackCount: 8, coverColor: "#15803d", description: "Uplifting instrumentals to build faith and renew hope." },
-  { id: "p10", title: "Thankfulness & Praise", curator: "ShemenMusic", trackCount: 10, coverColor: "#b45309", description: "Grateful worship anthems celebrating God's goodness and faithfulness." },
+  {
+    id: "worship-adoration",
+    title: "Worship & Adoration",
+    curator: "ShemenMusic",
+    trackCount: 24,
+    coverColor: "#6d28d9",
+    description: "Songs focused on loving, worshipping and magnifying God — one of the most-used playlists for Sunday services and personal devotion.",
+    songs: ["worship", "adoration", "you are my god", "blessed jesus", "i really love you", "jesus you're beautiful", "thank you lord", "my dear jesus", "we want to bask", "there's no one i love like you", "i see you jesus", "it's worship time", "worship him"],
+  },
+  {
+    id: "prayer-intercession",
+    title: "Prayer & Intercession",
+    curator: "ShemenMusic",
+    trackCount: 18,
+    coverColor: "#3730a3",
+    description: "For prayer meetings, all-night services and waiting on God. Deep, atmospheric tracks to accompany intercession and seeking.",
+    songs: ["pray", "prayer changes things", "watch and pray", "what is the best way to pray", "i sought the lord", "if my people", "let us come boldly", "have mercy on us", "teach me", "let thy mercies"],
+  },
+  {
+    id: "salvation-evangelism",
+    title: "Salvation & Evangelism",
+    curator: "ShemenMusic",
+    trackCount: 22,
+    coverColor: "#b91c1c",
+    description: "Songs for altar calls, outreaches, crusades and soul winning. Essential for evangelism services and salvation messages.",
+    songs: ["altar call", "give your life to christ", "born again", "all have sinned", "jesus saviour", "people need the lord", "go into the world", "go ye", "a soul is a soul", "you're gonna go to hell", "the day i found jesus", "who is jesus", "salvation"],
+  },
+  {
+    id: "holy-spirit-anointing",
+    title: "Holy Spirit & Anointing",
+    curator: "ShemenMusic",
+    trackCount: 16,
+    coverColor: "#b45309",
+    description: "For Holy Ghost services, impartation camps and anointing meetings. Tracks that usher in the presence and power of the Spirit.",
+    songs: ["anoint me", "the anointing", "anointing coming", "ye shall receive power", "speak in tongues", "go on in the spirit", "stir up the gift", "the grace chant", "spirit of humility", "holy spirit", "holy ghost"],
+  },
+  {
+    id: "mission-church-planting",
+    title: "Mission & Church Planting",
+    curator: "ShemenMusic",
+    trackCount: 20,
+    coverColor: "#15803d",
+    description: "A huge First Love Music category. Songs for missionaries, church planters and those answering the Great Commission.",
+    songs: ["missionary song", "so send i you", "whom shall i send", "if you need someone to send", "maximum impact", "man on a mission", "keep preaching", "preparation of the gospel", "the isles shall wait", "ends of the world", "i don't wanna fail in my mission", "go into the world"],
+  },
+  {
+    id: "ministry-service",
+    title: "Ministry & Service",
+    curator: "ShemenMusic",
+    trackCount: 18,
+    coverColor: "#0e7490",
+    description: "For workers' meetings, pastors, shepherds and volunteers. Songs of calling, commitment and servant leadership.",
+    songs: ["take my life", "choose me use me", "fulfill your ministry", "give him your life", "reasonable service", "i must work", "occupy till i come", "work on", "shepherd the people", "peter do you love me", "bear much fruit", "service"],
+  },
+  {
+    id: "christian-growth",
+    title: "Christian Growth & Discipleship",
+    curator: "ShemenMusic",
+    trackCount: 20,
+    coverColor: "#166534",
+    description: "For teaching services and personal growth. Songs on the Word, prayer, faith and walking with Jesus day by day.",
+    songs: ["be strong in the lord", "strong christian", "walk by faith", "walking with jesus", "wisdom is the principal thing", "read your bible", "i need my quiet time", "seek ye first", "give thyself wholly", "he must increase", "deeper", "going deeper doing more"],
+  },
+  {
+    id: "healing-encouragement",
+    title: "Healing & Encouragement",
+    curator: "ShemenMusic",
+    trackCount: 16,
+    coverColor: "#0369a1",
+    description: "For healing services, counselling and difficult seasons. Gentle, faith-building tracks for comfort and restoration.",
+    songs: ["by his wounds", "jesus heals your heart", "carry me", "he will carry me", "let the weary rest", "everybody needs a little help", "all things work together", "i waited patiently", "now brought near", "thankful", "healing", "restoration", "encouragement"],
+  },
+  {
+    id: "spiritual-warfare",
+    title: "Spiritual Warfare & End-Times",
+    curator: "ShemenMusic",
+    trackCount: 16,
+    coverColor: "#1e3a5f",
+    description: "For prayer camps, warfare meetings and revival. Bold, declarative anthems for the end-time soldier of the faith.",
+    songs: ["christian soldier", "war a good warfare", "yield not to temptation", "wise as serpents", "last days", "there will be traitors", "no apologies", "we will stand", "vengeance is mine", "bear your cross", "warfare", "soldier"],
+  },
+  {
+    id: "love-marriage",
+    title: "Love, Marriage & Relationships",
+    curator: "ShemenMusic",
+    trackCount: 18,
+    coverColor: "#9d174d",
+    description: "Surprisingly popular — a rich collection of relationship songs for courtship, weddings, marriages and godly love.",
+    songs: ["love is patient", "love is as strong as death", "my beloved is mine", "together forever", "proposal", "propose to me", "promise me", "when a man loves the lord", "come unto me my dear", "let me love", "i want my love to last", "all i want is a christian girl"],
+  },
+  {
+    id: "thanksgiving-celebration",
+    title: "Thanksgiving & Celebration",
+    curator: "ShemenMusic",
+    trackCount: 14,
+    coverColor: "#92400e",
+    description: "Joyful anthems of gratitude and celebration — perfect for thanksgiving services, harvest festivals and praise nights.",
+    songs: ["thank you lord", "thankful", "sing a new song", "i will bless the lord", "sing praises", "thanksgiving", "celebrate", "praise", "grateful"],
+  },
+  {
+    id: "church-loyalty",
+    title: "The Church & Loyalty",
+    curator: "ShemenMusic",
+    trackCount: 12,
+    coverColor: "#374151",
+    description: "Songs about the body of Christ, church commitment and faithfulness. For workers' dedication services and church anniversaries.",
+    songs: ["wonderful church", "we are the church", "i will build your church", "a mega church", "loyalty and disloyalty", "go to church", "church", "loyalty"],
+  },
+  {
+    id: "youth-calling",
+    title: "Youth & Calling",
+    curator: "ShemenMusic",
+    trackCount: 12,
+    coverColor: "#065f46",
+    description: "For youth services and calling conventions. Songs that stir up purpose and the call of God in the next generation.",
+    songs: ["ready at twenty", "reigning from sixteen", "twenty-five to fifty", "i got the call of god", "why did i come into the world", "use it or lose it", "youth", "young", "calling"],
+  },
 ];
 
 export const moods: Mood[] = [
