@@ -1,10 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { Download, Headphones, Heart, ListMusic, Menu, Search, Sparkles, User, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { CommandPalette } from "@/components/CommandPalette";
+
+const CommandPalette = dynamic(
+  () => import("@/components/CommandPalette").then((m) => ({ default: m.CommandPalette })),
+  { ssr: false, loading: () => null }
+);
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);

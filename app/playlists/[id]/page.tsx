@@ -1,37 +1,8 @@
-import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CollectionCover } from "@/components/CollectionCover";
 import { TrackList } from "@/components/TrackList";
 import { PlayAllButton } from "@/components/PlayAllButton";
 import { playlists, tracks } from "@/lib/data";
-
-const BASE = "https://shemenmusic.com";
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}): Promise<Metadata> {
-  const { id } = await params;
-  const playlist = playlists.find((p) => p.id === id);
-  if (!playlist) return {};
-  return {
-    title: `${playlist.title} — ShemenMusic`,
-    description: playlist.description ?? `${playlist.title} playlist on ShemenMusic`,
-    openGraph: {
-      title: `${playlist.title} — ShemenMusic`,
-      description: playlist.description ?? `${playlist.title} — worship music playlist`,
-      url: `${BASE}/playlists/${id}`,
-      siteName: "ShemenMusic",
-      type: "music.playlist",
-    },
-    twitter: {
-      card: "summary",
-      title: `${playlist.title} — ShemenMusic`,
-      description: playlist.description ?? `${playlist.title} playlist`,
-    },
-  };
-}
 
 export function generateStaticParams() {
   return playlists.map((p) => ({ id: p.id }));
@@ -46,13 +17,13 @@ export default async function PlaylistPage({
   const playlist = playlists.find((p) => p.id === id);
   if (!playlist) notFound();
 
-  // Match tracks by ID (songs array), preserving playlist order
-  const songIds = playlist.songs ?? [];
-  const trackById = Object.fromEntries(tracks.map((t) => [t.id, t]));
-  const matched = songIds.flatMap((sid) => (trackById[sid] ? [trackById[sid]] : []));
-  const playlistTracks = matched.length >= 4
-    ? matched
-    : tracks.filter((_, i) => i % playlists.length === playlists.findIndex((p) => p.id === id) || i < 2);
+  // Use curated trackIds when available, otherwise fall back to distributed selection
+  const playlistTracks = playlist.trackIds && playlist.trackIds.length > 0
+    ? playlist.trackIds.map((tid) => tracks.find((t) => t.id === tid)).filter(Boolean) as typeof tracks
+    : (() => {
+        const offset = playlists.findIndex((p) => p.id === id);
+        return tracks.filter((_, index) => index % playlists.length === offset || index < 2);
+      })();
 
   return (
     <div>
@@ -75,7 +46,7 @@ export default async function PlaylistPage({
             {playlist.title}
           </h1>
           <p className="text-sm text-white/70 mt-1">
-            {playlist.trackCount} tracks &middot; {playlist.curator}
+            {playlistTracks.length} tracks &middot; {playlist.curator}
           </p>
         </div>
       </div>

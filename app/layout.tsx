@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import TopBar from "@/components/TopBar";
@@ -10,14 +9,7 @@ import SearchOverlay from "@/components/SearchOverlay";
 import { LikesProvider } from "@/components/LikesContext";
 import { SessionRestore } from "@/components/SessionRestore";
 import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
-import IntroAnimation from "@/components/IntroAnimation";
-import { Analytics } from "@vercel/analytics/next";
-
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-inter",
-});
+import { tracks } from "@/lib/data";
 
 export const viewport = {
   width: "device-width",
@@ -32,15 +24,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: `(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})()` }} />
         {/* Establish connections to audio/image origin early */}
         <link rel="preconnect" href="https://shemenmusic.com" />
         <link rel="dns-prefetch" href="https://shemenmusic.com" />
       </head>
-      <body className={inter.className}>
-        <IntroAnimation />
+      <body>
         <PlayerProvider>
           <LikesProvider>
             <SearchProvider>
@@ -56,13 +47,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
 
               <KeyboardShortcuts />
-              <SessionRestore />
-              <SearchOverlay />
+              <SessionRestore tracks={tracks} />
+              <SearchOverlay tracks={tracks} />
               <MusicPlayer />
             </SearchProvider>
           </LikesProvider>
         </PlayerProvider>
-        <Analytics />
       </body>
     </html>
   );

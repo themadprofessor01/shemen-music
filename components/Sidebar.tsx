@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Headphones, Download, Home, Heart, Moon, Music2, Mail, Sun } from "lucide-react";
+import { Headphones, Download, Home, Heart, Moon, Music2, Mail, Sun, ListMusic } from "lucide-react";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
@@ -60,6 +60,7 @@ export default function Sidebar() {
           Library
         </p>
         <nav className="flex flex-col gap-0.5">
+          <SideLink href="/playlists" icon={<ListMusic size={15} />} label="Playlists" />
           <SideLink href="/likes" icon={<Heart size={15} />} label="Likes" />
         </nav>
       </div>
@@ -83,9 +84,10 @@ export default function Sidebar() {
       </div>
       </aside>
 
-      <nav className="mobile-bottom-nav fixed inset-x-3 bottom-3 z-50 grid grid-cols-4 rounded-[1.35rem] border p-1.5 backdrop-blur-xl" style={{ background: "rgba(255,253,250,0.88)", borderColor: "rgba(231,223,209,0.92)", boxShadow: "0 20px 60px rgba(12,24,35,0.18)" }}>
+      <nav className="mobile-bottom-nav fixed inset-x-3 bottom-3 z-50 grid grid-cols-5 rounded-[1.35rem] border p-1.5 backdrop-blur-xl" style={{ background: "rgba(255,253,250,0.88)", borderColor: "rgba(231,223,209,0.92)", boxShadow: "0 20px 60px rgba(12,24,35,0.18)" }}>
         <MobileLink href="/" icon={<Home size={18} />} label="Home" />
         <MobileLink href="/instrumentals" icon={<Headphones size={18} />} label="Tracks" />
+        <MobileLink href="/playlists" icon={<ListMusic size={18} />} label="Playlists" />
         <MobileLink href="/download" icon={<Download size={18} />} label="Files" />
         <MobileLink href="/likes" icon={<Heart size={18} />} label="Likes" />
       </nav>

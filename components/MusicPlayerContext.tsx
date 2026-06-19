@@ -13,8 +13,6 @@ import type { Track } from "@/lib/data";
 type PlayerState = {
   currentTrack: Track | null;
   isPlaying: boolean;
-  progress: number;       // 0–100
-  duration: number;       // seconds
   volume: number;         // 0–100
   muted: boolean;
   play: (track: Track) => void;
@@ -30,11 +28,14 @@ type PlayerState = {
   preload: (track: Track) => void;
 };
 
+// Separate context for rapidly-changing playback position
+// Splitting this prevents all card components from re-rendering on every progress tick
+type ProgressState = { progress: number; duration: number };
+const ProgressContext = createContext<ProgressState>({ progress: 0, duration: 0 });
+
 const PlayerContext = createContext<PlayerState>({
   currentTrack: null,
   isPlaying: false,
-  progress: 0,
-  duration: 0,
   volume: 80,
   muted: false,
   play: () => {},
@@ -112,7 +113,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
           return q;
         });
         if (nextTrack) {
-          const src = (nextTrack as Track).audioUrl ?? (nextTrack as Track).downloadUrl ?? (nextTrack as Track).stationUrl ?? "";
+          const src = (nextTrack as Track).downloadUrl ?? (nextTrack as Track).audioUrl ?? (nextTrack as Track).stationUrl ?? "";
           if (src) {
             const el = audioRef.current!;
             el.src = src;
@@ -153,7 +154,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   }, [currentTrack]);
 
   const preload = useCallback((track: Track) => {
-    const src = track.audioUrl ?? track.downloadUrl ?? track.stationUrl ?? "";
+    const src = track.downloadUrl ?? track.audioUrl ?? track.stationUrl ?? "";
     if (!src || currentTrackIdRef.current === track.id) return;
     if (!preloadRef.current) {
       preloadRef.current = new Audio();
@@ -166,7 +167,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const play = useCallback((track: Track) => {
-    const src = track.audioUrl ?? track.downloadUrl ?? track.stationUrl ?? "";
+    const src = track.downloadUrl ?? track.audioUrl ?? track.stationUrl ?? "";
     if (!src) return;
 
     setCurrentTrack((cur) => {
@@ -256,8 +257,6 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
       value={{
         currentTrack,
         isPlaying,
-        progress,
-        duration,
         volume,
         muted,
         play,
@@ -273,9 +272,12 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         preload,
       }}
     >
-      {children}
+      <ProgressContext.Provider value={{ progress, duration }}>
+        {children}
+      </ProgressContext.Provider>
     </PlayerContext.Provider>
   );
 }
 
 export const usePlayer = () => useContext(PlayerContext);
+export const useProgress = () => useContext(ProgressContext);

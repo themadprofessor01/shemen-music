@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { usePlayer, useProgress } from "@/components/MusicPlayerContext";
-import { tracks } from "@/lib/data";
+import type { Track } from "@/lib/data";
 
 const STORAGE_KEY = "shemen_session";
 
@@ -11,7 +11,7 @@ type SavedSession = {
   progress: number; // 0–100
 };
 
-export function SessionRestore() {
+export function SessionRestore({ tracks }: { tracks: Track[] }) {
   const { play, seek, pause, setQueue, currentTrack } = usePlayer();
   const { progress } = useProgress();
   const restored = useRef(false);

@@ -4,6 +4,7 @@ import { CollectionCover } from "@/components/CollectionCover";
 import { TrackCardLarge } from "@/components/TrackCard";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { CountUp } from "@/components/CountUp";
+import { AdBanner } from "@/components/AdBanner";
 import { Activity, ArrowUpRight, BarChart3, Sparkles, Users } from "lucide-react";
 import type { ReactNode } from "react";
 import Image from "next/image";
@@ -79,6 +80,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Ad placement — leaderboard between analytics and spotlight */}
+      <AdBanner size="leaderboard" />
+
       <section className="grid lg:grid-cols-[0.82fr_1.18fr] gap-6 items-stretch">
         <div className="relative min-h-[360px] overflow-hidden rounded-[2rem]" style={{ boxShadow: "var(--shadow-card)" }}>
           {featured[0].imageUrl ? <Image src={featured[0].imageUrl} alt="" fill sizes="(min-width: 1024px) 34vw, 100vw" className="object-cover" priority /> : <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${featured[0].coverColor}, ${featured[0].coverColor}88)` }} />}
@@ -128,6 +132,9 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* Ad placement — rectangle between trending and playlists */}
+      <AdBanner size="rectangle" />
 
       <section>
         <SectionHeader title="Playlists" href="/playlists" />

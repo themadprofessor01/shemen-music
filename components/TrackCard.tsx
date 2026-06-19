@@ -1,16 +1,27 @@
 "use client";
 
-import { Download, Pause, Play, Users, X } from "lucide-react";
-import { usePlayer } from "@/components/MusicPlayerContext";
+import { Download, Mic, Pause, Play, Users, X } from "lucide-react";
+import { usePlayer, useProgress } from "@/components/MusicPlayerContext";
 import type { Track } from "@/lib/data";
-import { formatPlays } from "@/lib/data";
-import { useState } from "react";
+import { formatPlays, cleanTitle, tracks as allTracks } from "@/lib/data";
+import { useEffect, useRef, useState } from "react";
 import { LikeButton } from "@/components/LikeButton";
 import { Equalizer } from "@/components/Equalizer";
 import { CoverImage } from "@/components/CoverImage";
 import { ShareButton } from "@/components/ShareButton";
+import { KaraokeMode } from "@/components/KaraokeMode";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useMagneticTilt } from "@/hooks/useMagneticTilt";
+import { LyricsDisplay } from "@/components/LyricsDisplay";
+import { lyricsMap } from "@/lib/lyrics-map";
+
+function dlHref(track: Track) {
+  const url = track.downloadUrl ?? track.audioUrl ?? "";
+  if (!url) return "#";
+  const ext = url.endsWith(".m4a") ? "m4a" : "mp3";
+  const filename = encodeURIComponent(`${track.title}.${ext}`);
+  return `/api/download?url=${encodeURIComponent(url)}&filename=${filename}`;
+}
 
 function CoverArt({ track, size, priority }: { track: Track; size: number; priority?: boolean }) {
   return (
@@ -30,6 +41,14 @@ export function TrackCardLarge({ track, priority }: { track: Track; priority?: b
   const [hovered, setHovered] = useState(false);
   const active = currentTrack?.id === track.id;
   const { ref: tiltRef, onMouseMove: tiltMove, onMouseLeave: tiltLeave } = useMagneticTilt(6);
+
+  useEffect(() => {
+    function handler(e: Event) {
+      if ((e as CustomEvent).detail?.trackId === track.id) setDrawerOpen(true);
+    }
+    document.addEventListener("shemen:open-drawer", handler);
+    return () => document.removeEventListener("shemen:open-drawer", handler);
+  }, [track.id]);
 
   return (
     <>
@@ -82,7 +101,7 @@ export function TrackCardLarge({ track, priority }: { track: Track; priority?: b
           </div>
         </div>
       <div className="p-3">
-        <p className="font-semibold text-sm truncate" style={{ color: "var(--foreground)" }}>{track.title}</p>
+        <p className="font-semibold text-sm truncate" style={{ color: "var(--foreground)" }}>{cleanTitle(track.title)}</p>
         <p className="text-xs mt-0.5 truncate" style={{ color: "var(--foreground-muted)" }}>{track.artist}</p>
         <WaveformPreview trackId={track.id} className="mt-3" />
         <div className="mt-2 flex items-center justify-between text-[11px]" style={{ color: "var(--foreground-muted)" }}>
@@ -91,8 +110,7 @@ export function TrackCardLarge({ track, priority }: { track: Track; priority?: b
             <span>{track.duration}</span>
             {(track.audioUrl ?? track.downloadUrl) && (
               <a
-                href={track.audioUrl ?? track.downloadUrl ?? "#"}
-                download
+                href={dlHref(track)}
                 onClick={(e) => e.stopPropagation()}
                 className="flex items-center justify-center w-6 h-6 rounded-full transition-opacity hover:opacity-70"
                 style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
@@ -117,6 +135,14 @@ export function TrackCardGrid({ track }: { track: Track }) {
   const active = currentTrack?.id === track.id;
   const { ref, revealed } = useScrollReveal();
   const { ref: tiltRef, onMouseMove: tiltMove, onMouseLeave: tiltLeave } = useMagneticTilt(7);
+
+  useEffect(() => {
+    function handler(e: Event) {
+      if ((e as CustomEvent).detail?.trackId === track.id) setDrawerOpen(true);
+    }
+    document.addEventListener("shemen:open-drawer", handler);
+    return () => document.removeEventListener("shemen:open-drawer", handler);
+  }, [track.id]);
 
   return (
     <div
@@ -173,15 +199,14 @@ export function TrackCardGrid({ track }: { track: Track }) {
         </div>
       </div>
       <div className="p-3">
-        <p className="font-semibold text-xs truncate" style={{ color: active ? "var(--accent)" : "var(--foreground)" }}>{track.title}</p>
+        <p className="font-semibold text-xs truncate" style={{ color: active ? "var(--accent)" : "var(--foreground)" }}>{cleanTitle(track.title)}</p>
         <p className="text-xs mt-0.5 truncate" style={{ color: "var(--foreground-muted)" }}>{track.artist}</p>
         <WaveformPreview trackId={track.id} className="mt-3" compact />
         <div className="flex items-center justify-between mt-1.5 text-xs" style={{ color: "var(--foreground-muted)" }}>
           <span className="flex items-center gap-1"><Users size={10} />{formatPlays(track.plays)}</span>
           {(track.audioUrl ?? track.downloadUrl) && (
             <a
-              href={track.audioUrl ?? track.downloadUrl ?? "#"}
-              download
+              href={dlHref(track)}
               onClick={(e) => e.stopPropagation()}
               className="flex items-center justify-center w-5 h-5 rounded-full transition-opacity hover:opacity-70"
               style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
@@ -240,7 +265,7 @@ export function TrackRow({ track, index }: { track: Track; index: number }) {
         <CoverArt track={track} size={36} />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium truncate" style={{ color: active ? "var(--accent)" : "var(--foreground)" }}>{track.title}</p>
+        <p className="text-sm font-medium truncate" style={{ color: active ? "var(--accent)" : "var(--foreground)" }}>{cleanTitle(track.title)}</p>
         <p className="text-xs truncate" style={{ color: "var(--foreground-muted)" }}>{track.artist}</p>
       </div>
       <div className="flex items-center gap-3 flex-shrink-0">
@@ -258,8 +283,13 @@ export function TrackRow({ track, index }: { track: Track; index: number }) {
 }
 
 function TrackDetailDrawer({ track, open, onClose }: { track: Track; open: boolean; onClose: () => void }) {
-  const { currentTrack, isPlaying, toggle } = usePlayer();
+  const { currentTrack, isPlaying, toggle, play, setQueue } = usePlayer();
   const active = currentTrack?.id === track.id;
+  const [karaokeOpen, setKaraokeOpen] = useState(false);
+
+  const related = allTracks
+    .filter((t) => t.id !== track.id && t.artist === track.artist)
+    .slice(0, 5);
 
   if (!open) return null;
 
@@ -280,26 +310,122 @@ function TrackDetailDrawer({ track, open, onClose }: { track: Track; open: boole
           </div>
         </div>
 
-        <h2 className="mt-6 text-3xl font-black tracking-tight">{track.title}</h2>
+        <h2 className="mt-6 text-3xl font-black tracking-tight">{cleanTitle(track.title)}</h2>
         <p className="mt-1 text-[var(--muted)]">{track.artist}</p>
 
         <div className="mt-6 grid grid-cols-3 gap-3">
           <DrawerMetric value={track.duration} label="Runtime" />
-          <DrawerMetric value={track.size} label="File" />
+          {(track.audioUrl ?? track.downloadUrl) ? (
+            <a
+              href={dlHref(track)}
+              onClick={(e) => e.stopPropagation()}
+              className="rounded-2xl p-3 flex flex-col gap-1 transition-opacity hover:opacity-80"
+              style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
+              aria-label={`Download ${track.title}`}
+            >
+              <div className="flex items-center gap-1.5">
+                <Download size={14} style={{ color: "var(--premium)" }} />
+                <p className="font-black text-sm">Download</p>
+              </div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--muted)]">Free MP3</p>
+            </a>
+          ) : (
+            <DrawerMetric value={track.size || "—"} label="File" />
+          )}
           <DrawerMetric value={formatPlays(track.plays)} label="Plays" />
         </div>
+
+        {(track.bpm || track.musicalKey || track.mood || (track.tags && track.tags.length > 0)) && (
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            {track.bpm && <DrawerMetric value={`${track.bpm} BPM`} label="Tempo" />}
+            {track.musicalKey && <DrawerMetric value={track.musicalKey} label="Key" />}
+            {track.mood && !track.bpm && <DrawerMetric value={track.mood} label="Mood" />}
+            {track.tags && track.tags.length > 0 && (
+              <div className="col-span-2 rounded-2xl p-3" style={{ background: "var(--surface)", border: "1px solid var(--border)" }}>
+                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--muted)] mb-2">Tags</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {track.tags.map((tag) => (
+                    <span key={tag} className="rounded-full px-2.5 py-1 text-[10px] font-semibold" style={{ background: "var(--accent-dim)", color: "var(--accent)" }}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="mt-6 rounded-3xl p-5" style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}>
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--premium)]">Waveform preview</p>
           <WaveformPreview trackId={track.id} className="mt-5" />
         </div>
 
+        {lyricsMap[track.id] && (
+          <div className="mt-6 rounded-3xl p-5" style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}>
+            <div className="flex items-center justify-between mb-1">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--premium)]">Lyrics</p>
+              <button
+                onClick={() => setKaraokeOpen(true)}
+                className="flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition-opacity hover:opacity-80"
+                style={{ background: "var(--accent)", color: "white" }}
+                aria-label="Open karaoke mode"
+              >
+                <Mic size={11} />
+                Karaoke
+              </button>
+            </div>
+            <p className="text-[11px] mb-3" style={{ color: "var(--foreground-muted)" }}>
+              {active && isPlaying ? "Following along…" : "Play the track to sync"}
+            </p>
+            <LyricsDisplay trackId={track.id} />
+          </div>
+        )}
+        <KaraokeMode trackId={track.id} open={karaokeOpen} onClose={() => setKaraokeOpen(false)} />
+
+        {related.length > 0 && (
+          <div className="mt-6">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--muted)] mb-3">More from {track.artist}</p>
+            <div className="space-y-1">
+              {related.map((t) => {
+                const relActive = currentTrack?.id === t.id;
+                const relCover = t.coverImage || t.imageUrl;
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => { setQueue(allTracks); play(t); }}
+                    className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors"
+                    style={{ background: relActive ? "var(--accent-dim)" : "transparent" }}
+                    onMouseEnter={(e) => { if (!relActive) (e.currentTarget as HTMLElement).style.background = "var(--surface2)"; }}
+                    onMouseLeave={(e) => { if (!relActive) (e.currentTarget as HTMLElement).style.background = "transparent"; }}
+                  >
+                    <div style={{ width: 36, height: 36, borderRadius: 8, overflow: "hidden", flexShrink: 0 }}>
+                      {relCover
+                        ? <img src={relCover} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        : <div style={{ width: "100%", height: "100%", background: t.coverColor }} />
+                      }
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium truncate" style={{ color: relActive ? "var(--accent)" : "var(--foreground)" }}>
+                        {cleanTitle(t.title)}
+                      </p>
+                      <p className="text-xs truncate" style={{ color: "var(--muted)" }}>{t.duration}</p>
+                    </div>
+                    <span style={{ color: relActive ? "var(--accent)" : "var(--muted)" }}>
+                      {relActive && isPlaying ? <Pause size={13} /> : <Play size={13} />}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         <div className="mt-6 flex gap-3">
           <button className="flex-1 rounded-full px-5 py-3 text-sm font-bold text-white" style={{ background: "linear-gradient(135deg, var(--ink), var(--blue-deep))" }} onClick={() => toggle(track)}>
             {active && isPlaying ? "Pause" : "Listen now"}
           </button>
           <ShareButton track={track} size={18} />
-          <a className="h-12 w-12 rounded-full flex items-center justify-center" style={{ background: "var(--premium-soft)", color: "var(--premium)" }} href={track.audioUrl ?? track.downloadUrl ?? "#"} aria-label={`Download ${track.title}`}>
+          <a className="h-12 w-12 rounded-full flex items-center justify-center" style={{ background: "var(--premium-soft)", color: "var(--premium)" }} href={dlHref(track)} aria-label={`Download ${track.title}`}>
             <Download size={18} />
           </a>
         </div>
@@ -309,32 +435,82 @@ function TrackDetailDrawer({ track, open, onClose }: { track: Track; open: boole
 }
 
 function WaveformPreview({ trackId, compact = false, className = "" }: { trackId: string; compact?: boolean; className?: string }) {
-  const { ref, revealed } = useScrollReveal();
-  const seed = trackId.split("").reduce((sum, char) => sum + char.charCodeAt(0), 0);
-  const bars = Array.from({ length: compact ? 18 : 28 }, (_, index) => {
-    const value = ((seed + index * 11) % 17) + (index % 3) * 4;
-    return compact ? 5 + (value % 15) : 7 + (value % 22);
+  const { currentTrack, seek } = usePlayer(); // stable — only changes on track switch
+  const [revealed, setRevealed] = useState(false);
+  const isActive = currentTrack?.id === trackId;
+
+  const barCount = compact ? 18 : 28;
+  const seed = trackId.split("").reduce((sum, c) => sum + c.charCodeAt(0), 0);
+  const heights = Array.from({ length: barCount }, (_, i) => {
+    const v = ((seed + i * 11) % 17) + (i % 3) * 4;
+    return compact ? 5 + (v % 15) : 7 + (v % 22);
   });
+
+  useEffect(() => {
+    const t = setTimeout(() => setRevealed(true), 60);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Static render for non-active tracks — no progress subscription, zero re-renders on ticks
+  if (!isActive) {
+    return (
+      <div className={`flex items-end gap-[2px] ${className}`} style={{ userSelect: "none" }}>
+        {heights.map((h, i) => (
+          <span key={i} style={{
+            display: "block", width: compact ? 3 : 4, height: h, borderRadius: 99,
+            background: "var(--border)",
+            opacity: revealed ? 1 : 0,
+            transform: revealed ? "scaleY(1)" : "scaleY(0.2)",
+            transformOrigin: "bottom",
+            transition: `opacity 0.35s ease ${i * 18}ms, transform 0.4s cubic-bezier(0.22,1,0.36,1) ${i * 18}ms`,
+          }} />
+        ))}
+      </div>
+    );
+  }
+
+  // Active track: sub-component subscribes to progress — only this instance re-renders on ticks
+  return <ActiveWaveformBars heights={heights} seek={seek} compact={compact} className={className} revealed={revealed} />;
+}
+
+// Only mounts for the currently-playing track — sole subscriber to ProgressContext among waveforms
+function ActiveWaveformBars({ heights, seek, compact, className, revealed }: {
+  heights: number[]; seek: (p: number) => void; compact: boolean; className: string; revealed: boolean;
+}) {
+  const { progress } = useProgress();
+  const barRef = useRef<HTMLDivElement>(null);
+  const dragging = useRef(false);
+  const barCount = heights.length;
+
+  function seekFromX(clientX: number) {
+    const el = barRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    seek(Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100)));
+  }
 
   return (
     <div
-      ref={ref as React.RefObject<HTMLDivElement>}
-      className={`flex items-center gap-1 ${className}`}
-      aria-hidden="true"
+      ref={barRef}
+      className={`flex items-end gap-[2px] ${className}`}
+      style={{ cursor: "pointer", userSelect: "none" }}
+      onMouseDown={(e) => { e.preventDefault(); dragging.current = true; seekFromX(e.clientX); }}
+      onMouseMove={(e) => { if (dragging.current) seekFromX(e.clientX); }}
+      onMouseUp={() => { dragging.current = false; }}
+      onMouseLeave={() => { dragging.current = false; }}
+      onTouchStart={(e) => { dragging.current = true; seekFromX(e.touches[0].clientX); }}
+      onTouchMove={(e) => { if (dragging.current) seekFromX(e.touches[0].clientX); }}
+      onTouchEnd={() => { dragging.current = false; }}
     >
-      {bars.map((height, index) => (
-        <span
-          key={index}
-          className="w-1 rounded-full"
-          style={{
-            height,
-            background: index < bars.length * 0.42 ? "var(--premium)" : "rgba(12,24,35,0.14)",
-            opacity: revealed ? (index < bars.length * 0.42 ? 0.9 : 0.78) : 0,
-            transform: revealed ? "scaleY(1)" : "scaleY(0)",
-            transformOrigin: "bottom",
-            transition: `opacity 0.35s ease ${index * 18}ms, transform 0.4s cubic-bezier(0.22,1,0.36,1) ${index * 18}ms`,
-          }}
-        />
+      {heights.map((height, i) => (
+        <span key={i} style={{
+          display: "block", width: compact ? 3 : 4, height, borderRadius: 99,
+          background: (i / barCount) * 100 <= progress ? "var(--accent)" : "var(--border)",
+          opacity: revealed ? 1 : 0,
+          transform: revealed ? "scaleY(1)" : "scaleY(0.2)",
+          transformOrigin: "bottom",
+          transition: `background 0.08s ease, opacity 0.35s ease ${i * 18}ms, transform 0.4s cubic-bezier(0.22,1,0.36,1) ${i * 18}ms`,
+        }} />
       ))}
     </div>
   );
