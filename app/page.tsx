@@ -2,7 +2,9 @@ import { formatPlays, tracks, playlists, moods, totalDuration } from "@/lib/data
 import { CollectionCover } from "@/components/CollectionCover";
 import { TrackCardLarge } from "@/components/TrackCard";
 import { AdBanner } from "@/components/AdBanner";
-import { Activity, ArrowUpRight, BarChart3, Download, SlidersHorizontal, Sparkles, Users, Wand2 } from "lucide-react";
+import { HeroCarousel } from "@/components/HeroCarousel";
+import { FeaturedScrollSection } from "@/components/FeaturedScrollSection";
+import { Activity, ArrowUpRight, BarChart3, Sparkles, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -31,73 +33,30 @@ export default function HomePage() {
 
   return (
     <div className="px-3 py-6 sm:px-8 lg:px-14 space-y-10 sm:space-y-14">
-      <header className="relative overflow-hidden rounded-[2rem] p-6 sm:p-9 lg:p-12" style={{ background: "linear-gradient(135deg, #0c1823 0%, #123655 54%, #0b1520 100%)", boxShadow: "0 34px 90px rgba(12,24,35,0.24)" }}>
+      <header className="relative overflow-hidden rounded-[2rem] p-6 sm:p-9 lg:p-12" style={{ background: "var(--hero-bg, linear-gradient(135deg, #0c1823 0%, #123655 54%, #0b1520 100%))", boxShadow: "0 34px 90px rgba(12,24,35,0.24)", minHeight: "580px", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div className="absolute inset-0 opacity-40" style={{ background: "radial-gradient(circle at 70% 20%, rgba(230, 194, 119, 0.24), transparent 22rem)" }} />
-        <div className="relative grid lg:grid-cols-[0.92fr_1.08fr] gap-10 items-center">
-          {/* Text content */}
-          <div className="text-white">
+        <div className="relative flex flex-col items-center text-center text-white gap-6 w-full max-w-3xl mx-auto">
+          {/* Badge + heading */}
+          <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white/75">
               Curated Worship Archive
             </span>
             <h1 className="mt-5 text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none">Discover</h1>
-            <p className="mt-4 max-w-xl text-base sm:text-lg leading-7 text-white/68">A polished music library for worship leaders, studios, and church teams.</p>
-            <div className="mt-6 flex flex-wrap gap-3">
+            <p className="mt-4 text-base sm:text-lg leading-7 text-white/68">A polished music library for worship leaders, studios, and church teams.</p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
               <Link href="/instrumentals" className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-bold shadow-xl shadow-black/20" style={{ color: "#0c1823" }}>
                 Browse Collection
                 <ArrowUpRight size={15} />
               </Link>
-              <Link href="/download" className="inline-flex items-center gap-2 rounded-full border border-white/18 px-4 py-2.5 text-sm font-semibold text-white/86">
+              <Link href="/instrumentals" className="inline-flex items-center gap-2 rounded-full border border-white/18 px-4 py-2.5 text-sm font-semibold text-white/86">
                 Downloads
               </Link>
             </div>
           </div>
 
-          {/* Stacked cards — hidden on small, visible lg+ */}
-          <div className="relative hidden lg:block min-h-[340px]">
-            {featured.slice(0, 3).map((track, index) => (
-              <div
-                key={track.id}
-                className="absolute overflow-hidden rounded-[1.5rem] border border-white/12 bg-white/10 shadow-2xl"
-                style={{
-                  width: index === 1 ? "54%" : "44%",
-                  left: index === 0 ? "0%" : index === 1 ? "29%" : "57%",
-                  top: index === 0 ? "12%" : index === 1 ? "0%" : "22%",
-                  transform: index === 1 ? "scale(1.04)" : "scale(0.92)",
-                  zIndex: index === 1 ? 2 : 1,
-                }}
-              >
-                <div className="relative aspect-square">
-                  {track.imageUrl ? <Image src={track.imageUrl} alt="" fill sizes="28vw" className="object-cover" priority={index === 1} /> : <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${track.coverColor}, ${track.coverColor}88)` }} />}
-                </div>
-                <div className="bg-white/92 p-3">
-                  <p className="truncate font-bold text-sm text-[var(--ink)]">{track.title}</p>
-                  <p className="truncate text-xs text-[var(--muted)]">{track.artist}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Mobile: horizontal scroll of covers */}
-          <div className="flex lg:hidden gap-3 overflow-x-auto pb-1 -mx-1 px-1">
-            {featured.slice(0, 4).map((track) => (
-              <div key={track.id} className="flex-shrink-0 w-28 rounded-xl overflow-hidden border border-white/12">
-                <div className="relative aspect-square">
-                  {track.imageUrl ? <Image src={track.imageUrl} alt="" fill sizes="112px" className="object-cover" /> : <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${track.coverColor}, ${track.coverColor}88)` }} />}
-                </div>
-                <div className="bg-white/90 px-2 py-1.5">
-                  <p className="truncate text-xs font-bold text-[var(--ink)]">{track.title}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <HeroCarousel tracks={featured} />
         </div>
       </header>
-
-      <section className="grid md:grid-cols-3 gap-4">
-        <PremiumFeature icon={<Download size={18} />} title="Studio-grade files" label="WAV, MP3, stems" />
-        <PremiumFeature icon={<SlidersHorizontal size={18} />} title="Prepared for teams" label="Keys, tempos, service flow" />
-        <PremiumFeature icon={<Wand2 size={18} />} title="Editorial discovery" label="Curated moods and moments" />
-      </section>
 
       <section className="relative overflow-hidden rounded-[2rem] p-5 sm:p-6 lg:p-7" style={{ background: "linear-gradient(135deg, rgba(255,253,250,0.92), rgba(242,236,226,0.86))", border: "1px solid var(--border)", boxShadow: "var(--shadow-soft)" }}>
         <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[var(--premium-soft)] blur-3xl" />
@@ -118,6 +77,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <AdBanner size="leaderboard" />
 
       <section className="grid lg:grid-cols-[0.82fr_1.18fr] gap-6 items-stretch">
         <div className="relative min-h-[360px] overflow-hidden rounded-[2rem]" style={{ boxShadow: "var(--shadow-card)" }}>
@@ -157,18 +118,7 @@ export default function HomePage() {
 
       <section>
         <SectionHeader title="Featured" href="/instrumentals" />
-        <div className="flex gap-6 overflow-x-auto pb-4 snap-x">
-          {featured.map((track) => (
-            <div key={track.id} className="min-w-[220px] sm:min-w-[320px] max-w-[420px] flex-1 snap-start">
-              <TrackCardLarge track={track} />
-            </div>
-          ))}
-        </div>
-        <div className="hidden sm:flex justify-center gap-3 pt-1">
-          <span className="h-1.5 w-1.5 rounded-full bg-black/30" />
-          <span className="h-1.5 w-1.5 rounded-full bg-black" />
-          <span className="h-1.5 w-1.5 rounded-full bg-black/30" />
-        </div>
+        <FeaturedScrollSection tracks={featured} />
       </section>
 
       <AdBanner size="leaderboard" />
@@ -181,6 +131,8 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      <AdBanner size="leaderboard" />
 
       <section>
         <SectionHeader title="Moods" />
@@ -230,29 +182,15 @@ export default function HomePage() {
       <footer className="border-t pt-12 pb-8 mt-16 text-xs text-[var(--muted)]" style={{ borderColor: "var(--border)" }}>
         <p>@ Copyright 2024 ShemenMusic. All Rights Reserved</p>
         <div className="flex flex-wrap gap-3 mt-7 text-[var(--foreground)]">
-          <Link href="/download">Service Terms</Link>
+          <Link href="/terms">Service Terms</Link>
           <span>•</span>
-          <Link href="/download">Cookie Warnings</Link>
+          <Link href="/privacy">Cookie Warnings</Link>
           <span>•</span>
-          <Link href="/download">Support</Link>
+          <Link href="/contact">Support</Link>
           <span>•</span>
-          <Link href="/download">Feedback</Link>
+          <Link href="/contact">Feedback</Link>
         </div>
       </footer>
-    </div>
-  );
-}
-
-function PremiumFeature({ icon, title, label }: { icon: ReactNode; title: string; label: string }) {
-  return (
-    <div className="premium-card rounded-3xl p-5 flex items-center gap-4">
-      <span className="h-12 w-12 rounded-2xl flex items-center justify-center text-[var(--blue)]" style={{ background: "var(--blue-soft)" }}>
-        {icon}
-      </span>
-      <div className="min-w-0">
-        <p className="font-bold truncate">{title}</p>
-        <p className="text-sm text-[var(--muted)] truncate">{label}</p>
-      </div>
     </div>
   );
 }
