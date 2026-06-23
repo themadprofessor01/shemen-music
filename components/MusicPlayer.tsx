@@ -4,6 +4,9 @@ import { useState, useEffect, useRef } from "react";
 import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, X, ListMusic } from "lucide-react";
 import { usePlayer, useProgress } from "@/components/MusicPlayerContext";
 import { cleanTitle } from "@/lib/data";
+import { TrackDetailDrawer } from "@/components/TrackCard";
+import ElasticSlider from "@/components/ElasticSlider";
+import { SeekBar } from "@/components/SeekBar";
 
 function fmt(secs: number) {
   if (!secs || isNaN(secs)) return "0:00";
@@ -20,23 +23,30 @@ export default function MusicPlayer() {
     muted, setMuted,
     skipNext, skipPrev,
     queue,
+    getAudio,
   } = usePlayer();
   const { progress, duration } = useProgress();
   const [dismissed, setDismissed] = useState(false);
   const [queueOpen, setQueueOpen] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
+  const [detailOpen, setDetailOpen] = useState(false);
 
-  const [barHeights, setBarHeights] = useState(() => Array.from({ length: 24 }, () => 8));
+  const [barHeights, setBarHeights] = useState(() => Array.from({ length: 32 }, () => 8));
   const rafRef = useRef<number | undefined>(undefined);
   const timeRef = useRef(0);
 
   useEffect(() => {
     if (!isPlaying) { cancelAnimationFrame(rafRef.current!); return; }
+    const BAR_COUNT = 32;
     const animate = () => {
-      timeRef.current += 0.06;
-      setBarHeights(prev => prev.map((_, i) => {
-        const base = 5 + ((i * 7 + 3) % 17);
-        return base + Math.abs(Math.sin(timeRef.current * (0.8 + i * 0.15)) * 14);
+      timeRef.current += 0.07;
+      const t = timeRef.current;
+      setBarHeights(Array.from({ length: BAR_COUNT }, (_, i) => {
+        const phase = (i * 2.3) % (Math.PI * 2);
+        return 4 +
+          Math.abs(Math.sin(t * (0.5 + (i * 0.18) % 0.6) + phase)) * 12 +
+          Math.abs(Math.sin(t * (0.8 + (i * 0.13) % 0.4) + phase * 1.7)) * 9 +
+          Math.abs(Math.sin(t * 1.3 + i * 0.35)) * 7;
       }));
       rafRef.current = requestAnimationFrame(animate);
     };
@@ -96,12 +106,7 @@ export default function MusicPlayer() {
           </div>
 
           <div className="px-7 py-3">
-            <input
-              type="range" min={0} max={100} step={0.1} value={progress}
-              onChange={(e) => seek(Number(e.target.value))}
-              className="w-full"
-              style={{ background: `linear-gradient(to right, ${accentColor} 0%, ${accentColor} ${progress}%, rgba(12,24,35,0.15) ${progress}%, rgba(12,24,35,0.15) 100%)` }}
-            />
+            <SeekBar progress={progress} duration={duration} accentColor={accentColor} onSeek={seek} />
             <div className="flex justify-between text-xs mt-1 opacity-50" style={{ color: "var(--foreground)" }}>
               <span>{fmt(currentTime)}</span>
               <span>{fmt(duration)}</span>
@@ -207,27 +212,31 @@ export default function MusicPlayer() {
           <div
             className="flex items-center gap-3 flex-1 min-w-0"
             style={{ cursor: "pointer" }}
-            onClick={() => { if (window.innerWidth < 768) setFullscreen(true); }}
+            onClick={() => { if (window.innerWidth < 768) setFullscreen(true); else setDetailOpen(true); }}
             role="button"
             aria-label="Expand player"
           >
-            <div className="flex-shrink-0 rounded-lg overflow-hidden" style={{ width: 40, height: 40 }}>
-              {coverSrc
-                ? <img src={coverSrc} alt="" style={{ width: 40, height: 40, objectFit: "cover" }} />
-                : <div style={{ width: 40, height: 40, background: currentTrack.coverColor }} />
-              }
+            <div
+              className="flex-shrink-0 rounded-lg overflow-hidden"
+              style={{ width: 40, height: 40, background: currentTrack.coverColor ?? "#075d9e", cursor: "pointer", flexShrink: 0 }}
+              onClick={(e) => { e.stopPropagation(); setDetailOpen(true); }}
+              role="button"
+              aria-label="Open track details"
+            >
+              {coverSrc && <img key={currentTrack.id} src={coverSrc} alt="" style={{ width: 40, height: 40, objectFit: "cover" }} />}
             </div>
             <div className="min-w-0">
               <p className="text-sm font-black truncate" style={{ color: "var(--foreground)" }}>{cleanTitle(currentTrack.title)}</p>
               <p className="text-xs truncate" style={{ color: "var(--muted)" }}>{currentTrack.artist}</p>
-              <div className="mt-2 hidden sm:flex items-end gap-1">
+              <div className="mt-2 hidden sm:flex items-end gap-0.5">
                 {barHeights.map((h, index) => (
                   <span
                     key={index}
-                    className="w-1 rounded-full"
+                    className="w-0.5 rounded-full"
                     style={{
                       height: h,
-                      background: index * 4 < progress ? accentColor : "rgba(12,24,35,0.13)",
+                      background: "#22c55e",
+                      opacity: isPlaying ? 0.9 : 0.4,
                       transition: isPlaying ? "none" : "height 0.3s ease",
                     }}
                   />
@@ -257,34 +266,25 @@ export default function MusicPlayer() {
 
             <div className="flex w-full items-center gap-2 sm:w-64 sm:max-w-full">
               <span className="text-xs opacity-40 w-7 text-right" style={{ color: "var(--foreground)" }}>{fmt(currentTime)}</span>
-              <input
-                type="range"
-                min={0}
-                max={100}
-                step={0.1}
-                value={progress}
-                onChange={(e) => seek(Number(e.target.value))}
-                className="flex-1"
-                style={{
-                  background: `linear-gradient(to right, ${accentColor} 0%, ${accentColor} ${progress}%, rgba(12,24,35,0.15) ${progress}%, rgba(12,24,35,0.15) 100%)`
-                }}
-              />
+              <div className="flex-1">
+                <SeekBar progress={progress} duration={duration} accentColor={accentColor} onSeek={seek} />
+              </div>
               <span className="text-xs opacity-40 w-7" style={{ color: "var(--foreground)" }}>{fmt(duration)}</span>
             </div>
           </div>
 
           {/* Volume + queue + close */}
           <div className="hidden items-center gap-3 flex-shrink-0 sm:flex">
-            <button onClick={() => setMuted(!muted)} className="opacity-50 hover:opacity-100 transition-opacity" style={{ color: "var(--foreground)" }}>
-              {muted ? <VolumeX size={17} /> : <Volume2 size={17} />}
-            </button>
-            <input
-              type="range"
-              min={0}
-              max={100}
-              value={muted ? 0 : volume}
-              onChange={(e) => setVolume(Number(e.target.value))}
-              className="w-20 hidden sm:block"
+            <ElasticSlider
+              leftIcon={<VolumeX size={15} onClick={() => setMuted(true)} />}
+              rightIcon={<Volume2 size={15} onClick={() => setMuted(false)} />}
+              startingValue={0}
+              defaultValue={muted ? 0 : volume}
+              maxValue={100}
+              isStepped={false}
+              stepSize={1}
+              onChange={(v) => { setMuted(false); setVolume(v); }}
+              className="w-28"
             />
             <button
               onClick={() => setQueueOpen((o) => !o)}
@@ -305,6 +305,7 @@ export default function MusicPlayer() {
           </div>
         </div>
       </div>
+      <TrackDetailDrawer track={currentTrack} open={detailOpen} onClose={() => setDetailOpen(false)} />
     </>
   );
 }

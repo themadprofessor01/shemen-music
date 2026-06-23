@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { X, Play, Pause, SkipBack, SkipForward, Mic } from "lucide-react";
-import { usePlayer } from "@/components/MusicPlayerContext";
+import { usePlayer, useProgress } from "@/components/MusicPlayerContext";
 import type { Track } from "@/lib/data";
 
 interface KaraokeModeProps {
@@ -12,7 +12,8 @@ interface KaraokeModeProps {
 }
 
 export function KaraokeMode({ track, open, onClose }: KaraokeModeProps) {
-  const { isPlaying, play, pause, progress, skipNext, skipPrev } = usePlayer();
+  const { isPlaying, play, pause, skipNext, skipPrev } = usePlayer();
+  const { progress } = useProgress();
   const [activeLine, setActiveLine] = useState(0);
   const linesRef = useRef<HTMLDivElement>(null);
 

@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  --hero-bg: linear-gradient(135deg, #0f3d6b 0%, #1a5ea8 54%, #0a2e52 100%);
   --background: #f7f4ef;
   --foreground: #131b24;
   --foreground-muted: #74706a;
@@ -23,6 +24,7 @@
 }
 
 .dark {
+  --hero-bg: linear-gradient(135deg, #0c1823 0%, #123655 54%, #0b1520 100%);
   --background: #0c1823;
   --foreground: #e8e4de;
   --foreground-muted: #8d9ba8;
@@ -103,6 +105,52 @@ body {
     radial-gradient(circle at top right, rgba(182, 138, 58, 0.15), transparent 16rem);
   border: 1px solid rgba(231, 223, 209, 0.92);
   box-shadow: var(--shadow-soft);
+}
+
+.dark .premium-card {
+  background:
+    linear-gradient(145deg, var(--surface) 0%, var(--surface2) 100%),
+    radial-gradient(circle at top right, rgba(182, 138, 58, 0.1), transparent 16rem);
+  border: 1px solid var(--border);
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background: linear-gradient(to right, #0c1823, #123655);
+  height: 4px;
+  border-radius: 999px;
+}
+
+input[type="range"]::-moz-range-track {
+  background: linear-gradient(to right, #0c1823, #123655);
+  height: 4px;
+  border-radius: 999px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #0c1823;
+  margin-top: -5px;
+  box-shadow: 0 2px 8px rgba(12, 24, 35, 0.5);
+  border: 2px solid #123655;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #0c1823;
+  box-shadow: 0 2px 8px rgba(12, 24, 35, 0.5);
+  border: 2px solid #123655;
 }
 
 .premium-pill {
@@ -198,6 +246,85 @@ body {
 @keyframes motion-eq {
   0%, 100% { transform: scaleY(0.72); opacity: 0.72; }
   50% { transform: scaleY(1.18); opacity: 1; }
+}
+
+@keyframes orbit-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbit-counter {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+/* ── Scroll reveal ─────────────────────────────────────────── */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Heading mask reveal ───────────────────────────────────── */
+.heading-reveal {
+  overflow: hidden;
+  display: block;
+}
+.heading-reveal-inner {
+  display: block;
+  transform: translateY(110%);
+  transition: transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.heading-reveal.revealed .heading-reveal-inner {
+  transform: translateY(0);
+}
+
+/* ── Text shimmer ──────────────────────────────────────────── */
+@keyframes text-shimmer {
+  from { background-position: 200% center; }
+  to { background-position: -200% center; }
+}
+.text-shimmer {
+  background: linear-gradient(90deg, #e8e4de 0%, #075d9e 28%, #b68a3a 50%, #075d9e 72%, #e8e4de 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: text-shimmer 5s linear infinite;
+}
+
+
+/* ── Waveform bar reveal ───────────────────────────────────── */
+@keyframes bar-reveal {
+  from { transform: scaleY(0); opacity: 0; }
+  to { transform: scaleY(1); opacity: 1; }
+}
+.bar-reveal {
+  transform-origin: bottom;
+  animation: bar-reveal 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Waveform loading pulse ────────────────────────────────── */
+@keyframes waveform-pulse {
+  0%, 100% { opacity: 0.35; transform: scaleY(0.6); }
+  50% { opacity: 0.85; transform: scaleY(1); }
+}
+.waveform-pulse span {
+  transform-origin: bottom;
+  animation: waveform-pulse 1.2s ease-in-out infinite;
+}
+
+/* ── Page enter ────────────────────────────────────────────── */
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.page-enter {
+  animation: page-enter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {

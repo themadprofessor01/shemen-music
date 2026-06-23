@@ -8,6 +8,7 @@ import { Activity, ArrowUpRight, BarChart3, Sparkles, Users } from "lucide-react
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { CountUp } from "@/components/CountUp";
 
 function SectionHeader({ title, href }: { title: string; href?: string }) {
   return (
@@ -33,7 +34,7 @@ export default function HomePage() {
 
   return (
     <div className="px-3 py-6 sm:px-8 lg:px-14 space-y-10 sm:space-y-14">
-      <header className="relative overflow-hidden rounded-[2rem] p-6 sm:p-9 lg:p-12" style={{ background: "var(--hero-bg, linear-gradient(135deg, #0c1823 0%, #123655 54%, #0b1520 100%))", boxShadow: "0 34px 90px rgba(12,24,35,0.24)", minHeight: "580px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <header className="relative overflow-hidden rounded-[2rem] p-6 sm:p-9 lg:p-12" style={{ background: "var(--hero-bg, linear-gradient(135deg, #0c1823 0%, #123655 54%, #0b1520 100%))", boxShadow: "0 34px 90px rgba(12,24,35,0.24)", minHeight: "900px", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div className="absolute inset-0 opacity-40" style={{ background: "radial-gradient(circle at 70% 20%, rgba(230, 194, 119, 0.24), transparent 22rem)" }} />
         <div className="relative flex flex-col items-center text-center text-white gap-6 w-full max-w-3xl mx-auto">
           {/* Badge + heading */}
@@ -58,7 +59,7 @@ export default function HomePage() {
         </div>
       </header>
 
-      <section className="relative overflow-hidden rounded-[2rem] p-5 sm:p-6 lg:p-7" style={{ background: "linear-gradient(135deg, rgba(255,253,250,0.92), rgba(242,236,226,0.86))", border: "1px solid var(--border)", boxShadow: "var(--shadow-soft)" }}>
+      <section className="relative overflow-hidden rounded-[2rem] p-5 sm:p-6 lg:p-7" style={{ background: "var(--surface)", border: "1px solid var(--border)", boxShadow: "var(--shadow-soft)" }}>
         <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[var(--premium-soft)] blur-3xl" />
         <div className="relative flex flex-col gap-6">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -197,14 +198,14 @@ export default function HomePage() {
 
 function AnalyticsCard({ icon, value, label, detail }: { icon: ReactNode; value: string; label: string; detail: string }) {
   return (
-    <div className="rounded-3xl p-5" style={{ background: "rgba(255,253,250,0.76)", border: "1px solid rgba(231,223,209,0.84)", boxShadow: "0 14px 34px rgba(33,26,16,0.07)" }}>
+    <div className="rounded-3xl p-5" style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}>
       <div className="flex items-center justify-between gap-4">
-        <span className="h-11 w-11 rounded-2xl flex items-center justify-center text-[var(--premium)]" style={{ background: "rgba(245,234,210,0.72)" }}>
+        <span className="h-11 w-11 rounded-2xl flex items-center justify-center text-[var(--premium)]" style={{ background: "var(--surface)" }}>
           {icon}
         </span>
         <span className="h-2 w-2 rounded-full" style={{ background: "var(--premium)" }} />
       </div>
-      <p className="mt-6 text-3xl font-black tracking-tight">{value}</p>
+      <p className="mt-6 text-3xl font-black tracking-tight"><CountUp value={value} /></p>
       <p className="mt-1 font-bold">{label}</p>
       <p className="mt-3 text-sm text-[var(--muted)]">{detail}</p>
     </div>
@@ -213,7 +214,7 @@ function AnalyticsCard({ icon, value, label, detail }: { icon: ReactNode; value:
 
 function SpotlightStat({ value, label }: { value: string; label: string }) {
   return (
-    <div className="rounded-2xl p-4" style={{ background: "rgba(255,253,250,0.62)", border: "1px solid rgba(231,223,209,0.8)" }}>
+    <div className="rounded-2xl p-4" style={{ background: "var(--surface2)", border: "1px solid var(--border)" }}>
       <p className="text-xl font-black">{value}</p>
       <p className="mt-1 text-xs font-bold uppercase tracking-[0.16em] text-[var(--muted)]">{label}</p>
     </div>

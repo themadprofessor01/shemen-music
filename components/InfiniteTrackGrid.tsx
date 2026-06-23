@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import type { Track } from "@/lib/data";
 import { TrackCardLarge, TrackRow } from "@/components/TrackCard";
 
-const BATCH = 40;
+const BATCH = 12;
 
 export function InfiniteTrackGrid({
   tracks,
@@ -38,7 +38,8 @@ export function InfiniteTrackGrid({
     return () => observer.disconnect();
   }, [count, tracks.length]);
 
-  const visible = tracks.slice(0, count);
+  const sorted = [...tracks].sort((a, b) => b.plays - a.plays);
+  const visible = sorted.slice(0, count);
   const hasMore = count < tracks.length;
 
   if (tracks.length === 0) {

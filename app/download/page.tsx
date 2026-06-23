@@ -24,7 +24,7 @@ export default function DownloadPage() {
       <div className="px-4 pb-14 sm:px-8 lg:px-14">
         <div className="grid gap-8 md:grid-cols-2">
         {offers.map((offer) => (
-          <div key={offer.title} className="luxury-hover-card rounded-[2rem] p-8" style={{ background: "rgba(255,253,250,0.76)", border: "1px solid var(--border)", boxShadow: "var(--shadow-card)" }}>
+          <div key={offer.title} className="luxury-hover-card rounded-[2rem] p-8" style={{ background: "var(--surface2)", border: "1px solid var(--border)", boxShadow: "var(--shadow-card)" }}>
             <div className="flex h-12 w-12 items-center justify-center rounded-full" style={{ background: "var(--premium-soft)", color: "var(--premium)" }}>
               <Download size={19} />
             </div>

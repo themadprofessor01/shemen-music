@@ -17,11 +17,10 @@ export default async function PlaylistPage({
   const playlist = playlists.find((p) => p.id === id);
   if (!playlist) notFound();
 
-  // Match tracks by title keywords defined in playlist.songs, fall back to a sample
-  const keywords = (playlist.songs ?? []).map((s) => s.toLowerCase());
-  const matched = keywords.length > 0
-    ? tracks.filter((t) => keywords.some((kw) => t.title.toLowerCase().includes(kw)))
-    : [];
+  // Match tracks by ID (songs array), preserving playlist order
+  const songIds = playlist.songs ?? [];
+  const trackById = Object.fromEntries(tracks.map((t) => [t.id, t]));
+  const matched = songIds.flatMap((sid) => (trackById[sid] ? [trackById[sid]] : []));
   const playlistTracks = matched.length >= 4
     ? matched
     : tracks.filter((_, i) => i % playlists.length === playlists.findIndex((p) => p.id === id) || i < 2);

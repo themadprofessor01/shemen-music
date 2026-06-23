@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { usePlayer } from "@/components/MusicPlayerContext";
+import { usePlayer, useProgress } from "@/components/MusicPlayerContext";
 import { tracks } from "@/lib/data";
 
 const STORAGE_KEY = "shemen_session";
@@ -12,7 +12,8 @@ type SavedSession = {
 };
 
 export function SessionRestore() {
-  const { play, seek, pause, setQueue, currentTrack, progress } = usePlayer();
+  const { play, seek, pause, setQueue, currentTrack } = usePlayer();
+  const { progress } = useProgress();
   const restored = useRef(false);
 
   // Restore on mount

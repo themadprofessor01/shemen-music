@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, User } from "lucide-react";
+import { Search } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearch } from "@/components/SearchContext";
@@ -45,24 +45,6 @@ export default function TopBar() {
         />
       </div>
 
-      {/* Auth */}
-      <div className="flex items-center gap-2 ml-auto flex-shrink-0">
-        <Link
-          href="/signin"
-          className="hidden sm:block text-sm font-medium hover:opacity-80 transition-opacity"
-          style={{ color: "var(--foreground-muted)" }}
-        >
-          Sign In
-        </Link>
-        <Link
-          href="/signup"
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold transition-opacity hover:opacity-90"
-          style={{ background: "var(--accent)", color: "#ffffff" }}
-        >
-          <User size={13} />
-          <span className="hidden sm:inline">Sign Up</span>
-        </Link>
-      </div>
     </header>
   );
 }

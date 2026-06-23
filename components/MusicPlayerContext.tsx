@@ -13,8 +13,6 @@ import type { Track } from "@/lib/data";
 type PlayerState = {
   currentTrack: Track | null;
   isPlaying: boolean;
-  progress: number;       // 0–100
-  duration: number;       // seconds
   volume: number;         // 0–100
   muted: boolean;
   play: (track: Track) => void;
@@ -27,13 +25,18 @@ type PlayerState = {
   skipPrev: () => void;
   queue: Track[];
   setQueue: (tracks: Track[]) => void;
+  preload: (track: Track) => void;
+  getAudio: () => HTMLAudioElement | null;
 };
+
+// Separate context for rapidly-changing playback position
+// Splitting this prevents all card components from re-rendering on every progress tick
+type ProgressState = { progress: number; duration: number };
+const ProgressContext = createContext<ProgressState>({ progress: 0, duration: 0 });
 
 const PlayerContext = createContext<PlayerState>({
   currentTrack: null,
   isPlaying: false,
-  progress: 0,
-  duration: 0,
   volume: 80,
   muted: false,
   play: () => {},
@@ -46,10 +49,14 @@ const PlayerContext = createContext<PlayerState>({
   skipPrev: () => {},
   queue: [],
   setQueue: () => {},
+  preload: () => {},
+  getAudio: () => null,
 });
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const preloadRef = useRef<HTMLAudioElement | null>(null);
+  const currentTrackIdRef = useRef<string | null>(null);
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -58,10 +65,34 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const [muted, setMutedState] = useState(false);
   const [queue, setQueue] = useState<Track[]>([]);
 
+  // Store event handler refs so they can be re-attached after an element swap
+  const handlersRef = useRef<{
+    onTimeUpdate: () => void;
+    onLoadedMetadata: () => void;
+    onEnded: () => void;
+  } | null>(null);
+
+  /** Attach the shared event handlers to a given audio element */
+  const attachHandlers = useCallback((el: HTMLAudioElement) => {
+    const h = handlersRef.current;
+    if (!h) return;
+    el.addEventListener("timeupdate", h.onTimeUpdate);
+    el.addEventListener("loadedmetadata", h.onLoadedMetadata);
+    el.addEventListener("ended", h.onEnded);
+  }, []);
+
+  const detachHandlers = useCallback((el: HTMLAudioElement) => {
+    const h = handlersRef.current;
+    if (!h) return;
+    el.removeEventListener("timeupdate", h.onTimeUpdate);
+    el.removeEventListener("loadedmetadata", h.onLoadedMetadata);
+    el.removeEventListener("ended", h.onEnded);
+  }, []);
+
   // Create audio element once
   useEffect(() => {
     const audio = new Audio();
-    audio.preload = "metadata";
+    audio.preload = "auto";
     audioRef.current = audio;
 
     const onTimeUpdate = () => {
@@ -69,28 +100,35 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         setProgress((audio.currentTime / audio.duration) * 100);
       }
     };
-    const onLoadedMetadata = () => setDuration(audio.duration);
+    const onLoadedMetadata = () => setDuration((audioRef.current as HTMLAudioElement).duration);
     const onEnded = () => {
-      setIsPlaying(false);
       setProgress(0);
-      // Auto-advance queue
+      // Auto-advance queue and update currentTrack so UI shows new song
       setCurrentTrack((cur) => {
-        if (!cur) return cur;
+        if (!cur) { setIsPlaying(false); return cur; }
+        let nextTrack: Track | null = null;
         setQueue((q) => {
           const idx = q.findIndex((t) => t.id === cur.id);
           if (idx >= 0 && idx < q.length - 1) {
-            const next = q[idx + 1];
-            audio.src = next.downloadUrl ?? next.stationUrl ?? "";
-            audio.play().catch(() => {});
-            setIsPlaying(true);
-            return q;
+            nextTrack = q[idx + 1];
           }
           return q;
         });
+        if (nextTrack) {
+          const src = (nextTrack as Track).downloadUrl ?? (nextTrack as Track).stationUrl ?? "";
+          if (src) {
+            const el = audioRef.current!;
+            el.src = src;
+            el.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+          }
+          return nextTrack;
+        }
+        setIsPlaying(false);
         return cur;
       });
     };
 
+    handlersRef.current = { onTimeUpdate, onLoadedMetadata, onEnded };
     audio.addEventListener("timeupdate", onTimeUpdate);
     audio.addEventListener("loadedmetadata", onLoadedMetadata);
     audio.addEventListener("ended", onEnded);
@@ -101,6 +139,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
       audio.removeEventListener("loadedmetadata", onLoadedMetadata);
       audio.removeEventListener("ended", onEnded);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Sync volume/mute to audio element
@@ -111,22 +150,54 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     }
   }, [volume, muted]);
 
+  // Keep currentTrackId ref in sync for preload comparisons
+  useEffect(() => {
+    currentTrackIdRef.current = currentTrack?.id ?? null;
+  }, [currentTrack]);
+
+  const getAudio = useCallback(() => audioRef.current, []);
+
+  const preload = useCallback((track: Track) => {
+    const src = track.downloadUrl ?? track.stationUrl ?? "";
+    if (!src || currentTrackIdRef.current === track.id) return;
+    if (!preloadRef.current) {
+      preloadRef.current = new Audio();
+      preloadRef.current.preload = "auto";
+    }
+    if (preloadRef.current.src !== src) {
+      preloadRef.current.src = src;
+      preloadRef.current.load();
+    }
+  }, []);
+
   const play = useCallback((track: Track) => {
-    const audio = audioRef.current;
-    if (!audio) return;
     const src = track.downloadUrl ?? track.stationUrl ?? "";
     if (!src) return;
 
-    setCurrentTrack((cur) => {
-      if (cur?.id !== track.id) {
-        audio.src = src;
-        audio.load();
-      }
-      return track;
-    });
+    // Perform all DOM side-effects synchronously — BEFORE React batches the state update.
+    // If these lived inside a setCurrentTrack updater, React 18 defers them and
+    // audioRef.current?.play() would fire before the new src is assigned.
+    if (currentTrackIdRef.current !== track.id) {
+      const pre = preloadRef.current;
+      const audio = audioRef.current!;
 
-    audio.play().then(() => setIsPlaying(true)).catch(() => {});
-  }, []);
+      if (pre && pre.src === src && pre.readyState >= 2) {
+        // Swap preloaded element in as the main player
+        audio.pause();
+        detachHandlers(audio);
+        pre.volume = audio.volume;
+        pre.muted = audio.muted;
+        attachHandlers(pre);
+        preloadRef.current = audio;
+        audioRef.current = pre;
+      } else {
+        audio.src = src;
+      }
+    }
+
+    audioRef.current?.play().then(() => setIsPlaying(true)).catch(() => {});
+    setCurrentTrack(track);
+  }, [attachHandlers, detachHandlers]);
 
   const pause = useCallback(() => {
     audioRef.current?.pause();
@@ -135,7 +206,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
 
   const toggle = useCallback(
     (track: Track) => {
-      if (currentTrack?.id === track.id) {
+      if (currentTrackIdRef.current === track.id) {
         if (isPlaying) {
           audioRef.current?.pause();
           setIsPlaying(false);
@@ -146,7 +217,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         play(track);
       }
     },
-    [currentTrack, isPlaying, play]
+    [isPlaying, play]
   );
 
   const seek = useCallback((pct: number) => {
@@ -191,8 +262,6 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
       value={{
         currentTrack,
         isPlaying,
-        progress,
-        duration,
         volume,
         muted,
         play,
@@ -205,15 +274,16 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         skipPrev,
         queue,
         setQueue,
+        preload,
+        getAudio,
       }}
     >
-      {children}
+      <ProgressContext.Provider value={{ progress, duration }}>
+        {children}
+      </ProgressContext.Provider>
     </PlayerContext.Provider>
   );
 }
 
 export const usePlayer = () => useContext(PlayerContext);
-export const useProgress = () => {
-  const { progress, duration } = useContext(PlayerContext);
-  return { progress, duration };
-};
+export const useProgress = () => useContext(ProgressContext);
