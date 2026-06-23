@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { usePlayer } from "@/components/MusicPlayerContext";
 
 export function KeyboardShortcuts() {
-  const { currentTrack, isPlaying, play, pause, skipNext, skipPrev, muted, setMuted } = usePlayer();
+  const { currentTrack, isPlaying, play, pause, seek, skipNext, skipPrev, muted, setMuted, getAudio } = usePlayer();
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -16,11 +16,31 @@ export function KeyboardShortcuts() {
           e.preventDefault();
           if (currentTrack) { isPlaying ? pause() : play(currentTrack); }
           break;
-        case "ArrowRight":
+        case "ArrowRight": {
+          e.preventDefault();
+          const audio = getAudio();
+          if (audio && audio.duration) {
+            const newTime = Math.min(audio.currentTime + 10, audio.duration);
+            seek((newTime / audio.duration) * 100);
+          }
+          break;
+        }
+        case "ArrowLeft": {
+          e.preventDefault();
+          const audio = getAudio();
+          if (audio && audio.duration) {
+            const newTime = Math.max(audio.currentTime - 10, 0);
+            seek((newTime / audio.duration) * 100);
+          }
+          break;
+        }
+        case "n":
+        case "N":
           e.preventDefault();
           skipNext();
           break;
-        case "ArrowLeft":
+        case "p":
+        case "P":
           e.preventDefault();
           skipPrev();
           break;
@@ -34,7 +54,7 @@ export function KeyboardShortcuts() {
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [currentTrack, isPlaying, play, pause, skipNext, skipPrev, muted, setMuted]);
+  }, [currentTrack, isPlaying, play, pause, seek, skipNext, skipPrev, muted, setMuted, getAudio]);
 
   return null;
 }

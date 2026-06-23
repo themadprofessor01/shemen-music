@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, X, ListMusic } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, X, ListMusic, Shuffle, Repeat, Repeat1 } from "lucide-react";
 import { usePlayer, useProgress } from "@/components/MusicPlayerContext";
 import { cleanTitle } from "@/lib/data";
 import { TrackDetailDrawer } from "@/components/TrackCard";
@@ -24,6 +24,8 @@ export default function MusicPlayer() {
     skipNext, skipPrev,
     queue,
     getAudio,
+    shuffle, setShuffle,
+    repeat, setRepeat,
   } = usePlayer();
   const { progress, duration } = useProgress();
   const [dismissed, setDismissed] = useState(false);
@@ -273,7 +275,7 @@ export default function MusicPlayer() {
             </div>
           </div>
 
-          {/* Volume + queue + close */}
+          {/* Volume + shuffle + repeat + queue + close */}
           <div className="hidden items-center gap-3 flex-shrink-0 sm:flex">
             <ElasticSlider
               leftIcon={<VolumeX size={15} onClick={() => setMuted(true)} />}
@@ -286,6 +288,24 @@ export default function MusicPlayer() {
               onChange={(v) => { setMuted(false); setVolume(v); }}
               className="w-28"
             />
+            <button
+              onClick={() => setShuffle(!shuffle)}
+              className="transition-opacity"
+              style={{ color: "var(--foreground)", opacity: shuffle ? 1 : 0.4 }}
+              aria-label={shuffle ? "Shuffle on" : "Shuffle off"}
+              title="Shuffle"
+            >
+              <Shuffle size={15} />
+            </button>
+            <button
+              onClick={() => setRepeat(repeat === "none" ? "all" : repeat === "all" ? "one" : "none")}
+              className="transition-opacity"
+              style={{ color: "var(--foreground)", opacity: repeat !== "none" ? 1 : 0.4 }}
+              aria-label={`Repeat: ${repeat}`}
+              title={repeat === "none" ? "Repeat off" : repeat === "all" ? "Repeat all" : "Repeat one"}
+            >
+              {repeat === "one" ? <Repeat1 size={15} /> : <Repeat size={15} />}
+            </button>
             <button
               onClick={() => setQueueOpen((o) => !o)}
               className="transition-opacity"

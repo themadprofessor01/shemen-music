@@ -10,6 +10,8 @@ import {
 } from "react";
 import type { Track } from "@/lib/data";
 
+export type RepeatMode = "none" | "one" | "all";
+
 type PlayerState = {
   currentTrack: Track | null;
   isPlaying: boolean;
@@ -27,6 +29,10 @@ type PlayerState = {
   setQueue: (tracks: Track[]) => void;
   preload: (track: Track) => void;
   getAudio: () => HTMLAudioElement | null;
+  shuffle: boolean;
+  setShuffle: (s: boolean) => void;
+  repeat: RepeatMode;
+  setRepeat: (r: RepeatMode) => void;
 };
 
 // Separate context for rapidly-changing playback position
@@ -51,6 +57,10 @@ const PlayerContext = createContext<PlayerState>({
   setQueue: () => {},
   preload: () => {},
   getAudio: () => null,
+  shuffle: false,
+  setShuffle: () => {},
+  repeat: "none",
+  setRepeat: () => {},
 });
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
@@ -64,6 +74,20 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const [volume, setVolumeState] = useState(80);
   const [muted, setMutedState] = useState(false);
   const [queue, setQueue] = useState<Track[]>([]);
+  const [shuffle, setShuffleState] = useState(false);
+  const [repeat, setRepeatState] = useState<RepeatMode>("none");
+  const shuffleRef = useRef(false);
+  const repeatRef = useRef<RepeatMode>("none");
+
+  const setShuffle = useCallback((s: boolean) => {
+    setShuffleState(s);
+    shuffleRef.current = s;
+  }, []);
+
+  const setRepeat = useCallback((r: RepeatMode) => {
+    setRepeatState(r);
+    repeatRef.current = r;
+  }, []);
 
   // Store event handler refs so they can be re-attached after an element swap
   const handlersRef = useRef<{
@@ -103,14 +127,26 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     const onLoadedMetadata = () => setDuration((audioRef.current as HTMLAudioElement).duration);
     const onEnded = () => {
       setProgress(0);
-      // Auto-advance queue and update currentTrack so UI shows new song
+      // Repeat one: restart immediately
+      if (repeatRef.current === "one") {
+        const el = audioRef.current;
+        if (el) { el.currentTime = 0; el.play().catch(() => {}); }
+        return;
+      }
+      // Auto-advance queue respecting shuffle and repeat-all
       setCurrentTrack((cur) => {
         if (!cur) { setIsPlaying(false); return cur; }
         let nextTrack: Track | null = null;
         setQueue((q) => {
           const idx = q.findIndex((t) => t.id === cur.id);
-          if (idx >= 0 && idx < q.length - 1) {
+          if (shuffleRef.current && q.length > 1) {
+            let randIdx = Math.floor(Math.random() * (q.length - 1));
+            if (randIdx >= idx) randIdx++;
+            nextTrack = q[randIdx];
+          } else if (idx >= 0 && idx < q.length - 1) {
             nextTrack = q[idx + 1];
+          } else if (repeatRef.current === "all" && q.length > 0) {
+            nextTrack = q[0];
           }
           return q;
         });
@@ -173,6 +209,20 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const play = useCallback((track: Track) => {
     const src = track.downloadUrl ?? track.stationUrl ?? "";
     if (!src) return;
+
+    // Track play event for analytics
+    if (currentTrackIdRef.current !== track.id) {
+      try {
+        const statsRaw = localStorage.getItem("shemen_stats") ?? "{}";
+        const stats: Record<string, number> = JSON.parse(statsRaw);
+        stats[track.id] = (stats[track.id] ?? 0) + 1;
+        localStorage.setItem("shemen_stats", JSON.stringify(stats));
+      } catch {}
+      // Fire custom event that Vercel Analytics can pick up via window.va
+      if (typeof window !== "undefined" && (window as Window & { va?: (event: string, props: Record<string, string>) => void }).va) {
+        (window as Window & { va?: (event: string, props: Record<string, string>) => void }).va!("track", { event: "play", trackId: track.id, title: track.title, artist: track.artist });
+      }
+    }
 
     // Perform all DOM side-effects synchronously — BEFORE React batches the state update.
     // If these lived inside a setCurrentTrack updater, React 18 defers them and
@@ -238,9 +288,16 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const skipNext = useCallback(() => {
     if (!currentTrack || queue.length === 0) return;
     const idx = queue.findIndex((t) => t.id === currentTrack.id);
-    const next = queue[idx + 1];
+    let next: Track | undefined;
+    if (shuffle) {
+      let randIdx = Math.floor(Math.random() * (queue.length - 1));
+      if (randIdx >= idx) randIdx++;
+      next = queue[randIdx];
+    } else {
+      next = queue[idx + 1] ?? (repeat === "all" ? queue[0] : undefined);
+    }
     if (next) play(next);
-  }, [currentTrack, queue, play]);
+  }, [currentTrack, queue, play, shuffle, repeat]);
 
   const skipPrev = useCallback(() => {
     const audio = audioRef.current;
@@ -276,6 +333,10 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         setQueue,
         preload,
         getAudio,
+        shuffle,
+        setShuffle,
+        repeat,
+        setRepeat,
       }}
     >
       <ProgressContext.Provider value={{ progress, duration }}>

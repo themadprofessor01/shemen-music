@@ -9,8 +9,8 @@ export function ShareButton({ track, size = 15 }: { track: Track; size?: number 
 
   async function handleShare(e: React.MouseEvent) {
     e.stopPropagation();
-    const url = typeof window !== "undefined" ? window.location.origin + `/?track=${track.id}` : "";
-    const shareData = { title: track.title, text: `Listen to "${track.title}" by ${track.artist}`, url };
+    const url = typeof window !== "undefined" ? `${window.location.origin}/station/${track.id}` : "";
+    const shareData = { title: `${track.title} — ShemenMusic`, text: `Listen to "${track.title}" by ${track.artist} on ShemenMusic`, url };
 
     try {
       if (navigator.share) {

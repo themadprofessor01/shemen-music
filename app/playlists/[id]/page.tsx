@@ -1,8 +1,37 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CollectionCover } from "@/components/CollectionCover";
 import { TrackList } from "@/components/TrackList";
 import { PlayAllButton } from "@/components/PlayAllButton";
 import { playlists, tracks } from "@/lib/data";
+
+const BASE = "https://shemenmusic.com";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const playlist = playlists.find((p) => p.id === id);
+  if (!playlist) return {};
+  return {
+    title: `${playlist.title} — ShemenMusic`,
+    description: playlist.description ?? `${playlist.title} playlist on ShemenMusic`,
+    openGraph: {
+      title: `${playlist.title} — ShemenMusic`,
+      description: playlist.description ?? `${playlist.title} — worship music playlist`,
+      url: `${BASE}/playlists/${id}`,
+      siteName: "ShemenMusic",
+      type: "music.playlist",
+    },
+    twitter: {
+      card: "summary",
+      title: `${playlist.title} — ShemenMusic`,
+      description: playlist.description ?? `${playlist.title} playlist`,
+    },
+  };
+}
 
 export function generateStaticParams() {
   return playlists.map((p) => ({ id: p.id }));

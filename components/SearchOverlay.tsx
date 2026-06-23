@@ -1,9 +1,21 @@
 "use client";
 
+import Fuse from "fuse.js";
 import { useSearch } from "@/components/SearchContext";
 import { usePlayer } from "@/components/MusicPlayerContext";
 import { tracks } from "@/lib/data";
 import { Play, Pause, X } from "lucide-react";
+
+const fuse = new Fuse(tracks, {
+  keys: [
+    { name: "title", weight: 3 },
+    { name: "artist", weight: 2 },
+    { name: "mood", weight: 1 },
+    { name: "tags", weight: 1 },
+  ],
+  threshold: 0.35,
+  includeScore: true,
+});
 
 export default function SearchOverlay() {
   const { query, setQuery } = useSearch();
@@ -11,13 +23,9 @@ export default function SearchOverlay() {
 
   if (!query.trim()) return null;
 
-  const q = query.toLowerCase();
-  const results = tracks.filter(
-    (t) =>
-      t.title.toLowerCase().includes(q) ||
-      t.artist.toLowerCase().includes(q) ||
-      (t.mood ?? "").toLowerCase().includes(q)
-  );
+  const results = query.length < 2
+    ? tracks.filter((t) => t.title.toLowerCase().startsWith(query.toLowerCase())).slice(0, 12)
+    : fuse.search(query, { limit: 20 }).map((r) => r.item);
 
   function handlePlay(index: number) {
     setQueue(results);

@@ -1,9 +1,23 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { PageShell } from "@/components/PageShell";
 import { PlayAllButton } from "@/components/PlayAllButton";
 import { tracks, totalDuration } from "@/lib/data";
 import { MoodFilter } from "./MoodFilter";
 import { InfiniteTrackGrid } from "@/components/InfiniteTrackGrid";
+
+export const metadata: Metadata = {
+  title: "Instrumentals — ShemenMusic",
+  description: "Browse hundreds of free Christian instrumental tracks — worship, prayer, and gospel music available for streaming and download.",
+  openGraph: {
+    title: "Instrumentals — ShemenMusic",
+    description: "Browse hundreds of free Christian instrumental tracks.",
+    url: "https://shemenmusic.com/instrumentals",
+    siteName: "ShemenMusic",
+    type: "website",
+  },
+  twitter: { card: "summary", title: "Instrumentals — ShemenMusic" },
+};
 
 export default async function InstrumentalsPage({
   searchParams,

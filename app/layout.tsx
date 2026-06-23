@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import TopBar from "@/components/TopBar";
@@ -10,6 +11,14 @@ import SearchOverlay from "@/components/SearchOverlay";
 import { LikesProvider } from "@/components/LikesContext";
 import { SessionRestore } from "@/components/SessionRestore";
 import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import IntroAnimation from "@/components/IntroAnimation";
+import { Analytics } from "@vercel/analytics/next";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 export const viewport = {
   width: "device-width",
@@ -24,8 +33,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
-      <body>
+    <html lang="en" className={`dark ${inter.variable}`} suppressHydrationWarning>
+      <body className={inter.className}>
+        <IntroAnimation />
         <PlayerProvider>
           <LikesProvider>
             <SearchProvider>
@@ -50,6 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </SearchProvider>
           </LikesProvider>
         </PlayerProvider>
+        <Analytics />
       </body>
     </html>
   );

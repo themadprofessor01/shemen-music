@@ -1,9 +1,23 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { PageShell } from "@/components/PageShell";
 import { PlayAllButton } from "@/components/PlayAllButton";
 import { tracks, totalDuration } from "@/lib/data";
 import { MoodFilter } from "./MoodFilter";
 import { InfiniteTrackGrid } from "@/components/InfiniteTrackGrid";
+
+export const metadata: Metadata = {
+  title: "Praise & Worship — ShemenMusic",
+  description: "Stream and download free Christian praise and worship songs — timeless hymns and contemporary worship music.",
+  openGraph: {
+    title: "Praise & Worship — ShemenMusic",
+    description: "Free Christian praise and worship songs for streaming and download.",
+    url: "https://shemenmusic.com/worship",
+    siteName: "ShemenMusic",
+    type: "website",
+  },
+  twitter: { card: "summary", title: "Praise & Worship — ShemenMusic" },
+};
 
 export default async function WorshipPage({
   searchParams,
