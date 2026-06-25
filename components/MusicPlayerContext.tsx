@@ -26,6 +26,7 @@ type PlayerState = {
   queue: Track[];
   setQueue: (tracks: Track[]) => void;
   preload: (track: Track) => void;
+  getAudioElement: () => HTMLAudioElement | null;
 };
 
 // Separate context for rapidly-changing playback position
@@ -49,6 +50,7 @@ const PlayerContext = createContext<PlayerState>({
   queue: [],
   setQueue: () => {},
   preload: () => {},
+  getAudioElement: () => null,
 });
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
@@ -152,6 +154,8 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     currentTrackIdRef.current = currentTrack?.id ?? null;
   }, [currentTrack]);
+
+  const getAudioElement = useCallback(() => audioRef.current, []);
 
   const preload = useCallback((track: Track) => {
     const src = track.downloadUrl ?? track.audioUrl ?? track.stationUrl ?? "";
@@ -270,6 +274,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         queue,
         setQueue,
         preload,
+        getAudioElement,
       }}
     >
       <ProgressContext.Provider value={{ progress, duration }}>

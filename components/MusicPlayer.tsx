@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, X, ListMusic } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, X, ListMusic, Wind, Share2 } from "lucide-react";
 import { usePlayer, useProgress } from "@/components/MusicPlayerContext";
 import { cleanTitle } from "@/lib/data";
+import { initAudioEngine, getAnalyser, setReverb, isReverbOn, resumeContext, isInitialized } from "@/lib/audioEngine";
 
 function fmt(secs: number) {
   if (!secs || isNaN(secs)) return "0:00";
@@ -12,6 +13,270 @@ function fmt(secs: number) {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
+// ── Real-time frequency visualizer ────────────────────────────────────────────
+function AudioVisualizer({ isPlaying, accentColor }: { isPlaying: boolean; accentColor: string }) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const rafRef = useRef<number | undefined>(undefined);
+  // Fallback animated heights when analyser not ready
+  const fallbackRef = useRef<number[]>(Array.from({ length: 24 }, () => 8));
+  const timeRef = useRef(0);
+
+  useEffect(() => {
+    if (!isPlaying) {
+      cancelAnimationFrame(rafRef.current!);
+      return;
+    }
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx2d = canvas.getContext("2d");
+    if (!ctx2d) return;
+
+    const draw = () => {
+      const W = canvas.width;
+      const H = canvas.height;
+      ctx2d.clearRect(0, 0, W, H);
+
+      const analyser = getAnalyser();
+      const bars = 24;
+      const barW = Math.floor(W / bars) - 1;
+
+      if (analyser) {
+        const data = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(data);
+        const step = Math.floor(data.length / bars);
+
+        for (let i = 0; i < bars; i++) {
+          const val = data[i * step] / 255;
+          const bH = Math.max(3, val * H);
+          const x = i * (barW + 1);
+          const alpha = 0.35 + val * 0.65;
+          ctx2d.fillStyle = accentColor + Math.round(alpha * 255).toString(16).padStart(2, "0");
+          ctx2d.beginPath();
+          ctx2d.roundRect(x, H - bH, barW, bH, 2);
+          ctx2d.fill();
+        }
+      } else {
+        // Animated fallback
+        timeRef.current += 0.06;
+        for (let i = 0; i < bars; i++) {
+          const base = 4 + ((i * 7 + 3) % 12);
+          const bH = base + Math.abs(Math.sin(timeRef.current * (0.8 + i * 0.15)) * (H * 0.55));
+          const x = i * (barW + 1);
+          const progress = i / bars;
+          ctx2d.fillStyle = progress < 0.4 ? accentColor + "99" : "rgba(12,24,35,0.18)";
+          ctx2d.beginPath();
+          ctx2d.roundRect(x, H - bH, barW, bH, 2);
+          ctx2d.fill();
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(draw);
+    };
+
+    rafRef.current = requestAnimationFrame(draw);
+    return () => cancelAnimationFrame(rafRef.current!);
+  }, [isPlaying, accentColor]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      width={144}
+      height={24}
+      style={{ display: "block" }}
+    />
+  );
+}
+
+// ── Share card modal ───────────────────────────────────────────────────────────
+function ShareCardModal({ onClose }: { onClose: () => void }) {
+  const { currentTrack } = usePlayer();
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [ready, setReady] = useState(false);
+
+  const draw = useCallback(async () => {
+    const canvas = canvasRef.current;
+    if (!canvas || !currentTrack) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const W = 600;
+    const H = 315; // 1.91:1 Open Graph ratio
+    canvas.width = W;
+    canvas.height = H;
+
+    // Background gradient using cover color
+    const color = currentTrack.coverColor ?? "#075d9e";
+    const r = parseInt(color.slice(1, 3), 16);
+    const g = parseInt(color.slice(3, 5), 16);
+    const b = parseInt(color.slice(5, 7), 16);
+
+    const bg = ctx.createLinearGradient(0, 0, W, H);
+    bg.addColorStop(0, `rgba(${r},${g},${b},1)`);
+    bg.addColorStop(1, `rgba(${Math.max(r - 60, 0)},${Math.max(g - 60, 0)},${Math.max(b - 60, 0)},1)`);
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // Noise texture overlay
+    ctx.fillStyle = "rgba(0,0,0,0.18)";
+    ctx.fillRect(0, 0, W, H);
+
+    // Album art (left side)
+    const coverSrc = currentTrack.coverImage || currentTrack.imageUrl;
+    const artSize = 200;
+    const artX = 48;
+    const artY = (H - artSize) / 2;
+
+    if (coverSrc) {
+      try {
+        const img = new window.Image();
+        img.crossOrigin = "anonymous";
+        await new Promise<void>((resolve, reject) => {
+          img.onload = () => resolve();
+          img.onerror = () => reject();
+          img.src = coverSrc;
+        });
+        // Rounded rect clip
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(artX, artY, artSize, artSize, 16);
+        ctx.clip();
+        ctx.drawImage(img, artX, artY, artSize, artSize);
+        ctx.restore();
+
+        // Shadow under art
+        ctx.shadowColor = "rgba(0,0,0,0.4)";
+        ctx.shadowBlur = 30;
+        ctx.shadowOffsetY = 10;
+        ctx.beginPath();
+        ctx.roundRect(artX, artY, artSize, artSize, 16);
+        ctx.fillStyle = "transparent";
+        ctx.fill();
+        ctx.shadowColor = "transparent";
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetY = 0;
+      } catch {
+        // Fallback: color block
+        ctx.fillStyle = `rgba(255,255,255,0.15)`;
+        ctx.beginPath();
+        ctx.roundRect(artX, artY, artSize, artSize, 16);
+        ctx.fill();
+      }
+    }
+
+    // Text area (right side)
+    const textX = artX + artSize + 36;
+    const textW = W - textX - 40;
+
+    ctx.fillStyle = "rgba(255,255,255,0.45)";
+    ctx.font = "500 11px -apple-system, sans-serif";
+    ctx.letterSpacing = "3px";
+    ctx.fillText("NOW PLAYING", textX, artY + 20);
+    ctx.letterSpacing = "0px";
+
+    // Title
+    ctx.fillStyle = "white";
+    ctx.font = `700 ${cleanTitle(currentTrack.title).length > 24 ? 22 : 28}px -apple-system, sans-serif`;
+    const title = cleanTitle(currentTrack.title);
+    // Word wrap
+    const words = title.split(" ");
+    let line = "";
+    let lineY = artY + 56;
+    for (const word of words) {
+      const test = line + (line ? " " : "") + word;
+      if (ctx.measureText(test).width > textW && line) {
+        ctx.fillText(line, textX, lineY);
+        line = word;
+        lineY += 34;
+      } else {
+        line = test;
+      }
+    }
+    ctx.fillText(line, textX, lineY);
+
+    // Artist
+    ctx.fillStyle = "rgba(255,255,255,0.65)";
+    ctx.font = "400 14px -apple-system, sans-serif";
+    ctx.fillText(currentTrack.artist || "ShemenMusic", textX, lineY + 28);
+
+    // Branding bottom right
+    ctx.fillStyle = "rgba(255,255,255,0.35)";
+    ctx.font = "600 12px -apple-system, sans-serif";
+    ctx.letterSpacing = "1px";
+    ctx.fillText("shemenmusic.com", W - 160, H - 24);
+
+    // Decorative circle
+    ctx.beginPath();
+    ctx.arc(W - 30, 30, 60, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255,255,255,0.06)";
+    ctx.fill();
+
+    setReady(true);
+  }, [currentTrack]);
+
+  useEffect(() => { draw(); }, [draw]);
+
+  const download = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const link = document.createElement("a");
+    link.download = `shemen-${cleanTitle(currentTrack?.title ?? "track").replace(/\s+/g, "-").toLowerCase()}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  };
+
+  return (
+    <div
+      style={{
+        position: "fixed", inset: 0, zIndex: 400,
+        background: "rgba(0,0,0,0.7)", backdropFilter: "blur(8px)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: 24,
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          background: "var(--surface)", borderRadius: 20, padding: 24,
+          maxWidth: 660, width: "100%",
+          border: "1px solid var(--border)",
+          boxShadow: "0 40px 100px rgba(0,0,0,0.4)",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: "var(--foreground)" }}>Share Card</p>
+          <button onClick={onClose} style={{ color: "var(--muted)", opacity: 0.6 }}>
+            <X size={16} />
+          </button>
+        </div>
+        <canvas
+          ref={canvasRef}
+          style={{ width: "100%", height: "auto", borderRadius: 12, display: "block" }}
+        />
+        <button
+          onClick={download}
+          disabled={!ready}
+          style={{
+            marginTop: 16, width: "100%",
+            padding: "12px 0",
+            borderRadius: 12,
+            background: "#0c1823",
+            color: "white",
+            fontSize: 14,
+            fontWeight: 700,
+            opacity: ready ? 1 : 0.5,
+            cursor: ready ? "pointer" : "default",
+          }}
+        >
+          Download PNG
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── Main MusicPlayer ───────────────────────────────────────────────────────────
 export default function MusicPlayer() {
   const {
     currentTrack, isPlaying, play, pause,
@@ -20,29 +285,33 @@ export default function MusicPlayer() {
     muted, setMuted,
     skipNext, skipPrev,
     queue,
+    getAudioElement,
   } = usePlayer();
   const { progress, duration } = useProgress();
   const [dismissed, setDismissed] = useState(false);
   const [queueOpen, setQueueOpen] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
+  const [reverbEnabled, setReverbEnabled] = useState(false);
+  const [showShare, setShowShare] = useState(false);
 
-  const [barHeights, setBarHeights] = useState(() => Array.from({ length: 24 }, () => 8));
-  const rafRef = useRef<number | undefined>(undefined);
-  const timeRef = useRef(0);
-
+  // Init audio engine lazily on first play
   useEffect(() => {
-    if (!isPlaying) { cancelAnimationFrame(rafRef.current!); return; }
-    const animate = () => {
-      timeRef.current += 0.06;
-      setBarHeights(prev => prev.map((_, i) => {
-        const base = 5 + ((i * 7 + 3) % 17);
-        return base + Math.abs(Math.sin(timeRef.current * (0.8 + i * 0.15)) * 14);
-      }));
-      rafRef.current = requestAnimationFrame(animate);
-    };
-    rafRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafRef.current!);
-  }, [isPlaying]);
+    if (!isPlaying) return;
+    const el = getAudioElement();
+    if (el && !isInitialized()) {
+      initAudioEngine(el);
+    }
+    resumeContext();
+  }, [isPlaying, getAudioElement]);
+
+  // Reset dismissed when new track loads
+  useEffect(() => { setDismissed(false); }, [currentTrack?.id]);
+
+  const toggleReverb = () => {
+    const next = !reverbEnabled;
+    setReverbEnabled(next);
+    setReverb(next);
+  };
 
   if (!currentTrack || dismissed) return null;
 
@@ -52,7 +321,9 @@ export default function MusicPlayer() {
 
   return (
     <>
-      {/* Mobile full-screen player — only visible on mobile */}
+      {showShare && <ShareCardModal onClose={() => setShowShare(false)} />}
+
+      {/* Mobile full-screen player */}
       {fullscreen && (
         <div
           className="fixed inset-0 z-[60] flex flex-col md:hidden"
@@ -91,8 +362,32 @@ export default function MusicPlayer() {
           </div>
 
           <div className="px-7 pb-2">
-            <p className="text-2xl font-black truncate" style={{ color: "var(--foreground)" }}>{cleanTitle(currentTrack.title)}</p>
-            <p className="text-sm mt-0.5 truncate" style={{ color: "var(--muted)" }}>{currentTrack.artist}</p>
+            <div className="flex items-center justify-between mb-1">
+              <div className="min-w-0">
+                <p className="text-2xl font-black truncate" style={{ color: "var(--foreground)" }}>{cleanTitle(currentTrack.title)}</p>
+                <p className="text-sm mt-0.5 truncate" style={{ color: "var(--muted)" }}>{currentTrack.artist}</p>
+              </div>
+              <div className="flex gap-2 ml-3">
+                <button
+                  onClick={toggleReverb}
+                  title="Sanctuary Reverb"
+                  style={{
+                    color: reverbEnabled ? accentColor : "var(--muted)",
+                    opacity: reverbEnabled ? 1 : 0.5,
+                    padding: 4,
+                  }}
+                >
+                  <Wind size={18} />
+                </button>
+                <button
+                  onClick={() => setShowShare(true)}
+                  title="Share Card"
+                  style={{ color: "var(--muted)", opacity: 0.5, padding: 4 }}
+                >
+                  <Share2 size={18} />
+                </button>
+              </div>
+            </div>
           </div>
 
           <div className="px-7 py-3">
@@ -203,7 +498,7 @@ export default function MusicPlayer() {
             backdropFilter: "blur(24px)",
           }}
         >
-          {/* Track info — tapping opens fullscreen on mobile */}
+          {/* Track info */}
           <div
             className="flex items-center gap-3 flex-1 min-w-0"
             style={{ cursor: "pointer" }}
@@ -220,18 +515,8 @@ export default function MusicPlayer() {
             <div className="min-w-0">
               <p className="text-sm font-black truncate" style={{ color: "var(--foreground)" }}>{cleanTitle(currentTrack.title)}</p>
               <p className="text-xs truncate" style={{ color: "var(--muted)" }}>{currentTrack.artist}</p>
-              <div className="mt-2 hidden sm:flex items-end gap-1">
-                {barHeights.map((h, index) => (
-                  <span
-                    key={index}
-                    className="w-1 rounded-full"
-                    style={{
-                      height: h,
-                      background: index * 4 < progress ? accentColor : "rgba(12,24,35,0.13)",
-                      transition: isPlaying ? "none" : "height 0.3s ease",
-                    }}
-                  />
-                ))}
+              <div className="mt-2 hidden sm:block">
+                <AudioVisualizer isPlaying={isPlaying} accentColor={accentColor} />
               </div>
             </div>
           </div>
@@ -273,7 +558,7 @@ export default function MusicPlayer() {
             </div>
           </div>
 
-          {/* Volume + queue + close */}
+          {/* Volume + reverb + share + queue + close */}
           <div className="hidden items-center gap-3 flex-shrink-0 sm:flex">
             <button onClick={() => setMuted(!muted)} className="opacity-50 hover:opacity-100 transition-opacity" style={{ color: "var(--foreground)" }}>
               {muted ? <VolumeX size={17} /> : <Volume2 size={17} />}
@@ -286,6 +571,27 @@ export default function MusicPlayer() {
               onChange={(e) => setVolume(Number(e.target.value))}
               className="w-20 hidden sm:block"
             />
+            {/* Sanctuary Reverb */}
+            <button
+              onClick={toggleReverb}
+              title={reverbEnabled ? "Sanctuary Reverb On" : "Sanctuary Reverb Off"}
+              style={{
+                color: reverbEnabled ? accentColor : "var(--foreground)",
+                opacity: reverbEnabled ? 1 : 0.5,
+                transition: "color 0.2s, opacity 0.2s",
+              }}
+            >
+              <Wind size={16} />
+            </button>
+            {/* Share card */}
+            <button
+              onClick={() => setShowShare(true)}
+              title="Share Now Playing card"
+              className="opacity-50 hover:opacity-80 transition-opacity"
+              style={{ color: "var(--foreground)" }}
+            >
+              <Share2 size={16} />
+            </button>
             <button
               onClick={() => setQueueOpen((o) => !o)}
               className="transition-opacity"

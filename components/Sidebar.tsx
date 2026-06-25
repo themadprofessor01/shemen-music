@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Headphones, Download, Home, Heart, Moon, Music2, Mail, Sun, ListMusic } from "lucide-react";
+import { Headphones, Download, Home, Heart, Moon, Music2, Mail, Sun, ListMusic, BookMarked } from "lucide-react";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
@@ -35,7 +35,7 @@ export default function Sidebar() {
             width={140}
             height={20}
             className="w-full max-w-[140px] h-auto"
-            style={{ filter: dark ? "brightness(0) invert(1)" : "none" }}
+            style={{ filter: "var(--logo-filter, none)" }}
             priority
           />
         </Link>
@@ -61,6 +61,7 @@ export default function Sidebar() {
         </p>
         <nav className="flex flex-col gap-0.5">
           <SideLink href="/playlists" icon={<ListMusic size={15} />} label="Playlists" />
+          <SideLink href="/setlists" icon={<BookMarked size={15} />} label="Setlists" />
           <SideLink href="/likes" icon={<Heart size={15} />} label="Likes" />
         </nav>
       </div>

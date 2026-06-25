@@ -1,12 +1,25 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Search, Sun, Moon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { useState, useEffect } from "react";
 import { useSearch } from "@/components/SearchContext";
 
 export default function TopBar() {
   const { query, setQuery } = useSearch();
+  const [dark, setDark] = useState(false);
+
+  useEffect(() => {
+    setDark(document.documentElement.classList.contains("dark"));
+  }, []);
+
+  function toggleDark() {
+    const next = !dark;
+    setDark(next);
+    document.documentElement.classList.toggle("dark", next);
+    localStorage.setItem("theme", next ? "dark" : "light");
+  }
 
   return (
     <header
@@ -44,6 +57,16 @@ export default function TopBar() {
           }}
         />
       </div>
+
+      {/* Dark mode toggle */}
+      <button
+        onClick={toggleDark}
+        className="flex-shrink-0 p-2 rounded-full hover:opacity-80 transition-opacity"
+        style={{ color: "var(--foreground-muted)" }}
+        aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+      >
+        {dark ? <Sun size={18} /> : <Moon size={18} />}
+      </button>
 
     </header>
   );

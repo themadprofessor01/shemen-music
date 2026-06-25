@@ -9,6 +9,10 @@ import SearchOverlay from "@/components/SearchOverlay";
 import { LikesProvider } from "@/components/LikesContext";
 import { SessionRestore } from "@/components/SessionRestore";
 import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import IntroAnimation from "@/components/IntroAnimation";
+import DynamicColorAtmosphere from "@/components/DynamicColorAtmosphere";
+import AmbientScreensaver from "@/components/AmbientScreensaver";
+import FloatingMiniPlayer from "@/components/FloatingMiniPlayer";
 import { tracks } from "@/lib/data";
 
 export const viewport = {
@@ -35,7 +39,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <PlayerProvider>
           <LikesProvider>
             <SearchProvider>
-              <div className="flex min-h-screen">
+              {/* Intro animation — plays on every page load */}
+              <IntroAnimation />
+
+              {/* Dynamic color atmosphere from current track */}
+              <DynamicColorAtmosphere />
+
+              {/* Ambient screensaver after 30s idle while playing */}
+              <AmbientScreensaver />
+
+              {/* Floating mini player appears when user scrolls down */}
+              <FloatingMiniPlayer />
+
+              <div className="flex min-h-screen" style={{ position: "relative", zIndex: 1 }}>
                 {/* Sidebar — hidden on mobile, visible md+ */}
                 <Sidebar />
 
