@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 import Sidebar from "@/components/Sidebar";
 import TopBar from "@/components/TopBar";
 import MusicPlayer from "@/components/MusicPlayer";
@@ -15,6 +17,12 @@ import AmbientScreensaver from "@/components/AmbientScreensaver";
 import FloatingMiniPlayer from "@/components/FloatingMiniPlayer";
 import { tracks } from "@/lib/data";
 
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
 export const viewport = {
   width: "device-width",
   initialScale: 1,
@@ -28,14 +36,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: `(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})()` }} />
         {/* Establish connections to audio/image origin early */}
         <link rel="preconnect" href="https://shemenmusic.com" />
         <link rel="dns-prefetch" href="https://shemenmusic.com" />
       </head>
-      <body>
+      <body className={inter.className}>
         <PlayerProvider>
           <LikesProvider>
             <SearchProvider>
@@ -69,6 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </SearchProvider>
           </LikesProvider>
         </PlayerProvider>
+        <Analytics />
       </body>
     </html>
   );
