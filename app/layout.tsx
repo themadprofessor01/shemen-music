@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import Sidebar from "@/components/Sidebar";
@@ -38,12 +39,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: `(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})()` }} />
         {/* Establish connections to audio/image origin early */}
         <link rel="preconnect" href="https://shemenmusic.com" />
         <link rel="dns-prefetch" href="https://shemenmusic.com" />
       </head>
       <body className={inter.className}>
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: `(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})()` }}
+        />
         <PlayerProvider>
           <LikesProvider>
             <SearchProvider>
