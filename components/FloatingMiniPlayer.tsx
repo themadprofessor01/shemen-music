@@ -22,6 +22,7 @@ export default function FloatingMiniPlayer() {
 
   return (
     <div
+      onClick={() => document.dispatchEvent(new CustomEvent("shemen:show-player"))}
       style={{
         position: "fixed",
         top: 14,
@@ -40,6 +41,7 @@ export default function FloatingMiniPlayer() {
         animation: "mini-player-in 0.35s cubic-bezier(0.22,1,0.36,1) both",
         maxWidth: "calc(100vw - 32px)",
         minWidth: 260,
+        cursor: "pointer",
       }}
     >
       {/* Album art */}

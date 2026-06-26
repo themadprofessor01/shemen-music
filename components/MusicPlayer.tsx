@@ -130,7 +130,7 @@ function ShareCardModal({ onClose }: { onClose: () => void }) {
     if (coverSrc) {
       try {
         const img = new window.Image();
-        img.crossOrigin = "anonymous";
+        // Load without crossOrigin so image always renders (avoids CORS failures)
         await new Promise<void>((resolve, reject) => {
           img.onload = () => resolve();
           img.onerror = () => reject();
@@ -143,25 +143,19 @@ function ShareCardModal({ onClose }: { onClose: () => void }) {
         ctx.clip();
         ctx.drawImage(img, artX, artY, artSize, artSize);
         ctx.restore();
-
-        // Shadow under art
-        ctx.shadowColor = "rgba(0,0,0,0.4)";
-        ctx.shadowBlur = 30;
-        ctx.shadowOffsetY = 10;
-        ctx.beginPath();
-        ctx.roundRect(artX, artY, artSize, artSize, 16);
-        ctx.fillStyle = "transparent";
-        ctx.fill();
-        ctx.shadowColor = "transparent";
-        ctx.shadowBlur = 0;
-        ctx.shadowOffsetY = 0;
       } catch {
-        // Fallback: color block
+        // Fallback: translucent color block
         ctx.fillStyle = `rgba(255,255,255,0.15)`;
         ctx.beginPath();
         ctx.roundRect(artX, artY, artSize, artSize, 16);
         ctx.fill();
       }
+    } else {
+      // No art: draw colored placeholder
+      ctx.fillStyle = `rgba(255,255,255,0.15)`;
+      ctx.beginPath();
+      ctx.roundRect(artX, artY, artSize, artSize, 16);
+      ctx.fill();
     }
 
     // Text area (right side)
@@ -219,10 +213,16 @@ function ShareCardModal({ onClose }: { onClose: () => void }) {
   const download = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const link = document.createElement("a");
-    link.download = `shemen-${cleanTitle(currentTrack?.title ?? "track").replace(/\s+/g, "-").toLowerCase()}.png`;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
+    try {
+      const link = document.createElement("a");
+      link.download = `shemen-${cleanTitle(currentTrack?.title ?? "track").replace(/\s+/g, "-").toLowerCase()}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } catch {
+      // Canvas tainted (image CORS) — open as image in new tab instead
+      const win = window.open();
+      if (win) win.document.write(`<img src="${canvas.toDataURL("image/png")}" />`);
+    }
   };
 
   return (
@@ -302,11 +302,16 @@ export default function MusicPlayer() {
       const y = window.scrollY;
       const goingUp = y < prevScrollY.current;
       if (y > 280 && goingUp) setConsolidatedUp(true);
-      else if (y <= 280) setConsolidatedUp(false);
+      else if (y <= 280 || !goingUp) setConsolidatedUp(false);
       prevScrollY.current = y;
     };
+    const onShowPlayer = () => setConsolidatedUp(false);
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    document.addEventListener("shemen:show-player", onShowPlayer);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("shemen:show-player", onShowPlayer);
+    };
   }, []);
 
   // Init audio engine lazily on first play

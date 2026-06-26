@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { PageShell } from "@/components/PageShell";
 import { PlayAllButton } from "@/components/PlayAllButton";
 import { InfiniteTrackGrid } from "@/components/InfiniteTrackGrid";
+import { InlineSearch } from "@/components/InlineSearch";
 import { tracks, totalDuration } from "@/lib/data";
 import { ViewToggle } from "./ViewToggle";
 
@@ -38,10 +39,13 @@ export default async function InstrumentalsPage({
       </PageShell>
 
       <div className="sticky top-16 z-10 -mx-4 sm:-mx-8 lg:-mx-14 px-4 sm:px-8 lg:px-14 py-3 flex items-center justify-between gap-3" style={{ background: "var(--background)", borderBottom: "1px solid var(--border)", backdropFilter: "blur(12px)" }}>
-        <p className="text-sm" style={{ color: "var(--foreground-muted)" }}>
+        <p className="text-sm flex-shrink-0" style={{ color: "var(--foreground-muted)" }}>
           {instrumentals.length} track{instrumentals.length !== 1 ? "s" : ""}
         </p>
-        <div className="flex items-center gap-2">
+        <Suspense fallback={null}>
+          <InlineSearch />
+        </Suspense>
+        <div className="flex items-center gap-2 flex-shrink-0">
           <PlayAllButton tracks={instrumentals.slice(0, 40)} />
           <Suspense fallback={null}>
             <ViewToggle />
