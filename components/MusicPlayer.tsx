@@ -423,7 +423,7 @@ export default function MusicPlayer() {
       )}
 
       {/* Mini player bar */}
-      <div className="fixed inset-x-0 bottom-16 md:bottom-4 z-50 px-3 md:px-4">
+      <div className="fixed left-0 right-0 md:left-48 bottom-16 md:bottom-4 z-50 px-3 md:px-4">
         {/* Queue Panel */}
         {queueOpen && (
           <div
