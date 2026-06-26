@@ -293,6 +293,21 @@ export default function MusicPlayer() {
   const [fullscreen, setFullscreen] = useState(false);
   const [reverbEnabled, setReverbEnabled] = useState(false);
   const [showShare, setShowShare] = useState(false);
+  const [consolidatedUp, setConsolidatedUp] = useState(false);
+  const prevScrollY = useRef(0);
+
+  // Hide bottom player when scrolling UP past threshold (consolidate with FloatingMiniPlayer)
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      const goingUp = y < prevScrollY.current;
+      if (y > 280 && goingUp) setConsolidatedUp(true);
+      else if (y <= 280) setConsolidatedUp(false);
+      prevScrollY.current = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Init audio engine lazily on first play
   useEffect(() => {
@@ -423,7 +438,15 @@ export default function MusicPlayer() {
       )}
 
       {/* Mini player bar */}
-      <div className="fixed left-0 right-0 md:left-48 bottom-16 md:bottom-4 z-50 px-3 md:px-4">
+      <div
+        className="fixed left-0 right-0 md:left-48 bottom-16 md:bottom-4 z-50 px-3 md:px-4"
+        style={{
+          transition: "transform 0.45s cubic-bezier(0.22,1,0.36,1), opacity 0.35s ease",
+          transform: consolidatedUp ? "translateY(140%)" : "translateY(0)",
+          opacity: consolidatedUp ? 0 : 1,
+          pointerEvents: consolidatedUp ? "none" : "auto",
+        }}
+      >
         {/* Queue Panel */}
         {queueOpen && (
           <div
