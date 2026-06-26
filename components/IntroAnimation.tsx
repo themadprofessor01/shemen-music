@@ -23,64 +23,32 @@ export default function IntroAnimation() {
         zIndex: 9999,
         background: "#0c1823",
         display: "flex",
-        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        gap: 0,
         opacity: phase === "exit" ? 0 : 1,
         transition: phase === "exit" ? "opacity 0.65s cubic-bezier(0.4,0,0.2,1)" : "none",
         pointerEvents: phase === "exit" ? "none" : "auto",
       }}
     >
-      {/* Ambient glow behind logo */}
+      {/* Logo — fades in from left to right */}
       <div
         style={{
-          position: "absolute",
-          width: 320,
-          height: 320,
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(90,171,220,0.18) 0%, transparent 70%)",
-          animation: "intro-glow 2s ease-in-out infinite alternate",
-        }}
-      />
-
-      {/* Logo */}
-      <div
-        style={{
-          animation: phase === "enter" ? "intro-logo-in 0.7s cubic-bezier(0.22,1,0.36,1) both" : undefined,
-          position: "relative",
+          animation: phase === "enter" ? "intro-logo-ltr 0.8s cubic-bezier(0.22,1,0.36,1) both" : undefined,
         }}
       >
         <Image
           src="/logo.png"
           alt="ShemenMusic"
-          width={200}
-          height={30}
+          width={360}
+          height={52}
           priority
           style={{
             filter: "brightness(0) invert(1)",
-            width: 200,
+            width: 360,
             height: "auto",
           }}
         />
       </div>
-
-      {/* Tagline */}
-      <p
-        style={{
-          color: "rgba(255,255,255,0.35)",
-          fontSize: 11,
-          letterSpacing: 5,
-          textTransform: "uppercase",
-          marginTop: 20,
-          fontWeight: 500,
-          animation: phase === "enter"
-            ? "intro-text-in 0.7s 0.3s cubic-bezier(0.22,1,0.36,1) both"
-            : undefined,
-        }}
-      >
-        Worship Music
-      </p>
 
       {/* Loading bar */}
       <div

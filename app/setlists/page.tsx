@@ -102,15 +102,13 @@ export default function SetlistsPage() {
     play(tracksToPlay[0]);
   }
 
-  const searchResults = search.length > 1
-    ? allTracks
-        .filter(
-          (t) =>
-            cleanTitle(t.title).toLowerCase().includes(search.toLowerCase()) ||
-            (t.artist ?? "").toLowerCase().includes(search.toLowerCase())
-        )
-        .slice(0, 20)
-    : [];
+  const searchResults = search.length > 0
+    ? allTracks.filter(
+        (t) =>
+          cleanTitle(t.title).toLowerCase().includes(search.toLowerCase()) ||
+          (t.artist ?? "").toLowerCase().includes(search.toLowerCase())
+      )
+    : allTracks;
 
   return (
     <div className="min-h-screen" style={{ color: "var(--foreground)" }}>
@@ -358,11 +356,8 @@ export default function SetlistsPage() {
                       </button>
                     );
                   })}
-                  {search.length > 1 && searchResults.length === 0 && (
+                  {search.length > 0 && searchResults.length === 0 && (
                     <p className="text-xs text-center py-4" style={{ color: "var(--muted)" }}>No results</p>
-                  )}
-                  {search.length <= 1 && (
-                    <p className="text-xs text-center py-4" style={{ color: "var(--muted)" }}>Type to search 437 tracks</p>
                   )}
                 </div>
               </div>
