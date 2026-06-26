@@ -37,9 +37,9 @@ export default function HomePage() {
         <div className="relative flex flex-col items-center text-center text-white gap-6">
           {/* Badge + heading */}
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white/75">
-              Curated Worship Archive
-            </span>
+            <div className="inline-flex items-center rounded-full border border-white/15 bg-white/8 px-4 py-2">
+              <Image src="/logo.png" alt="ShemenMusic" width={140} height={20} className="h-5 w-auto" style={{ filter: "brightness(0) invert(1)", opacity: 0.85 }} priority />
+            </div>
             <h1 className="mt-4 text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none text-shimmer">Discover</h1>
           </div>
 
