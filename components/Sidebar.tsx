@@ -69,7 +69,20 @@ export default function Sidebar() {
       <div className="flex-1" />
 
       {/* Footer */}
-      <div className="px-4 pb-5 flex flex-col gap-3">
+      <div className="px-4 pb-5 flex flex-col items-center gap-3 text-center">
+        {/* Dark mode toggle — pill style */}
+        <button
+          onClick={toggleDark}
+          className="flex items-center gap-2 text-xs px-3 py-1.5 rounded-full transition-colors"
+          style={{
+            background: "var(--surface2)",
+            border: "1px solid var(--border)",
+            color: "var(--foreground-muted)",
+          }}
+        >
+          {dark ? <Sun size={13} /> : <Moon size={13} />}
+          {dark ? "Light mode" : "Dark mode"}
+        </button>
         <Link href="/contact" className="flex items-center gap-2 text-sm hover:opacity-80 transition-opacity" style={{ color: "var(--foreground-muted)" }}>
           <Mail size={14} /> Contact Us
         </Link>
@@ -77,10 +90,6 @@ export default function Sidebar() {
           <Link href="/terms" className="hover:opacity-80">Terms</Link>
           <Link href="/privacy" className="hover:opacity-80">Privacy</Link>
         </div>
-        <button onClick={toggleDark} className="flex items-center gap-2 text-xs hover:opacity-80 transition-opacity" style={{ color: "var(--foreground-muted)" }}>
-          {dark ? <Sun size={13} /> : <Moon size={13} />}
-          {dark ? "Light mode" : "Dark mode"}
-        </button>
         <p className="text-xs" style={{ color: "var(--foreground-muted)" }}>©2025 ShemenMusic</p>
       </div>
       </aside>
