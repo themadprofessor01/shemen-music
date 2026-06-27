@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, X, ListMusic, Wind, Share2, Shuffle, Repeat, Repeat1, Mic } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, X, ListMusic, Wind, Share2, Shuffle, Repeat, Repeat1, Maximize2 } from "lucide-react";
 import { usePlayer, useProgress } from "@/components/MusicPlayerContext";
 import { cleanTitle } from "@/lib/data";
-import { initAudioEngine, getAnalyser, setReverb, isReverbOn, resumeContext, isInitialized } from "@/lib/audioEngine";
+import { initAudioEngine, getAnalyser, setReverb, resumeContext, isInitialized } from "@/lib/audioEngine";
 import { KaraokeMode } from "@/components/KaraokeMode";
+import { LyricsDisplay } from "@/components/LyricsDisplay";
 import { lyricsMap } from "@/lib/lyrics-map";
 
 function fmt(secs: number) {
@@ -335,6 +336,7 @@ export default function MusicPlayer() {
   const [reverbEnabled, setReverbEnabled] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [showKaraoke, setShowKaraoke] = useState(false);
+  const [showLyricsFullscreen, setShowLyricsFullscreen] = useState(false);
   const [consolidatedUp, setConsolidatedUp] = useState(false);
   const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -405,6 +407,7 @@ export default function MusicPlayer() {
           className="fixed inset-0 z-[60] flex flex-col md:hidden"
           style={{ background: "var(--surface)", paddingBottom: "env(safe-area-inset-bottom)" }}
         >
+          {/* Header */}
           <div className="flex items-center justify-between px-5 pt-5 pb-3">
             <button
               onClick={() => setFullscreen(false)}
@@ -416,19 +419,32 @@ export default function MusicPlayer() {
               </svg>
             </button>
             <p className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--muted)" }}>Now Playing</p>
-            <button
-              onClick={() => document.dispatchEvent(new CustomEvent("shemen:open-drawer", { detail: { trackId: currentTrack.id } }))}
-              className="opacity-60 hover:opacity-100 p-2"
-              style={{ color: "var(--foreground)" }}
-              aria-label="Track details"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /><circle cx="5" cy="12" r="1" />
-              </svg>
-            </button>
+            <div className="flex items-center gap-1">
+              {lyricsMap[currentTrack.id] && (
+                <button
+                  onClick={() => setShowLyricsFullscreen(true)}
+                  className="opacity-60 hover:opacity-100 p-2"
+                  style={{ color: "var(--foreground)" }}
+                  aria-label="View lyrics fullscreen"
+                >
+                  <Maximize2 size={18} />
+                </button>
+              )}
+              <button
+                onClick={() => document.dispatchEvent(new CustomEvent("shemen:open-drawer", { detail: { trackId: currentTrack.id } }))}
+                className="opacity-60 hover:opacity-100 p-2"
+                style={{ color: "var(--foreground)" }}
+                aria-label="Track details"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /><circle cx="5" cy="12" r="1" />
+                </svg>
+              </button>
+            </div>
           </div>
 
-          <div className="flex-1 flex items-center justify-center px-10 py-4">
+          {/* Album art — centered */}
+          <div className="flex-1 flex items-center justify-center px-10 py-2">
             <div className="w-full aspect-square overflow-hidden rounded-[2rem]" style={{ boxShadow: `0 32px 80px ${accentColor}55` }}>
               {coverSrc
                 ? <img src={coverSrc} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -437,62 +453,37 @@ export default function MusicPlayer() {
             </div>
           </div>
 
-          <div className="px-7 pb-2">
-            <div className="flex items-center justify-between mb-1">
-              <div className="min-w-0">
-                <p className="text-2xl font-black truncate" style={{ color: "var(--foreground)" }}>{cleanTitle(currentTrack.title)}</p>
-                <p className="text-sm mt-0.5 truncate" style={{ color: "var(--muted)" }}>{currentTrack.artist}</p>
-              </div>
-              <div className="flex gap-2 ml-3">
-                <button
-                  onClick={() => setShuffle(!shuffle)}
-                  title="Shuffle"
-                  style={{ color: shuffle ? accentColor : "var(--muted)", opacity: shuffle ? 1 : 0.5, padding: 4 }}
-                >
-                  <Shuffle size={17} />
-                </button>
-                <button
-                  onClick={cycleRepeat}
-                  title={repeat === "off" ? "Repeat off" : repeat === "all" ? "Repeat all" : "Repeat one"}
-                  style={{ color: repeat !== "off" ? accentColor : "var(--muted)", opacity: repeat !== "off" ? 1 : 0.5, padding: 4 }}
-                >
-                  {repeat === "one" ? <Repeat1 size={17} /> : <Repeat size={17} />}
-                </button>
-                <button onClick={cycleSpeed} title={`Speed: ${playbackRate}×`} style={{ color: playbackRate !== 1 ? accentColor : "var(--muted)", opacity: playbackRate !== 1 ? 1 : 0.5, padding: 4, fontSize: 11, fontWeight: 700, minWidth: 28 }}>
-                  {playbackRate}×
-                </button>
-                <button
-                  onClick={toggleReverb}
-                  title="Sanctuary Reverb"
-                  style={{
-                    color: reverbEnabled ? accentColor : "var(--muted)",
-                    opacity: reverbEnabled ? 1 : 0.5,
-                    padding: 4,
-                  }}
-                >
-                  <Wind size={18} />
-                </button>
-                <button
-                  onClick={() => setShowShare(true)}
-                  title="Share Card"
-                  style={{ color: "var(--muted)", opacity: 0.5, padding: 4 }}
-                >
-                  <Share2 size={18} />
-                </button>
-                {lyricsMap[currentTrack.id] && (
-                  <button
-                    onClick={() => setShowKaraoke(true)}
-                    title="Karaoke Mode"
-                    style={{ color: "var(--accent)", opacity: 0.85, padding: 4 }}
-                  >
-                    <Mic size={18} />
-                  </button>
-                )}
-              </div>
-            </div>
+          {/* Title + artist — centered below art */}
+          <div className="px-7 pb-3 text-center">
+            <p className="text-2xl font-black truncate" style={{ color: "var(--foreground)" }}>{cleanTitle(currentTrack.title)}</p>
+            <p className="text-sm mt-1 truncate" style={{ color: "var(--muted)" }}>{currentTrack.artist}</p>
           </div>
 
-          <div className="px-7 py-3">
+          {/* Controls row — centered */}
+          <div className="flex items-center justify-center gap-5 px-7 pb-3">
+            <button onClick={() => setShuffle(!shuffle)} title="Shuffle" style={{ color: shuffle ? accentColor : "var(--muted)", opacity: shuffle ? 1 : 0.5, padding: 4 }}>
+              <Shuffle size={17} />
+            </button>
+            <button
+              onClick={cycleRepeat}
+              title={repeat === "off" ? "Repeat off" : repeat === "all" ? "Repeat all" : "Repeat one"}
+              style={{ color: repeat !== "off" ? accentColor : "var(--muted)", opacity: repeat !== "off" ? 1 : 0.5, padding: 4 }}
+            >
+              {repeat === "one" ? <Repeat1 size={17} /> : <Repeat size={17} />}
+            </button>
+            <button onClick={cycleSpeed} title={`Speed: ${playbackRate}×`} style={{ color: playbackRate !== 1 ? accentColor : "var(--muted)", opacity: playbackRate !== 1 ? 1 : 0.5, padding: 4, fontSize: 11, fontWeight: 700, minWidth: 28 }}>
+              {playbackRate}×
+            </button>
+            <button onClick={toggleReverb} title="Sanctuary Reverb" style={{ color: reverbEnabled ? accentColor : "var(--muted)", opacity: reverbEnabled ? 1 : 0.5, padding: 4 }}>
+              <Wind size={18} />
+            </button>
+            <button onClick={() => setShowShare(true)} title="Share Card" style={{ color: "var(--muted)", opacity: 0.5, padding: 4 }}>
+              <Share2 size={18} />
+            </button>
+          </div>
+
+          {/* Seek bar */}
+          <div className="px-7 py-2">
             <input
               type="range" min={0} max={100} step={0.1} value={progress}
               onChange={(e) => seek(Number(e.target.value))}
@@ -505,7 +496,8 @@ export default function MusicPlayer() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between px-10 pb-8">
+          {/* Playback controls — centered */}
+          <div className="flex items-center justify-center gap-10 px-10 pb-8">
             <button onClick={skipPrev} className="opacity-60 hover:opacity-100 p-2" style={{ color: "var(--foreground)" }}>
               <SkipBack size={28} />
             </button>
@@ -521,6 +513,11 @@ export default function MusicPlayer() {
               <SkipForward size={28} />
             </button>
           </div>
+
+          {/* Fullscreen lyrics overlay */}
+          {showLyricsFullscreen && lyricsMap[currentTrack.id] && (
+            <FullscreenLyricsPlayer trackId={currentTrack.id} title={currentTrack.title} onClose={() => setShowLyricsFullscreen(false)} />
+          )}
         </div>
       )}
 
@@ -758,5 +755,46 @@ export default function MusicPlayer() {
         </div>
       </div>
     </>
+  );
+}
+
+function FullscreenLyricsPlayer({ trackId, title, onClose }: { trackId: string; title: string; onClose: () => void }) {
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[110] flex flex-col"
+      style={{ background: "var(--surface)" }}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Fullscreen lyrics"
+    >
+      <div className="flex items-center justify-between px-5 py-4 flex-shrink-0" style={{ borderBottom: "1px solid var(--border)" }}>
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--premium)]">Lyrics</p>
+          <p className="font-black text-lg leading-tight mt-0.5" style={{ color: "var(--foreground)" }}>{cleanTitle(title)}</p>
+        </div>
+        <button
+          onClick={onClose}
+          className="h-10 w-10 rounded-full flex items-center justify-center"
+          style={{ background: "var(--surface2)" }}
+          aria-label="Close fullscreen lyrics"
+        >
+          <X size={18} />
+        </button>
+      </div>
+      <div className="flex-1 overflow-y-scroll px-5 py-6" style={{ WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"] }}>
+        <LyricsDisplay trackId={trackId} />
+      </div>
+    </div>
   );
 }
