@@ -9,22 +9,29 @@ export default function FloatingMiniPlayer() {
   const { currentTrack, isPlaying, play, pause, skipNext, skipPrev } = usePlayer();
   const [visible, setVisible] = useState(false);
   const prevScrollY = useRef(0);
+  const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Only show when scrolling UP past 280px — mirrors when bottom bar hides, so only one exists at a time
+  // Show when scrolling UP past 280px; hide when scrolling stops (400ms after last scroll event)
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
       const goingUp = y < prevScrollY.current;
-      if (y > 280 && goingUp) setVisible(true);
-      else if (y <= 280 || !goingUp) setVisible(false);
       prevScrollY.current = y;
+      if (y > 280 && goingUp) setVisible(true);
+      else if (!goingUp) setVisible(false);
+      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+      scrollTimerRef.current = setTimeout(() => setVisible(false), 400);
     };
-    const onShowPlayer = () => setVisible(false);
+    const onShowPlayer = () => {
+      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+      setVisible(false);
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     document.addEventListener("shemen:show-player", onShowPlayer);
     return () => {
       window.removeEventListener("scroll", onScroll);
       document.removeEventListener("shemen:show-player", onShowPlayer);
+      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
     };
   }, []);
 

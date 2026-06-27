@@ -214,28 +214,31 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     const src = track.audioUrl ?? track.downloadUrl ?? track.stationUrl ?? "";
     if (!src) return;
 
-    setCurrentTrack((cur) => {
-      if (cur?.id !== track.id) {
-        const pre = preloadRef.current;
-        const audio = audioRef.current!;
+    const audio = audioRef.current;
+    if (!audio) return;
 
-        if (pre && pre.src === src && pre.readyState >= 2) {
-          // Swap preloaded element in as the main player so its buffered data is used
-          audio.pause();
-          detachHandlers(audio);
-          pre.volume = audio.volume;
-          pre.muted = audio.muted;
-          attachHandlers(pre);
-          preloadRef.current = audio; // recycle old element as the next preload slot
-          audioRef.current = pre;
-        } else {
-          audio.src = src;
-        }
+    // Apply src / element swap BEFORE calling play(). Side effects must NOT live
+    // inside a setState updater — React 18 does not guarantee updaters run
+    // synchronously, so audio.src would be unset when play() is called.
+    if (currentTrackIdRef.current !== track.id) {
+      const pre = preloadRef.current;
+      if (pre && pre.src === src && pre.readyState >= 2) {
+        // Swap preloaded element in so its buffered data is reused
+        audio.pause();
+        detachHandlers(audio);
+        pre.volume = audio.volume;
+        pre.muted = audio.muted;
+        attachHandlers(pre);
+        preloadRef.current = audio;
+        audioRef.current = pre;
+      } else {
+        audio.src = src;
       }
-      return track;
-    });
+      currentTrackIdRef.current = track.id;
+    }
 
-    audioRef.current?.play().then(() => setIsPlaying(true)).catch(() => {});
+    setCurrentTrack(track);
+    audioRef.current.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
   }, [attachHandlers, detachHandlers]);
 
   const pause = useCallback(() => {

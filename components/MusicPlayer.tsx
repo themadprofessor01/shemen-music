@@ -336,23 +336,25 @@ export default function MusicPlayer() {
   const [showShare, setShowShare] = useState(false);
   const [showKaraoke, setShowKaraoke] = useState(false);
   const [consolidatedUp, setConsolidatedUp] = useState(false);
-  const prevScrollY = useRef(0);
+  const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Hide bottom player when scrolling UP past threshold (consolidate with FloatingMiniPlayer)
+  // Hide bottom player while scrolling (any direction); restore 400ms after scrolling stops
   useEffect(() => {
     const onScroll = () => {
-      const y = window.scrollY;
-      const goingUp = y < prevScrollY.current;
-      if (y > 280 && goingUp) setConsolidatedUp(true);
-      else if (y <= 280 || !goingUp) setConsolidatedUp(false);
-      prevScrollY.current = y;
+      setConsolidatedUp(true);
+      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+      scrollTimerRef.current = setTimeout(() => setConsolidatedUp(false), 400);
     };
-    const onShowPlayer = () => setConsolidatedUp(false);
+    const onShowPlayer = () => {
+      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+      setConsolidatedUp(false);
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     document.addEventListener("shemen:show-player", onShowPlayer);
     return () => {
       window.removeEventListener("scroll", onScroll);
       document.removeEventListener("shemen:show-player", onShowPlayer);
+      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
     };
   }, []);
 
@@ -607,9 +609,18 @@ export default function MusicPlayer() {
           }}
         >
           {/* Track info */}
-          <div className="flex items-center gap-3 flex-1 min-w-0">
+          <div className="relative flex items-center flex-1 min-w-0">
+            {/* Mobile X button — absolutely positioned so track info stays centered */}
+            <button
+              className="sm:hidden absolute right-0 top-1/2 -translate-y-1/2 opacity-40 hover:opacity-80 transition-opacity z-10"
+              onClick={(e) => { e.stopPropagation(); setDismissed(true); }}
+              style={{ color: "var(--foreground)", padding: 4 }}
+              aria-label="Close player"
+            >
+              <X size={18} />
+            </button>
             <div
-              className="flex items-center gap-3 flex-1 min-w-0"
+              className="flex items-center gap-3 flex-1 min-w-0 justify-center sm:justify-start pr-8 sm:pr-0"
               style={{ cursor: "pointer" }}
               onClick={() => { if (window.innerWidth < 768) setFullscreen(true); }}
               role="button"
@@ -629,15 +640,6 @@ export default function MusicPlayer() {
                 </div>
               </div>
             </div>
-            {/* Mobile-only close button */}
-            <button
-              className="sm:hidden flex-shrink-0 opacity-40 hover:opacity-80 transition-opacity"
-              onClick={() => setDismissed(true)}
-              style={{ color: "var(--foreground)", padding: 4 }}
-              aria-label="Close player"
-            >
-              <X size={18} />
-            </button>
           </div>
 
           {/* Playback controls + progress */}
