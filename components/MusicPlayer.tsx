@@ -401,10 +401,10 @@ export default function MusicPlayer() {
       {showShare && <ShareCardModal onClose={() => setShowShare(false)} />}
       {showKaraoke && currentTrack && <KaraokeMode trackId={currentTrack.id} open={showKaraoke} onClose={() => setShowKaraoke(false)} />}
 
-      {/* Mobile full-screen player */}
+      {/* Full-screen player — mobile + desktop */}
       {fullscreen && (
         <div
-          className="fixed inset-0 z-[60] flex flex-col md:hidden"
+          className="fixed inset-0 z-[60] flex flex-col"
           style={{ background: "var(--surface)", paddingBottom: "env(safe-area-inset-bottom)" }}
         >
           {/* Header */}
@@ -445,7 +445,7 @@ export default function MusicPlayer() {
 
           {/* Album art — centered */}
           <div className="flex-1 flex items-center justify-center px-10 py-2">
-            <div className="w-full aspect-square overflow-hidden rounded-[2rem]" style={{ boxShadow: `0 32px 80px ${accentColor}55` }}>
+            <div className="w-full max-w-sm aspect-square overflow-hidden rounded-[2rem]" style={{ boxShadow: `0 32px 80px ${accentColor}55` }}>
               {coverSrc
                 ? <img src={coverSrc} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 : <div style={{ width: "100%", height: "100%", background: accentColor }} />
@@ -619,7 +619,7 @@ export default function MusicPlayer() {
             <div
               className="flex items-center gap-3 pr-8 sm:pr-0 sm:flex-1 sm:min-w-0 max-w-[calc(100%_-_3rem)] sm:max-w-none"
               style={{ cursor: "pointer" }}
-              onClick={() => { if (window.innerWidth < 768) setFullscreen(true); }}
+              onClick={() => setFullscreen(true)}
               role="button"
               aria-label="Expand player"
             >
@@ -742,6 +742,14 @@ export default function MusicPlayer() {
               aria-label="Toggle queue"
             >
               <ListMusic size={17} />
+            </button>
+            <button
+              onClick={() => setFullscreen(true)}
+              className="opacity-50 hover:opacity-100 transition-opacity"
+              style={{ color: "var(--foreground)" }}
+              aria-label="Fullscreen player"
+            >
+              <Maximize2 size={16} />
             </button>
             <button
               onClick={() => setDismissed(true)}
