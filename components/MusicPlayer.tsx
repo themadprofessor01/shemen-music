@@ -609,7 +609,7 @@ export default function MusicPlayer() {
           }}
         >
           {/* Track info */}
-          <div className="relative flex items-center flex-1 min-w-0">
+          <div className="relative flex items-center flex-1 min-w-0 justify-center sm:justify-start">
             {/* Mobile X button — absolutely positioned so track info stays centered */}
             <button
               className="sm:hidden absolute right-0 top-1/2 -translate-y-1/2 opacity-40 hover:opacity-80 transition-opacity z-10"
@@ -620,7 +620,7 @@ export default function MusicPlayer() {
               <X size={18} />
             </button>
             <div
-              className="flex items-center gap-3 flex-1 min-w-0 justify-center sm:justify-start pr-8 sm:pr-0"
+              className="flex items-center gap-3 pr-8 sm:pr-0 sm:flex-1 sm:min-w-0 max-w-[calc(100%_-_3rem)] sm:max-w-none"
               style={{ cursor: "pointer" }}
               onClick={() => { if (window.innerWidth < 768) setFullscreen(true); }}
               role="button"
