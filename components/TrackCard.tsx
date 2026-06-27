@@ -16,7 +16,7 @@ import { LyricsDisplay } from "@/components/LyricsDisplay";
 import { lyricsMap } from "@/lib/lyrics-map";
 
 function dlHref(track: Track) {
-  const url = track.downloadUrl ?? track.audioUrl ?? "";
+  const url = track.audioUrl ?? track.downloadUrl ?? "";
   if (!url) return "#";
   const ext = url.endsWith(".m4a") ? "m4a" : "mp3";
   const filename = encodeURIComponent(`${track.title}.${ext}`);

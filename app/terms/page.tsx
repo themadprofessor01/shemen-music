@@ -36,7 +36,7 @@ export default function TermsPage() {
             </p>
           </section>
 
-          <p className="text-xs" style={{ color: "var(--muted)" }}>@2024 ShemenMusic. All Rights Reserved.</p>
+          <p className="text-xs" style={{ color: "var(--muted)" }}>© 2025 ShemenMusic. All Rights Reserved.</p>
         </div>
       </div>
     </>

@@ -58,7 +58,7 @@ export function InfiniteTrackGrid({
           ))}
         </div>
       ) : (
-        <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+        <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
           {visible.map((track, i) => (
             <TrackCardLarge key={track.id} track={track} priority={i < 6} />
           ))}

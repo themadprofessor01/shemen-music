@@ -27,6 +27,12 @@ type PlayerState = {
   setQueue: (tracks: Track[]) => void;
   preload: (track: Track) => void;
   getAudioElement: () => HTMLAudioElement | null;
+  shuffle: boolean;
+  setShuffle: (s: boolean) => void;
+  repeat: "off" | "one" | "all";
+  setRepeat: (r: "off" | "one" | "all") => void;
+  playbackRate: number;
+  setPlaybackRate: (r: number) => void;
 };
 
 // Separate context for rapidly-changing playback position
@@ -51,6 +57,12 @@ const PlayerContext = createContext<PlayerState>({
   setQueue: () => {},
   preload: () => {},
   getAudioElement: () => null,
+  shuffle: false,
+  setShuffle: () => {},
+  repeat: "off",
+  setRepeat: () => {},
+  playbackRate: 1,
+  setPlaybackRate: () => {},
 });
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
@@ -64,6 +76,11 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const [volume, setVolumeState] = useState(80);
   const [muted, setMutedState] = useState(false);
   const [queue, setQueue] = useState<Track[]>([]);
+  const [shuffle, setShuffleState] = useState(false);
+  const [repeat, setRepeatState] = useState<"off" | "one" | "all">("off");
+  const [playbackRate, setPlaybackRateState] = useState(1);
+  const shuffleRef = useRef(false);
+  const repeatRef = useRef<"off" | "one" | "all">("off");
 
   // Store event handler refs so they can be re-attached after an element swap
   const handlersRef = useRef<{
@@ -102,20 +119,38 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     };
     const onLoadedMetadata = () => setDuration((audioRef.current as HTMLAudioElement).duration);
     const onEnded = () => {
+      // Repeat one: restart current track
+      if (repeatRef.current === "one") {
+        const el = audioRef.current!;
+        el.currentTime = 0;
+        el.play().then(() => setIsPlaying(true)).catch(() => {});
+        return;
+      }
       setProgress(0);
-      // Auto-advance queue and update currentTrack so UI shows new song
+      // Auto-advance queue respecting shuffle and repeat
       setCurrentTrack((cur) => {
         if (!cur) { setIsPlaying(false); return cur; }
         let nextTrack: Track | null = null;
         setQueue((q) => {
-          const idx = q.findIndex((t) => t.id === cur.id);
-          if (idx >= 0 && idx < q.length - 1) {
-            nextTrack = q[idx + 1];
+          if (shuffleRef.current) {
+            const others = q.filter((t) => t.id !== cur.id);
+            if (others.length > 0) {
+              nextTrack = others[Math.floor(Math.random() * others.length)];
+            } else if (repeatRef.current === "all" && q.length > 0) {
+              nextTrack = q[Math.floor(Math.random() * q.length)];
+            }
+          } else {
+            const idx = q.findIndex((t) => t.id === cur.id);
+            if (idx >= 0 && idx < q.length - 1) {
+              nextTrack = q[idx + 1];
+            } else if (repeatRef.current === "all" && q.length > 0) {
+              nextTrack = q[0];
+            }
           }
           return q;
         });
         if (nextTrack) {
-          const src = (nextTrack as Track).downloadUrl ?? (nextTrack as Track).audioUrl ?? (nextTrack as Track).stationUrl ?? "";
+          const src = (nextTrack as Track).audioUrl ?? (nextTrack as Track).downloadUrl ?? (nextTrack as Track).stationUrl ?? "";
           if (src) {
             const el = audioRef.current!;
             el.src = src;
@@ -150,6 +185,11 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     }
   }, [volume, muted]);
 
+  // Sync playback rate to audio element
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.playbackRate = playbackRate;
+  }, [playbackRate]);
+
   // Keep currentTrackId ref in sync for preload comparisons
   useEffect(() => {
     currentTrackIdRef.current = currentTrack?.id ?? null;
@@ -158,7 +198,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const getAudioElement = useCallback(() => audioRef.current, []);
 
   const preload = useCallback((track: Track) => {
-    const src = track.downloadUrl ?? track.audioUrl ?? track.stationUrl ?? "";
+    const src = track.audioUrl ?? track.downloadUrl ?? track.stationUrl ?? "";
     if (!src || currentTrackIdRef.current === track.id) return;
     if (!preloadRef.current) {
       preloadRef.current = new Audio();
@@ -171,7 +211,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const play = useCallback((track: Track) => {
-    const src = track.downloadUrl ?? track.audioUrl ?? track.stationUrl ?? "";
+    const src = track.audioUrl ?? track.downloadUrl ?? track.stationUrl ?? "";
     if (!src) return;
 
     setCurrentTrack((cur) => {
@@ -234,12 +274,32 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
 
   const setMuted = useCallback((m: boolean) => setMutedState(m), []);
 
+  const setShuffle = useCallback((s: boolean) => {
+    setShuffleState(s);
+    shuffleRef.current = s;
+  }, []);
+
+  const setRepeat = useCallback((r: "off" | "one" | "all") => {
+    setRepeatState(r);
+    repeatRef.current = r;
+  }, []);
+
+  const setPlaybackRate = useCallback((r: number) => {
+    setPlaybackRateState(r);
+    if (audioRef.current) audioRef.current.playbackRate = r;
+  }, []);
+
   const skipNext = useCallback(() => {
     if (!currentTrack || queue.length === 0) return;
-    const idx = queue.findIndex((t) => t.id === currentTrack.id);
-    const next = queue[idx + 1];
-    if (next) play(next);
-  }, [currentTrack, queue, play]);
+    if (shuffle) {
+      const others = queue.filter((t) => t.id !== currentTrack.id);
+      if (others.length > 0) play(others[Math.floor(Math.random() * others.length)]);
+    } else {
+      const idx = queue.findIndex((t) => t.id === currentTrack.id);
+      const next = queue[idx + 1] ?? (repeat === "all" ? queue[0] : null);
+      if (next) play(next);
+    }
+  }, [currentTrack, queue, play, shuffle, repeat]);
 
   const skipPrev = useCallback(() => {
     const audio = audioRef.current;
@@ -275,6 +335,12 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         setQueue,
         preload,
         getAudioElement,
+        shuffle,
+        setShuffle,
+        repeat,
+        setRepeat,
+        playbackRate,
+        setPlaybackRate,
       }}
     >
       <ProgressContext.Provider value={{ progress, duration }}>

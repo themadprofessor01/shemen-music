@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "shemenmusic.com",
       },
+      {
+        protocol: "https",
+        hostname: "media.shemenmusic.com",
+      },
     ],
     formats: ["image/avif", "image/webp"],
     qualities: [70, 75],

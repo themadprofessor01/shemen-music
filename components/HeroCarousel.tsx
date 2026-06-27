@@ -55,7 +55,7 @@ export function HeroCarousel({ tracks }: { tracks: Track[] }) {
             >
               <div className="relative" style={{ height: "78%" }}>
                 {track.imageUrl
-                  ? <Image src={track.imageUrl} alt={track.title} fill sizes="480px" style={{ objectFit: "cover" }} priority={i === 0} />
+                  ? <Image src={track.imageUrl} alt={track.title} fill sizes="480px" style={{ objectFit: "cover" }} priority />
                   : <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${track.coverColor}, ${track.coverColor}88)` }} />
                 }
               </div>

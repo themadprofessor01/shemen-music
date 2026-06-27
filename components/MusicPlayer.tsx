@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, X, ListMusic, Wind, Share2 } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, X, ListMusic, Wind, Share2, Shuffle, Repeat, Repeat1, Mic } from "lucide-react";
 import { usePlayer, useProgress } from "@/components/MusicPlayerContext";
 import { cleanTitle } from "@/lib/data";
 import { initAudioEngine, getAnalyser, setReverb, isReverbOn, resumeContext, isInitialized } from "@/lib/audioEngine";
+import { KaraokeMode } from "@/components/KaraokeMode";
+import { lyricsMap } from "@/lib/lyrics-map";
 
 function fmt(secs: number) {
   if (!secs || isNaN(secs)) return "0:00";
@@ -254,23 +256,59 @@ function ShareCardModal({ onClose }: { onClose: () => void }) {
           ref={canvasRef}
           style={{ width: "100%", height: "auto", borderRadius: 12, display: "block" }}
         />
-        <button
-          onClick={download}
-          disabled={!ready}
-          style={{
-            marginTop: 16, width: "100%",
-            padding: "12px 0",
-            borderRadius: 12,
-            background: "#0c1823",
-            color: "white",
-            fontSize: 14,
-            fontWeight: 700,
-            opacity: ready ? 1 : 0.5,
-            cursor: ready ? "pointer" : "default",
-          }}
-        >
-          Download PNG
-        </button>
+        <div style={{ marginTop: 16, display: "flex", gap: 10 }}>
+          <button
+            onClick={async () => {
+              const url = `${window.location.origin}`;
+              const shareData = {
+                title: `${cleanTitle(currentTrack?.title ?? "")} — ShemenMusic`,
+                text: `Listen to "${cleanTitle(currentTrack?.title ?? "")}" by ${currentTrack?.artist} on ShemenMusic`,
+                url,
+              };
+              try {
+                if (navigator.share) {
+                  await navigator.share(shareData);
+                } else {
+                  await navigator.clipboard.writeText(url);
+                  // briefly show feedback
+                  const btn = document.getElementById("share-link-btn");
+                  if (btn) { btn.textContent = "Copied!"; setTimeout(() => { btn.textContent = "Copy Link"; }, 2000); }
+                }
+              } catch {}
+            }}
+            id="share-link-btn"
+            style={{
+              flex: 1,
+              padding: "12px 0",
+              borderRadius: 12,
+              background: "var(--surface2)",
+              border: "1px solid var(--border)",
+              color: "var(--foreground)",
+              fontSize: 14,
+              fontWeight: 700,
+              cursor: "pointer",
+            }}
+          >
+            Copy Link
+          </button>
+          <button
+            onClick={download}
+            disabled={!ready}
+            style={{
+              flex: 1,
+              padding: "12px 0",
+              borderRadius: 12,
+              background: "#0c1823",
+              color: "white",
+              fontSize: 14,
+              fontWeight: 700,
+              opacity: ready ? 1 : 0.5,
+              cursor: ready ? "pointer" : "default",
+            }}
+          >
+            Save Image
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -286,6 +324,9 @@ export default function MusicPlayer() {
     skipNext, skipPrev,
     queue,
     getAudioElement,
+    shuffle, setShuffle,
+    repeat, setRepeat,
+    playbackRate, setPlaybackRate,
   } = usePlayer();
   const { progress, duration } = useProgress();
   const [dismissed, setDismissed] = useState(false);
@@ -293,6 +334,7 @@ export default function MusicPlayer() {
   const [fullscreen, setFullscreen] = useState(false);
   const [reverbEnabled, setReverbEnabled] = useState(false);
   const [showShare, setShowShare] = useState(false);
+  const [showKaraoke, setShowKaraoke] = useState(false);
   const [consolidatedUp, setConsolidatedUp] = useState(false);
   const prevScrollY = useRef(0);
 
@@ -333,6 +375,17 @@ export default function MusicPlayer() {
     setReverb(next);
   };
 
+  const SPEEDS = [0.75, 1, 1.25, 1.5, 2];
+  const cycleSpeed = () => {
+    const idx = SPEEDS.indexOf(playbackRate);
+    setPlaybackRate(SPEEDS[(idx + 1) % SPEEDS.length]);
+  };
+
+  const cycleRepeat = () => {
+    const next: Record<"off" | "one" | "all", "off" | "one" | "all"> = { off: "all", all: "one", one: "off" };
+    setRepeat(next[repeat]);
+  };
+
   if (!currentTrack || dismissed) return null;
 
   const currentTime = (progress / 100) * duration;
@@ -342,6 +395,7 @@ export default function MusicPlayer() {
   return (
     <>
       {showShare && <ShareCardModal onClose={() => setShowShare(false)} />}
+      {showKaraoke && currentTrack && <KaraokeMode trackId={currentTrack.id} open={showKaraoke} onClose={() => setShowKaraoke(false)} />}
 
       {/* Mobile full-screen player */}
       {fullscreen && (
@@ -389,6 +443,23 @@ export default function MusicPlayer() {
               </div>
               <div className="flex gap-2 ml-3">
                 <button
+                  onClick={() => setShuffle(!shuffle)}
+                  title="Shuffle"
+                  style={{ color: shuffle ? accentColor : "var(--muted)", opacity: shuffle ? 1 : 0.5, padding: 4 }}
+                >
+                  <Shuffle size={17} />
+                </button>
+                <button
+                  onClick={cycleRepeat}
+                  title={repeat === "off" ? "Repeat off" : repeat === "all" ? "Repeat all" : "Repeat one"}
+                  style={{ color: repeat !== "off" ? accentColor : "var(--muted)", opacity: repeat !== "off" ? 1 : 0.5, padding: 4 }}
+                >
+                  {repeat === "one" ? <Repeat1 size={17} /> : <Repeat size={17} />}
+                </button>
+                <button onClick={cycleSpeed} title={`Speed: ${playbackRate}×`} style={{ color: playbackRate !== 1 ? accentColor : "var(--muted)", opacity: playbackRate !== 1 ? 1 : 0.5, padding: 4, fontSize: 11, fontWeight: 700, minWidth: 28 }}>
+                  {playbackRate}×
+                </button>
+                <button
                   onClick={toggleReverb}
                   title="Sanctuary Reverb"
                   style={{
@@ -406,6 +477,15 @@ export default function MusicPlayer() {
                 >
                   <Share2 size={18} />
                 </button>
+                {lyricsMap[currentTrack.id] && (
+                  <button
+                    onClick={() => setShowKaraoke(true)}
+                    title="Karaoke Mode"
+                    style={{ color: "var(--accent)", opacity: 0.85, padding: 4 }}
+                  >
+                    <Mic size={18} />
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -527,31 +607,42 @@ export default function MusicPlayer() {
           }}
         >
           {/* Track info */}
-          <div
-            className="flex items-center gap-3 flex-1 min-w-0"
-            style={{ cursor: "pointer" }}
-            onClick={() => { if (window.innerWidth < 768) setFullscreen(true); }}
-            role="button"
-            aria-label="Expand player"
-          >
-            <div className="flex-shrink-0 rounded-lg overflow-hidden" style={{ width: 40, height: 40 }}>
-              {coverSrc
-                ? <img src={coverSrc} alt="" style={{ width: 40, height: 40, objectFit: "cover" }} />
-                : <div style={{ width: 40, height: 40, background: currentTrack.coverColor }} />
-              }
-            </div>
-            <div className="min-w-0">
-              <p className="text-sm font-black truncate" style={{ color: "var(--foreground)" }}>{cleanTitle(currentTrack.title)}</p>
-              <p className="text-xs truncate" style={{ color: "var(--muted)" }}>{currentTrack.artist}</p>
-              <div className="mt-2 hidden sm:block">
-                <AudioVisualizer isPlaying={isPlaying} accentColor={accentColor} />
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div
+              className="flex items-center gap-3 flex-1 min-w-0"
+              style={{ cursor: "pointer" }}
+              onClick={() => { if (window.innerWidth < 768) setFullscreen(true); }}
+              role="button"
+              aria-label="Expand player"
+            >
+              <div className="flex-shrink-0 rounded-lg overflow-hidden" style={{ width: 40, height: 40 }}>
+                {coverSrc
+                  ? <img src={coverSrc} alt="" style={{ width: 40, height: 40, objectFit: "cover" }} />
+                  : <div style={{ width: 40, height: 40, background: currentTrack.coverColor }} />
+                }
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-black truncate" style={{ color: "var(--foreground)" }}>{cleanTitle(currentTrack.title)}</p>
+                <p className="text-xs truncate" style={{ color: "var(--muted)" }}>{currentTrack.artist}</p>
+                <div className="mt-2 hidden sm:block">
+                  <AudioVisualizer isPlaying={isPlaying} accentColor={accentColor} />
+                </div>
               </div>
             </div>
+            {/* Mobile-only close button */}
+            <button
+              className="sm:hidden flex-shrink-0 opacity-40 hover:opacity-80 transition-opacity"
+              onClick={() => setDismissed(true)}
+              style={{ color: "var(--foreground)", padding: 4 }}
+              aria-label="Close player"
+            >
+              <X size={18} />
+            </button>
           </div>
 
           {/* Playback controls + progress */}
           <div className="flex flex-col items-stretch gap-2 sm:flex-shrink-0 sm:items-center">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center justify-center gap-4">
               <button onClick={skipPrev} className="opacity-50 hover:opacity-100 transition-opacity" style={{ color: "var(--foreground)" }}>
                 <SkipBack size={18} />
               </button>
@@ -586,8 +677,33 @@ export default function MusicPlayer() {
             </div>
           </div>
 
-          {/* Volume + reverb + share + queue + close */}
+          {/* Volume + controls + queue + close */}
           <div className="hidden items-center gap-3 flex-shrink-0 sm:flex">
+            {/* Shuffle */}
+            <button
+              onClick={() => setShuffle(!shuffle)}
+              title="Shuffle"
+              style={{ color: shuffle ? accentColor : "var(--foreground)", opacity: shuffle ? 1 : 0.45, transition: "color 0.2s, opacity 0.2s" }}
+            >
+              <Shuffle size={15} />
+            </button>
+            {/* Repeat */}
+            <button
+              onClick={cycleRepeat}
+              title={repeat === "off" ? "Repeat off" : repeat === "all" ? "Repeat all" : "Repeat one"}
+              style={{ color: repeat !== "off" ? accentColor : "var(--foreground)", opacity: repeat !== "off" ? 1 : 0.45, transition: "color 0.2s, opacity 0.2s" }}
+            >
+              {repeat === "one" ? <Repeat1 size={15} /> : <Repeat size={15} />}
+            </button>
+            {/* Speed */}
+            <button
+              onClick={cycleSpeed}
+              title={`Playback speed: ${playbackRate}×`}
+              style={{ color: playbackRate !== 1 ? accentColor : "var(--foreground)", opacity: playbackRate !== 1 ? 1 : 0.45, fontSize: 11, fontWeight: 700, minWidth: 24, transition: "color 0.2s, opacity 0.2s" }}
+            >
+              {playbackRate}×
+            </button>
+            <div style={{ width: 1, height: 16, background: "var(--border)" }} />
             <button onClick={() => setMuted(!muted)} className="opacity-50 hover:opacity-100 transition-opacity" style={{ color: "var(--foreground)" }}>
               {muted ? <VolumeX size={17} /> : <Volume2 size={17} />}
             </button>

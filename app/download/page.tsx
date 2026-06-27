@@ -1,6 +1,20 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Download } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
+
+export const metadata: Metadata = {
+  title: "Download Everything — ShemenMusic",
+  description: "Download free worship instrumentals and praise tracks from ShemenMusic. Complete collections available for church teams, worship leaders, and personal ministry use.",
+  openGraph: {
+    title: "Download Everything — ShemenMusic",
+    description: "Free worship instrumental and praise track collections for download.",
+    url: "https://shemenmusic.com/download",
+    siteName: "ShemenMusic",
+    type: "website",
+  },
+  alternates: { canonical: "https://shemenmusic.com/download" },
+};
 
 const offers = [
   {

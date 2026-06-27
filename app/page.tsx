@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { formatPlays, tracks, playlists, totalDuration } from "@/lib/data";
 import { FeaturedScrollSection } from "@/components/FeaturedScrollSection";
 import { CollectionCover } from "@/components/CollectionCover";
@@ -9,6 +10,24 @@ import { Activity, ArrowUpRight, BarChart3, Sparkles, Users } from "lucide-react
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "ShemenMusic — Church Music & Instrumentals",
+  description: "Free worship music, praise instrumentals, and gospel tracks from Shemen Music. Stream and download hundreds of tracks for church teams, worship leaders, and personal devotion.",
+  openGraph: {
+    title: "ShemenMusic — Church Music & Instrumentals",
+    description: "Free worship music, praise instrumentals, and gospel tracks from Shemen Music.",
+    url: "https://shemenmusic.com",
+    siteName: "ShemenMusic",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ShemenMusic — Church Music & Instrumentals",
+    description: "Free worship music, praise instrumentals, and gospel tracks from Shemen Music.",
+  },
+  alternates: { canonical: "https://shemenmusic.com" },
+};
 
 function SectionHeader({ title, href }: { title: string; href?: string }) {
   return (
@@ -32,7 +51,7 @@ export default function HomePage() {
 
   return (
     <div className="px-3 py-6 sm:px-8 lg:px-14 space-y-10 sm:space-y-14">
-      <header className="relative overflow-hidden rounded-[2rem] p-6 pb-10 sm:p-9 sm:pb-14 lg:p-12 lg:pb-16" style={{ background: "var(--hero-bg)", boxShadow: "0 34px 90px rgba(12,24,35,0.24)", minHeight: "580px" }}>
+      <header className="relative overflow-hidden rounded-[2rem] p-6 pb-10 sm:p-9 sm:pb-14 lg:p-12 lg:pb-16" style={{ background: "var(--hero-bg)", boxShadow: "0 34px 90px rgba(12,24,35,0.24)", minHeight: "clamp(260px, 55vh, 580px)" }}>
         <div className="absolute inset-0 opacity-40" style={{ background: "radial-gradient(circle at 70% 20%, rgba(230, 194, 119, 0.24), transparent 22rem)" }} />
         <div className="relative flex flex-col items-center text-center text-white gap-6">
           {/* Badge + heading */}
@@ -71,7 +90,7 @@ export default function HomePage() {
             <p className="mt-2 text-sm leading-6 text-[var(--muted)]">A calm overview of catalogue quality, engagement, and worship-team readiness.</p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             <AnalyticsCard icon={<BarChart3 size={18} />} value={formatPlays(totalPlays)} label="Total plays" detail="Across all releases" />
             <AnalyticsCard icon={<Activity size={18} />} value={`${trending.length}/${tracks.length}`} label="Trending now" detail="High rotation catalogue" />
             <AnalyticsCard icon={<Sparkles size={18} />} value={totalDuration(tracks)} label="Curated runtime" detail="Ready for service prep" />
@@ -84,7 +103,7 @@ export default function HomePage() {
       <AdBanner size="leaderboard" />
 
       <section className="grid lg:grid-cols-[0.82fr_1.18fr] gap-6 items-stretch">
-        <div className="relative min-h-[360px] overflow-hidden rounded-[2rem]" style={{ boxShadow: "var(--shadow-card)" }}>
+        <div className="relative min-h-[200px] sm:min-h-[360px] overflow-hidden rounded-[2rem]" style={{ boxShadow: "var(--shadow-card)" }}>
           {featured[0].imageUrl ? <Image src={featured[0].imageUrl} alt="" fill sizes="(min-width: 1024px) 34vw, 100vw" className="object-cover" priority /> : <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${featured[0].coverColor}, ${featured[0].coverColor}88)` }} />}
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 34%, rgba(12,24,35,0.84))" }} />
           <div className="absolute left-5 right-5 bottom-5">
@@ -94,14 +113,14 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="premium-card rounded-[2rem] p-6 sm:p-8 lg:p-10 flex flex-col justify-between gap-10">
+        <div className="premium-card rounded-[2rem] p-5 sm:p-8 lg:p-10 flex flex-col justify-between gap-6 sm:gap-10">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--premium)]">Editorial Album Spotlight</p>
-            <h2 className="mt-4 max-w-2xl text-4xl sm:text-5xl font-black tracking-tight leading-none">A release prepared for prayer rooms and Sunday mornings.</h2>
-            <p className="mt-5 max-w-xl text-[var(--muted)] leading-7">Master-quality worship audio, curated with a studio sensibility and arranged for teams that need reliable, beautiful sound in the room.</p>
+            <h2 className="mt-3 max-w-2xl text-2xl sm:text-5xl font-black tracking-tight leading-tight sm:leading-none">A release prepared for prayer rooms and Sunday mornings.</h2>
+            <p className="mt-3 sm:mt-5 max-w-xl text-[var(--muted)] leading-7 text-sm sm:text-base">Master-quality worship audio, curated with a studio sensibility and arranged for teams that need reliable, beautiful sound in the room.</p>
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             <SpotlightStat value={featured[0].duration} label="Runtime" />
             <SpotlightStat value={featured[0].size} label="Master file" />
             <SpotlightStat value={formatPlays(featured[0].plays)} label="Plays" />
@@ -126,7 +145,7 @@ export default function HomePage() {
 
       <section>
         <SectionHeader title="Trending" href="/instrumentals" />
-        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-5">
           {trending.concat(tracks.filter((track) => !track.trending)).slice(0, 10).map((track) => (
             <TrackCardLarge key={track.id} track={track} />
           ))}
@@ -138,7 +157,7 @@ export default function HomePage() {
 
       <section>
         <SectionHeader title="Playlists" href="/playlists" />
-        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-5">
           {playlists.map((playlist) => (
             <Link
               key={playlist.id}
@@ -175,16 +194,16 @@ export default function HomePage() {
 
 function AnalyticsCard({ icon, value, label, detail }: { icon: ReactNode; value: string; label: string; detail: string }) {
   return (
-    <div className="rounded-3xl p-5" style={{ background: "var(--surface2)", border: "1px solid var(--border)", boxShadow: "var(--shadow-card)" }}>
+    <div className="rounded-3xl p-4 sm:p-5" style={{ background: "var(--surface2)", border: "1px solid var(--border)", boxShadow: "var(--shadow-card)" }}>
       <div className="flex items-center justify-between gap-4">
-        <span className="h-11 w-11 rounded-2xl flex items-center justify-center text-[var(--premium)]" style={{ background: "rgba(245,234,210,0.72)" }}>
+        <span className="h-9 w-9 sm:h-11 sm:w-11 rounded-2xl flex items-center justify-center text-[var(--premium)]" style={{ background: "rgba(245,234,210,0.72)" }}>
           {icon}
         </span>
         <span className="h-2 w-2 rounded-full" style={{ background: "var(--premium)" }} />
       </div>
-      <p className="mt-6 text-3xl font-black tracking-tight"><CountUp value={value} /></p>
-      <p className="mt-1 font-bold">{label}</p>
-      <p className="mt-3 text-sm text-[var(--muted)]">{detail}</p>
+      <p className="mt-4 sm:mt-6 text-2xl sm:text-3xl font-black tracking-tight"><CountUp value={value} /></p>
+      <p className="mt-1 font-bold text-sm sm:text-base">{label}</p>
+      <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-[var(--muted)]">{detail}</p>
     </div>
   );
 }

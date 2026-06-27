@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Play, Pause, SkipForward, SkipBack } from "lucide-react";
 import { usePlayer } from "@/components/MusicPlayerContext";
 import { cleanTitle } from "@/lib/data";
@@ -8,11 +8,24 @@ import { cleanTitle } from "@/lib/data";
 export default function FloatingMiniPlayer() {
   const { currentTrack, isPlaying, play, pause, skipNext, skipPrev } = usePlayer();
   const [visible, setVisible] = useState(false);
+  const prevScrollY = useRef(0);
 
+  // Only show when scrolling UP past 280px — mirrors when bottom bar hides, so only one exists at a time
   useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 280);
+    const onScroll = () => {
+      const y = window.scrollY;
+      const goingUp = y < prevScrollY.current;
+      if (y > 280 && goingUp) setVisible(true);
+      else if (y <= 280 || !goingUp) setVisible(false);
+      prevScrollY.current = y;
+    };
+    const onShowPlayer = () => setVisible(false);
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    document.addEventListener("shemen:show-player", onShowPlayer);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("shemen:show-player", onShowPlayer);
+    };
   }, []);
 
   if (!currentTrack || !visible) return null;

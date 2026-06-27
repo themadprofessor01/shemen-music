@@ -94,7 +94,7 @@ export default function Sidebar() {
       </div>
       </aside>
 
-      <nav className="mobile-bottom-nav fixed inset-x-3 bottom-3 z-50 grid grid-cols-5 rounded-[1.35rem] border p-1.5 backdrop-blur-xl" style={{ background: "rgba(255,253,250,0.88)", borderColor: "rgba(231,223,209,0.92)", boxShadow: "0 20px 60px rgba(12,24,35,0.18)" }}>
+      <nav className="mobile-bottom-nav fixed inset-x-3 bottom-3 z-50 grid grid-cols-5 rounded-[1.35rem] border p-1.5 backdrop-blur-xl" style={{ background: "color-mix(in srgb, var(--surface) 88%, transparent)", borderColor: "var(--border)", boxShadow: "0 20px 60px rgba(12,24,35,0.18)" }}>
         <MobileLink href="/" icon={<Home size={18} />} label="Home" />
         <MobileLink href="/instrumentals" icon={<Headphones size={18} />} label="Tracks" />
         <MobileLink href="/playlists" icon={<ListMusic size={18} />} label="Playlists" />
@@ -127,9 +127,19 @@ function SideLink({ href, icon, label }: { href: string; icon: React.ReactNode; 
 }
 
 function MobileLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
+  const pathname = usePathname();
+  const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
+
   return (
-    <Link href={href} className="flex min-w-0 flex-col items-center justify-center gap-1 rounded-2xl px-1 py-2 text-[10px] font-bold" style={{ color: "var(--foreground-muted)" }}>
-      <span className="text-[var(--accent)]">{icon}</span>
+    <Link
+      href={href}
+      className="flex min-w-0 flex-col items-center justify-center gap-1 rounded-2xl px-1 py-2 text-[10px] font-bold transition-colors"
+      style={{
+        color: active ? "var(--accent)" : "var(--foreground-muted)",
+        background: active ? "var(--accent-dim)" : "transparent",
+      }}
+    >
+      <span style={{ color: active ? "var(--accent)" : "var(--foreground-muted)" }}>{icon}</span>
       <span className="truncate">{label}</span>
     </Link>
   );

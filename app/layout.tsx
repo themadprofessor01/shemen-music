@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import Sidebar from "@/components/Sidebar";
@@ -42,13 +41,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Establish connections to audio/image origin early */}
         <link rel="preconnect" href="https://shemenmusic.com" />
         <link rel="dns-prefetch" href="https://shemenmusic.com" />
+        {/* Theme init — runs before paint to prevent flash */}
+        {/* eslint-disable-next-line @next/next/no-before-interactive-script-outside-document */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme');if(t!=='light')document.documentElement.classList.add('dark');}catch(e){document.documentElement.classList.add('dark');}})()` }} />
       </head>
       <body className={inter.className}>
-        <Script
-          id="theme-init"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{ __html: `(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})()` }}
-        />
         <PlayerProvider>
           <LikesProvider>
             <SearchProvider>
@@ -69,7 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Sidebar />
 
                 {/* Main content — no left margin on mobile, 192px on md+ */}
-                <div className="flex-1 min-w-0 md:ml-48 mb-16 md:mb-20">
+                <div className="flex-1 min-w-0 md:ml-48 mb-36 md:mb-20">
                   <TopBar />
                   <main className="pt-16">{children}</main>
                 </div>

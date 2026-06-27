@@ -38,14 +38,22 @@ export default async function WorshipPage({
         Praise &amp; worship instrumentals for the church
       </PageShell>
 
-      <div className="sticky top-16 z-10 -mx-4 sm:-mx-8 lg:-mx-14 px-4 sm:px-8 lg:px-14 py-3 flex items-center justify-between gap-3" style={{ background: "var(--background)", borderBottom: "1px solid var(--border)", backdropFilter: "blur(12px)" }}>
-        <p className="text-sm flex-shrink-0" style={{ color: "var(--foreground-muted)" }}>
-          {worship.length} track{worship.length !== 1 ? "s" : ""}
-        </p>
+      <div className="sticky top-16 z-10 -mx-4 sm:-mx-8 lg:-mx-14 px-4 sm:px-8 lg:px-14 py-2.5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3" style={{ background: "var(--background)", borderBottom: "1px solid var(--border)", backdropFilter: "blur(12px)" }}>
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-sm flex-shrink-0" style={{ color: "var(--foreground-muted)" }}>
+            {worship.length} track{worship.length !== 1 ? "s" : ""}
+          </p>
+          <div className="flex items-center gap-2 flex-shrink-0 sm:hidden">
+            <PlayAllButton tracks={worship.slice(0, 40)} />
+            <Suspense fallback={null}>
+              <ViewToggle />
+            </Suspense>
+          </div>
+        </div>
         <Suspense fallback={null}>
           <InlineSearch />
         </Suspense>
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
           <PlayAllButton tracks={worship.slice(0, 40)} />
           <Suspense fallback={null}>
             <ViewToggle />

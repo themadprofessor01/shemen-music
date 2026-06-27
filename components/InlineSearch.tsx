@@ -14,7 +14,7 @@ export function InlineSearch() {
         placeholder="Search tracks…"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="rounded-full text-sm py-1.5 pl-8 pr-8 outline-none w-96"
+        className="rounded-full text-sm py-1.5 pl-8 pr-8 outline-none w-full"
         style={{
           background: "var(--surface2)",
           border: "1px solid var(--border)",
