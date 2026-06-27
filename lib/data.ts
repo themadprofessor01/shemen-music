@@ -109,7 +109,6 @@ export const tracks: Track[] = [
   },
   {
     id: "he-that-hath-my-commandments-163",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Helen-Baylor-Can-You-Reach-My-Friend-Official-Instrumental.mp3",
     title: "He That Hath My Commandments 163",
     artist: "Georlynn",
     duration: "08:44",
@@ -156,7 +155,6 @@ export const tracks: Track[] = [
   },
   {
     id: "i-know-i-really-like-you-156",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Cant-Keep-It-to-Myself.mp3",
     title: "I Know I Really Like You 156",
     artist: "Georlynn",
     duration: "06:01",
@@ -294,7 +292,6 @@ export const tracks: Track[] = [
   },
   {
     id: "give-your-life-to-christ-150",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Everybodys-Got-to-Know.mp3",
     title: "Give Your Life To Christ 150",
     artist: "Georlynn & First Love Music",
     duration: "05:56",
@@ -340,7 +337,6 @@ export const tracks: Track[] = [
   },
   {
     id: "he-must-increase-214",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Cant-Keep-It-to-Myself.mp3",
     title: "He Must Increase 214",
     artist: "Georlynn",
     duration: "05:44",
@@ -355,7 +351,6 @@ export const tracks: Track[] = [
   },
   {
     id: "have-mercy-on-us-instrumental-with-bvs-official-instrumental",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/04/Seven-Great-Principles-138-3.mp3",
     title: "Have Mercy On Us Instrumental (with BVs)",
     artist: "First Love Music & Keziah",
     duration: "03:32",
@@ -447,7 +442,6 @@ export const tracks: Track[] = [
   },
   {
     id: "the-more-i-seek-you-d",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/The-More-I-Seek-You_D.mp3",
     title: "The More I Seek You (D)",
     artist: "Kari Jobe",
     duration: "05:28",
@@ -462,7 +456,6 @@ export const tracks: Track[] = [
   },
   {
     id: "if-he-carried-the-weight-of-the-world-full-instrumental-track",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Count-It-All-Joy-2.mp3",
     title: "He Will Carry You (Full Instrumental Track)",
     artist: "Scott Wesley Brown",
     duration: "05:28",
@@ -493,7 +486,6 @@ export const tracks: Track[] = [
   },
   {
     id: "i-must-work-169",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Andrae-Crouch-Everybodys-Got-To-Know-Full-Instrumental.mp3",
     title: "I Must Work 169",
     artist: "Georlynn",
     duration: "10:03",
@@ -523,7 +515,6 @@ export const tracks: Track[] = [
   },
   {
     id: "go-into-the-world-151",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Yes-Lord.mp3",
     title: "Go Into The World 151",
     artist: "Georlynn",
     duration: "05:42",
@@ -597,7 +588,6 @@ export const tracks: Track[] = [
   },
   {
     id: "god-is-here",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Andrae-Crouch-Everybodys-Got-To-Know-Full-Instrumental.mp3",
     title: "God Is Here",
     artist: "Lara Martin",
     duration: "05:45",
@@ -670,7 +660,6 @@ export const tracks: Track[] = [
   },
   {
     id: "i-like-the-way-you-like-me-148",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Dreamin.mp3",
     title: "I Like The Way You Like Me 148",
     artist: "Georlynn",
     duration: "05:55",
@@ -684,7 +673,6 @@ export const tracks: Track[] = [
   },
   {
     id: "i-really-love-you-jesus-180",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/08/in-jesus-name.mp3",
     title: "I Really Love You Jesus 180",
     artist: "First Love Music & Georlynn",
     duration: "06:53",
@@ -727,7 +715,6 @@ export const tracks: Track[] = [
   },
   {
     id: "i-know-thy-works-248",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/05/I-Will-Bless-The-Lord-242.mp3",
     title: "I Know Thy Works 248",
     artist: "Aseda",
     duration: "07:16",
@@ -770,7 +757,6 @@ export const tracks: Track[] = [
   },
   {
     id: "i-cant-believe-its-true-196",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Comforter.mp3",
     title: "I Can't Believe It's True 196",
     artist: "Georlynn",
     duration: "04:41",
@@ -798,7 +784,6 @@ export const tracks: Track[] = [
   },
   {
     id: "go-into-the-world",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/02/Only-A-God-Like-You-1.mp3",
     title: "Go Into The World",
     artist: "Georlynn & First Love Music",
     duration: "0:00",
@@ -854,7 +839,6 @@ export const tracks: Track[] = [
   },
   {
     id: "greater-love",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Dreamin.mp3",
     title: "Greater Love",
     artist: "BDR",
     duration: "05:26",
@@ -999,7 +983,6 @@ export const tracks: Track[] = [
   },
   {
     id: "i-acknowledged-my-sin-217",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/08/breathe-upon-me.mp3",
     title: "I Acknowledged My Sin 217",
     artist: "Aseda",
     duration: "05:16",
@@ -1170,7 +1153,6 @@ export const tracks: Track[] = [
   },
   {
     id: "go-ye-instrumental-with-bvs-official-instrumental",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/04/Read-Your-Bible-Pray-Everyday-98.mp3",
     title: "Go Ye Instrumental (with BVs)",
     artist: "First Love Music & Aida",
     duration: "05:04",
@@ -1270,7 +1252,6 @@ export const tracks: Track[] = [
   },
   {
     id: "go-go-go-full-instrumental",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/ShemenMUSIC-Andrae-Crouch-Come-Home-Full-Instrumental-Track.m4a",
     title: "Go Go Go (Full Instrumental)",
     artist: "Shirley Caesar",
     duration: "03:20",
@@ -1285,7 +1266,6 @@ export const tracks: Track[] = [
   },
   {
     id: "heaven-song-full-instrumental-track",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Security.mp3",
     title: "Heaven Song (Full Instrumental Track)",
     artist: "Mary McKee & The Genesis",
     duration: "03:36",
@@ -1299,7 +1279,6 @@ export const tracks: Track[] = [
   },
   {
     id: "el-shaddai",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Cant-Keep-It-to-Myself.mp3",
     title: "El Shaddai",
     artist: "BDR",
     duration: "05:47",
@@ -1327,7 +1306,6 @@ export const tracks: Track[] = [
   },
   {
     id: "i-see-the-light-full-instrumental-track",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Say-I-Do.mp3",
     title: "I See The Light (Full Instrumental Track)",
     artist: "Passage",
     duration: "03:44",
@@ -1341,7 +1319,6 @@ export const tracks: Track[] = [
   },
   {
     id: "ive-found-it",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2025/11/GiveYourLifeToTheLord_Inst_BVs.mp3",
     title: "I've Found it",
     artist: "The Living Waters Singers",
     duration: "0:00",
@@ -1444,7 +1421,6 @@ export const tracks: Track[] = [
   },
   {
     id: "the-lord-thy-god-in-the-midst-of-thee-176",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/04/Choose-Me-Use-Me-124.mp3",
     title: "The Lord Thy God 176",
     artist: "First Love Music & Keziah",
     duration: "06:25",
@@ -1561,7 +1537,6 @@ export const tracks: Track[] = [
   },
   {
     id: "jesus-is-the-door",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2025/11/Jesus-Youre-So-Cool_Inst_BVs.mp3",
     title: "Jesus Is The Door",
     artist: "The Living Waters Singers",
     duration: "0:00",
@@ -1577,7 +1552,6 @@ export const tracks: Track[] = [
   },
   {
     id: "jesus-really-needs-to-know-62",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/04/Jesus-Savoiur-Of-The-World-142-1.mp3",
     title: "Jesus Really Needs To Know 62",
     artist: "ThomasS",
     duration: "0:00",
@@ -1711,7 +1685,6 @@ export const tracks: Track[] = [
   },
   {
     id: "dreamin",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Cant-Keep-It-to-Myself.mp3",
     title: "Dreamin",
     artist: "Andraé Crouch & MINISTRY MUSIC INSTRUMENTALS",
     duration: "03:13",
@@ -1725,7 +1698,6 @@ export const tracks: Track[] = [
   },
   {
     id: "heed-the-call-full-instrumental",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/The-Lord-is-My-Light.mp3",
     title: "Heed The Call (Full Instrumental)",
     artist: "The Imperials",
     duration: "02:58",
@@ -1813,7 +1785,6 @@ export const tracks: Track[] = [
   },
   {
     id: "war-a-good-warfare-181",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Cant-Keep-It-to-Myself.mp3",
     title: "War a Good Warfare 181",
     artist: "First Love Music & Georlynn",
     duration: "06:55",
@@ -1827,7 +1798,6 @@ export const tracks: Track[] = [
   },
   {
     id: "i-and-the-children-182",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/08/jesus-lover-of-my-soul.mp3",
     title: "I and the Children 182",
     artist: "Aseda",
     duration: "07:38",
@@ -1856,7 +1826,6 @@ export const tracks: Track[] = [
   },
   {
     id: "loyalty-and-disloyalty-100",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/04/Read-Your-Bible-Pray-Everyday-98.mp3",
     title: "Loyalty And Disloyalty 100",
     artist: "First Love Music & Aida",
     duration: "10:35",
@@ -1942,7 +1911,6 @@ export const tracks: Track[] = [
   },
   {
     id: "you-are-my-god-69",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/04/You-Are-My-God-69.mp3",
     title: "You Are My God 69",
     artist: "First Love Music & Aida",
     duration: "05:47",
@@ -2056,7 +2024,6 @@ export const tracks: Track[] = [
   },
   {
     id: "let-the-weary-rest",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2025/05/Let-The-Weary-Rest-INSTRUMENTAL-FIRST-LOVE-MUSIC-INSTRUMENTALS-1.mp3",
     title: "Let The Weary Rest",
     artist: "FIRST LOVE MUSIC INSTRUMENTALS",
     duration: "04:35",
@@ -2085,7 +2052,6 @@ export const tracks: Track[] = [
   },
   {
     id: "rose-of-sharon-official-instrumental-with-bvs",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2025/11/Rose-Of-Sharon_Inst_BVs.mp3",
     title: "Rose Of Sharon (Official Instrumental with BVs)",
     artist: "The Living Waters Singers",
     duration: "05:51",
@@ -2114,7 +2080,6 @@ export const tracks: Track[] = [
   },
   {
     id: "so-send-i-you-170",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Cant-Keep-It-to-Myself.mp3",
     title: "So Send I You 170",
     artist: "Georlynn",
     duration: "14:05",
@@ -2184,7 +2149,6 @@ export const tracks: Track[] = [
   },
   {
     id: "blocked-my-view-instrumental-with-bvs-official-instrumental",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/12/Thank-You-Lord-Official-Instrumental-4.mp3",
     title: "Blocked My View Instrumental (with BVs)",
     artist: "First Love Music & Keziah",
     duration: "06:16",
@@ -2212,7 +2176,6 @@ export const tracks: Track[] = [
   },
   {
     id: "every-valley-g",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Security.mp3",
     title: "Every Valley G",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "03:20",
@@ -2226,7 +2189,6 @@ export const tracks: Track[] = [
   },
   {
     id: "go-church",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2025/11/Go-Church_Inst_BVs.mp3",
     title: "Go Church",
     artist: "The Living Waters Singers",
     duration: "0:00",
@@ -2284,7 +2246,6 @@ export const tracks: Track[] = [
   },
   {
     id: "occupy-till-i-come-239",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/04/Shiella-Strange-Woman-44-1.mp3",
     title: "Occupy Till I Come 239",
     artist: "First Love Music & Aida",
     duration: "09:16",
@@ -2341,7 +2302,6 @@ export const tracks: Track[] = [
   },
   {
     id: "together-forever-175",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/04/Fulfill-Your-Ministry-132.mp3",
     title: "Together Forever 175",
     artist: "First Love Music & Keziah",
     duration: "06:40",
@@ -2412,7 +2372,6 @@ export const tracks: Track[] = [
   },
   {
     id: "all-i-want-is-a-christian-girl-116",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/08/eagles-wings.mp3",
     title: "All I Want Is A Christian Girl 116",
     artist: "First Love Music & Aida",
     duration: "06:40",
@@ -2427,7 +2386,6 @@ export const tracks: Track[] = [
   },
   {
     id: "anoint-me-without-bgvs",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2025/11/Living-Waters_Inst_BVs.mp3",
     title: "Anoint Me (without BGVs)",
     artist: "Georlynn & First Love Music",
     duration: "07:49",
@@ -2457,7 +2415,6 @@ export const tracks: Track[] = [
   },
   {
     id: "bear-much-fruit-193",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2025/01/Loving-My-Maker.mp3",
     title: "Bear Much Fruit 193",
     artist: "First Love Music & Georlynn",
     duration: "05:48",
@@ -2484,7 +2441,6 @@ export const tracks: Track[] = [
   },
   {
     id: "i-see-you-jesus-206",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/08/come-now-is-the-time.mp3",
     title: "I See You Jesus 206",
     artist: "Aseda",
     duration: "05:00",
@@ -2656,7 +2612,6 @@ export const tracks: Track[] = [
   },
   {
     id: "people-need-the-lord-official-instrumental",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2025/08/People-Need-The-Lord-Instreumental_leveled-3.mp3",
     title: "People Need The Lord (Official Instrumental)",
     artist: "First Love Music",
     duration: "04:34",
@@ -2869,7 +2824,6 @@ export const tracks: Track[] = [
   },
   {
     id: "blessed-jesus-195",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/04/I-Notice-Other-Girls-111.mp3",
     title: "Blessed Jesus 195",
     artist: "First Love Music & Georlynn",
     duration: "06:15",
@@ -2884,7 +2838,6 @@ export const tracks: Track[] = [
   },
   {
     id: "born-again-102",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/08/look-my-way.mp3",
     title: "Born Again 102",
     artist: "First Love Music & Aida",
     duration: "04:19",
@@ -2941,7 +2894,6 @@ export const tracks: Track[] = [
   },
   {
     id: "dare-bolder-programs-instrumental-withbvs-official-instrumental",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/04/Promise-Me-135.mp3",
     title: "Dare Bolder Programs Instrumental (withBVs)",
     artist: "First Love Music & Aida",
     duration: "07:30",
@@ -2955,7 +2907,6 @@ export const tracks: Track[] = [
   },
   {
     id: "every-valley-f",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/To-God-Be-the-Glory.mp3",
     title: "Every Valley F",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "03:20",
@@ -2969,7 +2920,6 @@ export const tracks: Track[] = [
   },
   {
     id: "i-will-pay-thee-all-174",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/04/Speak-in-Tongues-80.mp3",
     title: "I Will Pay Thee All 174",
     artist: "Keziah & First Love Music",
     duration: "09:45",
@@ -2983,7 +2933,6 @@ export const tracks: Track[] = [
   },
   {
     id: "im-impressed-233",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/04/I-Sought-The-Lord-26.mp3",
     title: "I'm Impressed 233",
     artist: "Aseda",
     duration: "04:33",
@@ -3040,7 +2989,6 @@ export const tracks: Track[] = [
   },
   {
     id: "living-waters-official-instrumental-with-bvs",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2025/11/Living-Waters_Inst_BVs.mp3",
     title: "Living Waters (Official Instrumental with BVs)",
     artist: "The Living Waters Singers",
     duration: "04:59",
@@ -3112,7 +3060,6 @@ export const tracks: Track[] = [
   },
   {
     id: "no-ordinary-water-official-instrumental-with-bvs",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2025/11/No-Ordinary-Water_Inst_BVs.mp3",
     title: "No Ordinary Water (Official Instrumental with BVs)",
     artist: "The Living Waters Singers",
     duration: "07:15",
@@ -3269,7 +3216,6 @@ export const tracks: Track[] = [
   },
   {
     id: "the-sea-of-forgetfulness-full-instrumental-track",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/ShemenMUSIC-Helen-Baylor-The-Sea-Of-Forgetfulness-Full-Instrumental-Track.mp3",
     title: "The Sea Of Forgetfulness (Full Instrumental Track)",
     artist: "Helen Baylor",
     duration: "04:11",
@@ -3588,7 +3534,6 @@ export const tracks: Track[] = [
   },
   {
     id: "everybodys-got-to-know",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Everybodys-Got-to-Know.mp3",
     title: "Everybody's Got to Know",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "08:46",
@@ -3602,7 +3547,6 @@ export const tracks: Track[] = [
   },
   {
     id: "hes-waiting",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/The-First-Thing-I-Do-197.mp3",
     title: "He's Waiting",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "04:36",
@@ -3631,7 +3575,6 @@ export const tracks: Track[] = [
   },
   {
     id: "i-see-it-in-your-eyes-205",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/04/Let-Me-Tell-You-Now-34.mp3",
     title: "I See It in Your Eyes 205",
     artist: "Aseda",
     duration: "06:44",
@@ -3660,7 +3603,6 @@ export const tracks: Track[] = [
   },
   {
     id: "jesus-is-lord",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/ShemenMUSIC-Andrae-Crouch-Come-Home-Full-Instrumental-Track.m4a",
     title: "Jesus is Love",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "06:22",
@@ -3690,7 +3632,6 @@ export const tracks: Track[] = [
   },
   {
     id: "lamentations-192",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/04/Communion-Song-72.mp3",
     title: "Lamentations 192",
     artist: "Aseda",
     duration: "06:36",
@@ -3704,7 +3645,6 @@ export const tracks: Track[] = [
   },
   {
     id: "let-the-church-say-amen-2",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Yes-Lord.mp3",
     title: "Let the Church Say Amen",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "05:52",
@@ -3747,7 +3687,6 @@ export const tracks: Track[] = [
   },
   {
     id: "never-let-me-go-c",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/The-Lord-is-My-Light.mp3",
     title: "Never Let Me Go (C)",
     artist: "Oslo Gospel Choir",
     duration: "05:06",
@@ -3788,7 +3727,6 @@ export const tracks: Track[] = [
   },
   {
     id: "proposal-ill-say-i-love-you-54",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/04/Proposal-Ill-Say-I-love-You-54-1.mp3",
     title: "Proposal (I'll Say I love You) 54",
     artist: "First Love Music & Aida",
     duration: "04:47",
@@ -3959,7 +3897,6 @@ export const tracks: Track[] = [
   },
   {
     id: "work-on-187",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Cant-Keep-It-to-Myself.mp3",
     title: "Work On 187",
     artist: "Georlynn",
     duration: "07:54",
@@ -4075,7 +4012,6 @@ export const tracks: Track[] = [
   },
   {
     id: "hallowed-be-thy-name",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/02/Only-A-God-Like-You-1.mp3",
     title: "Hallowed Be Thy Name",
     artist: "Clint Brown",
     duration: "03:41",
@@ -4165,7 +4101,6 @@ export const tracks: Track[] = [
   },
   {
     id: "1234-jesus",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2025/11/1234-Jesus_Inst_BVs.mp3",
     title: "1234 Jesus (Official Instrumental with BVs)",
     artist: "shemenmusic",
     duration: "04:48",
@@ -4180,7 +4115,6 @@ export const tracks: Track[] = [
   },
   {
     id: "abide-in-me",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2025/11/Jesus-Youre-So-Cool_Inst_BVs.mp3",
     title: "Abide In Me",
     artist: "Sandra Crouch",
     duration: "05:00",
@@ -4207,7 +4141,6 @@ export const tracks: Track[] = [
   },
   {
     id: "all-about-you",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/All-About-You.mp3",
     title: "All About You",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "06:04",
@@ -4221,7 +4154,6 @@ export const tracks: Track[] = [
   },
   {
     id: "be-nice-136",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/05/When-I-Get-To-Heaven-83-1.mp3",
     title: "Be Nice 136",
     artist: "First Love Music & Aida",
     duration: "06:18",
@@ -4335,7 +4267,6 @@ export const tracks: Track[] = [
   },
   {
     id: "first-love-love-first",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2025/11/First-Love-Love-First_Inst_BVs.mp3",
     title: "First Love Love First",
     artist: "The Living Waters Singers",
     duration: "0:00",
@@ -4351,7 +4282,6 @@ export const tracks: Track[] = [
   },
   {
     id: "give-your-life-to-the-lord",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2025/11/GiveYourLifeToTheLord_Inst_BVs.mp3",
     title: "Give Your Life To The Lord",
     artist: "The Living Waters Singers",
     duration: "0:00",
@@ -4409,7 +4339,6 @@ export const tracks: Track[] = [
   },
   {
     id: "jesus-youre-so-cool",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2025/11/Jesus-Youre-So-Cool_Inst_BVs.mp3",
     title: "Jesus You're So Cool",
     artist: "The Living Waters Singers",
     duration: "0:00",
@@ -4455,7 +4384,6 @@ export const tracks: Track[] = [
   },
   {
     id: "keep-on-dreamin-219",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/08/in-your-presence-such-joy.mp3",
     title: "Keep on Dreamin 219",
     artist: "Aseda",
     duration: "07:49",
@@ -4469,7 +4397,6 @@ export const tracks: Track[] = [
   },
   {
     id: "let-the-church-say-amen",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Work-On-187.mp3",
     title: "Let The Church Say Amen",
     artist: "Andraé Crouch",
     duration: "05:52",
@@ -4483,7 +4410,6 @@ export const tracks: Track[] = [
   },
   {
     id: "life-is-so-short-full-instrumental-track",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/ShemenMUSIC-Bridge-Over-Troubled-Water.mp3",
     title: "Life is So Short (Full Instrumental Track)",
     artist: "Bernice Offei",
     duration: "05:21",
@@ -4497,7 +4423,6 @@ export const tracks: Track[] = [
   },
   {
     id: "live-for-jesus",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/ShemenMUSIC-Bridge-Over-Troubled-Water.mp3",
     title: "Live For Jesus",
     artist: "BDR",
     duration: "04:08",
@@ -4526,7 +4451,6 @@ export const tracks: Track[] = [
   },
   {
     id: "lord-let-me-have-a-dream",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Count-It-All-Joy-2.mp3",
     title: "Lord, Let Me Have a Dream",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "03:41",
@@ -4726,7 +4650,6 @@ export const tracks: Track[] = [
   },
   {
     id: "shepherd-of-my-soul",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Comforter.mp3",
     title: "Shepherd Of My Soul",
     artist: "Hosanna! Music",
     duration: "04:01",
@@ -4840,7 +4763,6 @@ export const tracks: Track[] = [
   },
   {
     id: "this-is-the-day",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Cant-Keep-It-to-Myself.mp3",
     title: "This is the Day",
     artist: "Ministry Music Instrumentals",
     duration: "02:45",
@@ -4868,7 +4790,6 @@ export const tracks: Track[] = [
   },
   {
     id: "twenty-five-to-fifty-123",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/05/Twenty-Five-To-Fifty-123.mp3",
     title: "Twenty-Five To Fifty 123",
     artist: "First Love Music & Aida",
     duration: "07:02",
@@ -4882,7 +4803,6 @@ export const tracks: Track[] = [
   },
   {
     id: "use-it-or-lose-it-213",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/ShemenMUSIC-Andrae-Crouch-Come-Home-Full-Instrumental-Track.m4a",
     title: "Use It Or Lose It 213",
     artist: "Georlynn",
     duration: "05:16",
@@ -4896,7 +4816,6 @@ export const tracks: Track[] = [
   },
   {
     id: "we-come-rejoicing-full-instrumental-track",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Cant-Keep-It-to-Myself.mp3",
     title: "We Come Rejoicing (Full Instrumental Track)",
     artist: "Brooklyn Tabernacle Choir",
     duration: "04:07",
@@ -5070,7 +4989,6 @@ export const tracks: Track[] = [
   },
   {
     id: "hes-already-provided",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2025/11/Living-Waters_Inst_BVs.mp3",
     title: "He's Already Provided",
     artist: "Alvin Slaughter",
     duration: "04:55",
@@ -5216,7 +5134,6 @@ export const tracks: Track[] = [
   },
   {
     id: "jesus-your-name-is-power",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2022/07/Israel-Houghton-All-Around.mp3",
     title: "Jesus, Your Name Is Power",
     artist: "Maranatha Music",
     duration: "03:26",
@@ -5245,7 +5162,6 @@ export const tracks: Track[] = [
   },
   {
     id: "blind-bartimaeus-218",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/05/When-I-Fell-57.mp3",
     title: "Blind Bartimaeus 218",
     artist: "Aseda",
     duration: "07:32",
@@ -5272,7 +5188,6 @@ export const tracks: Track[] = [
   },
   {
     id: "choose-me-use-me-124",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/04/Choose-Me-Use-Me-124.mp3",
     title: "Choose Me, Use Me 124",
     artist: "First Love Music & Aida",
     duration: "08:20",
@@ -5327,7 +5242,6 @@ export const tracks: Track[] = [
   },
   {
     id: "finish-what-you-started-full-instrumental-track",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/ShemenMUSIC-The-Imperials-Finish-What-You-Started-Full-Instrumental-Track.mp3",
     title: "Finish What You Started (Full Instrumental Track)",
     artist: "The Imperials",
     duration: "04:21",
@@ -5425,7 +5339,6 @@ export const tracks: Track[] = [
   },
   {
     id: "its-not-just-a-story-full-instrumental-track",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Helen-Baylor-Can-You-Reach-My-Friend-Official-Instrumental.mp3",
     title: "It's Not Just A Story (Full Instrumental Track)",
     artist: "Andraé Crouch",
     duration: "02:53",
@@ -5439,7 +5352,6 @@ export const tracks: Track[] = [
   },
   {
     id: "jesus-youre-so-cool-official-instrumental-with-bvs",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2025/11/Jesus-Youre-So-Cool_Inst_BVs.mp3",
     title: "Jesus You're So Cool (Official Instrumental with BVs)",
     artist: "The Living Waters Singers",
     duration: "05:28",
@@ -5454,7 +5366,6 @@ export const tracks: Track[] = [
   },
   {
     id: "johnny",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/This-is-the-Day.mp3",
     title: "Johnny",
     artist: "Jermaine Edwards",
     duration: "04:22",
@@ -5468,7 +5379,6 @@ export const tracks: Track[] = [
   },
   {
     id: "joy-to-my-soul-full-instrumental-track",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/ShemenMUSIC-Helen-Baylor-The-Sea-Of-Forgetfulness-Full-Instrumental-Track.mp3",
     title: "Joy To My Soul (Full Instrumental Track)",
     artist: "Oslo Gospel Choir",
     duration: "04:33",
@@ -5483,7 +5393,6 @@ export const tracks: Track[] = [
   },
   {
     id: "keeping-my-eyes-on-you-full-instrumental-track",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/This-is-the-Day.mp3",
     title: "Keeping My Eyes On You (Full Instrumental Track)",
     artist: "Twila Paris",
     duration: "03:23",
@@ -5539,7 +5448,6 @@ export const tracks: Track[] = [
   },
   {
     id: "let-my-people-go-21",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/04/Let-My-People-Go-21.mp3",
     title: "Let My People Go 21",
     artist: "First Love Music & Aida",
     duration: "07:08",
@@ -5567,7 +5475,6 @@ export const tracks: Track[] = [
   },
   {
     id: "look-a-little-closer-a",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/ShemenMUSIC-Andrae-Crouch-Come-Home-Full-Instrumental-Track.m4a",
     title: "Look a Little Closer A",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "06:42",
@@ -5596,7 +5503,6 @@ export const tracks: Track[] = [
   },
   {
     id: "man-on-a-mission-square_1",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2025/01/Man-On-A-Mission.mp3",
     title: "Man On A Mission",
     artist: "First Love Music",
     duration: "05:14",
@@ -5610,7 +5516,6 @@ export const tracks: Track[] = [
   },
   {
     id: "more-than-a-friend",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/ShemenMUSIC-Andrae-Crouch-Where-Jesus-Is-Full-Instrumental-Track.mp3",
     title: "More Than a Friend",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "04:37",
@@ -5624,7 +5529,6 @@ export const tracks: Track[] = [
   },
   {
     id: "more-than-a-friend-full-instrumental-track",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Cant-Keep-It-to-Myself.mp3",
     title: "More Than A Friend (Full Instrumental Track)",
     artist: "Helen Baylor",
     duration: "04:29",
@@ -5653,7 +5557,6 @@ export const tracks: Track[] = [
   },
   {
     id: "new-jerusalem-new-school",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Work-On-187.mp3",
     title: "New Jerusalem (New School)",
     artist: "BDR",
     duration: "06:19",
@@ -5681,7 +5584,6 @@ export const tracks: Track[] = [
   },
   {
     id: "obligations-3-2",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/04/Obligations-3-2.mp3",
     title: "Obligations 3",
     artist: "First Love Music & Aida",
     duration: "10:31",
@@ -5738,7 +5640,6 @@ export const tracks: Track[] = [
   },
   {
     id: "play-it-again",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/To-God-Be-the-Glory.mp3",
     title: "Play It Again",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "03:20",
@@ -5794,7 +5695,6 @@ export const tracks: Track[] = [
   },
   {
     id: "quiet-times",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Cant-Keep-It-to-Myself.mp3",
     title: "Quiet Times",
     artist: "Andraé Crouch",
     duration: "06:04",
@@ -5850,7 +5750,6 @@ export const tracks: Track[] = [
   },
   {
     id: "simply-i-love-you",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Cant-Keep-It-to-Myself.mp3",
     title: "Simply I Love You",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "02:37",
@@ -5894,7 +5793,6 @@ export const tracks: Track[] = [
   },
   {
     id: "sweet-memories-179",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/08/in-your-presence-such-joy.mp3",
     title: "Sweet Memories 179",
     artist: "First Love Music & Georlynn",
     duration: "07:10",
@@ -5923,7 +5821,6 @@ export const tracks: Track[] = [
   },
   {
     id: "take-up-your-cross-full-instrumental-track",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Cant-Keep-It-to-Myself.mp3",
     title: "Take Up Your Cross (Full Instrumental Track)",
     artist: "Brooklyn Tabernacle Choir",
     duration: "05:31",
@@ -5937,7 +5834,6 @@ export const tracks: Track[] = [
   },
   {
     id: "thats-why-i-needed-you",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Cant-Keep-It-to-Myself.mp3",
     title: "That's Why I Needed You",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "04:26",
@@ -5980,7 +5876,6 @@ export const tracks: Track[] = [
   },
   {
     id: "the-more-i-love-the-less-i-be-loved-220",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/04/You-Are-My-God-69.mp3",
     title: "The More I Love, the Less I Be Loved 220",
     artist: "Aseda",
     duration: "06:33",
@@ -6023,7 +5918,6 @@ export const tracks: Track[] = [
   },
   {
     id: "welcome-back-to-jesus",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Cant-Keep-It-to-Myself.mp3",
     title: "Welcome Back to Jesus",
     artist: "Ministry Music Instrumentals",
     duration: "03:20",
@@ -6038,7 +5932,6 @@ export const tracks: Track[] = [
   },
   {
     id: "welcome-back-to-jesus-bb",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Cant-Keep-It-to-Myself.mp3",
     title: "Welcome Back To Jesus (Bb)",
     artist: "Evie Karlsson",
     duration: "03:20",
@@ -6137,7 +6030,6 @@ export const tracks: Track[] = [
   },
   {
     id: "you-can-depened-on-me",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Cant-Keep-It-to-Myself.mp3",
     title: "You Can Depend on Me",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "04:12",
