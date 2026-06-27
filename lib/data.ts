@@ -185,7 +185,7 @@ export const tracks: Track[] = [
   },
   {
     id: "i-will-be-calling-164",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Welcome-Back-to-Jesus.mp3",
+    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Will-Be-Calling-164.mp3",
     title: "I Will Be Calling 164",
     artist: "Georlynn & First Love Music",
     duration: "12:45",
@@ -411,7 +411,7 @@ export const tracks: Track[] = [
   },
   {
     id: "i-fell-in-love-with-god-189",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Simply-I-Love-You.mp3",
+    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Fell-In-Love-With-God-189.mp3",
     title: "I Fell In Love With God 189",
     artist: "Georlynn",
     duration: "05:07",
@@ -853,7 +853,7 @@ export const tracks: Track[] = [
   },
   {
     id: "i-will-bless-the-lord",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/So-Send-I-You-170-1.mp3",
+    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/I-Will-Bless-the-Lord.mp3",
     title: "I Will Bless the Lord",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "05:50",
@@ -1640,7 +1640,6 @@ export const tracks: Track[] = [
   },
   {
     id: "anoint-me",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2025/11/Rose-Of-Sharon_Inst_NoBVs.mp3",
     title: "Anoint Me (w/ BGVs)",
     artist: "Georlynn & First Love Music",
     duration: "07:49",
@@ -2088,6 +2087,7 @@ export const tracks: Track[] = [
     category: "instrumental",
     imageUrl: "/images/2024/08/So-Send-I-You.jpg",
     coverColor: "#d97706",
+    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/So-Send-I-You-170-1.mp3",
     stationUrl: "https://media.shemenmusic.com/three/station/so-send-i-you-170/",
     downloadUrl: "https://media.shemenmusic.com/three/station/so-send-i-you-170/stream",
   },
@@ -2584,7 +2584,6 @@ export const tracks: Track[] = [
   },
   {
     id: "oh-it-is-jesus-full-instrumental",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Thats-Why-I-Needed-You.mp3",
     title: "Oh It Is Jesus (Full Instrumental)",
     artist: "Andraé Crouch",
     duration: "04:13",
@@ -4579,7 +4578,7 @@ export const tracks: Track[] = [
   },
   {
     id: "peter-do-you-love-me-157",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/ShemenMUSIC-Brooklyn-Tabernacle-Choir-We-Come-Rejoicing-Full-Instrumental-Track.mp3",
+    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Peter-Do-You-Love-Me-157.mp3",
     title: "Peter Do You Love Me 157",
     artist: "Georlynn",
     duration: "08:15",
@@ -5759,6 +5758,7 @@ export const tracks: Track[] = [
     imageUrl: "/images/2024/08/Artboard-8-2.png",
     coverColor: "#374151",
     mood: "love",
+    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Simply-I-Love-You.mp3",
     stationUrl: "https://media.shemenmusic.com/three/station/simply-i-love-you/",
     downloadUrl: "https://media.shemenmusic.com/three/station/simply-i-love-you/stream",
   },
@@ -5842,6 +5842,7 @@ export const tracks: Track[] = [
     category: "instrumental",
     imageUrl: "/images/2024/08/Artboard-14-2.png",
     coverColor: "#374151",
+    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Thats-Why-I-Needed-You.mp3",
     stationUrl: "https://media.shemenmusic.com/three/station/thats-why-i-needed-you/",
     downloadUrl: "https://media.shemenmusic.com/three/station/thats-why-i-needed-you/stream",
   },
@@ -5927,6 +5928,7 @@ export const tracks: Track[] = [
     imageUrl: "/images/2024/08/Artboard-23-2.png",
     coverColor: "#374151",
     mood: "honour",
+    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Welcome-Back-to-Jesus.mp3",
     stationUrl: "https://media.shemenmusic.com/three/station/welcome-back-to-jesus/",
     downloadUrl: "https://media.shemenmusic.com/three/station/welcome-back-to-jesus/stream",
   },
