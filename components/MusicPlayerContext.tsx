@@ -150,7 +150,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
           return q;
         });
         if (nextTrack) {
-          const src = (nextTrack as Track).audioUrl ?? (nextTrack as Track).downloadUrl ?? (nextTrack as Track).stationUrl ?? "";
+          const src = resolveAudioSrc(nextTrack as Track);
           if (src) {
             const el = audioRef.current!;
             el.src = src;
@@ -198,7 +198,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const getAudioElement = useCallback(() => audioRef.current, []);
 
   const preload = useCallback((track: Track) => {
-    const src = track.audioUrl ?? track.downloadUrl ?? track.stationUrl ?? "";
+    const src = resolveAudioSrc(track);
     if (!src || currentTrackIdRef.current === track.id) return;
     if (!preloadRef.current) {
       preloadRef.current = new Audio();
@@ -210,8 +210,22 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  /** Route media.shemenmusic.com station URLs through our stream proxy */
+  function resolveAudioSrc(track: Track): string {
+    const raw = track.audioUrl ?? track.downloadUrl ?? track.stationUrl ?? "";
+    if (!raw) return "";
+    // Convert https://media.shemenmusic.com/three/station/{id}/stream → /api/stream?path=...
+    if (raw.startsWith("https://media.shemenmusic.com/three/station/")) {
+      try {
+        const { pathname } = new URL(raw);
+        return `/api/stream?path=${encodeURIComponent(pathname)}`;
+      } catch { /* fall through */ }
+    }
+    return raw;
+  }
+
   const play = useCallback((track: Track) => {
-    const src = track.audioUrl ?? track.downloadUrl ?? track.stationUrl ?? "";
+    const src = resolveAudioSrc(track);
     if (!src) return;
 
     const audio = audioRef.current;

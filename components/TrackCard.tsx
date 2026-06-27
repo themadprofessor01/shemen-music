@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, Mic, Pause, Play, Users, X } from "lucide-react";
+import { Download, Maximize2, Pause, Play, Users, X } from "lucide-react";
 import { usePlayer, useProgress } from "@/components/MusicPlayerContext";
 import type { Track } from "@/lib/data";
 import { formatPlays, cleanTitle, tracks as allTracks } from "@/lib/data";
@@ -9,7 +9,6 @@ import { LikeButton } from "@/components/LikeButton";
 import { Equalizer } from "@/components/Equalizer";
 import { CoverImage } from "@/components/CoverImage";
 import { ShareButton } from "@/components/ShareButton";
-import { KaraokeMode } from "@/components/KaraokeMode";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useMagneticTilt } from "@/hooks/useMagneticTilt";
 import { LyricsDisplay } from "@/components/LyricsDisplay";
@@ -285,7 +284,7 @@ export function TrackRow({ track, index }: { track: Track; index: number }) {
 function TrackDetailDrawer({ track, open, onClose }: { track: Track; open: boolean; onClose: () => void }) {
   const { currentTrack, isPlaying, toggle, play, setQueue } = usePlayer();
   const active = currentTrack?.id === track.id;
-  const [karaokeOpen, setKaraokeOpen] = useState(false);
+  const [lyricsFullscreen, setLyricsFullscreen] = useState(false);
 
   const related = allTracks
     .filter((t) => t.id !== track.id && t.artist === track.artist)
@@ -391,13 +390,13 @@ function TrackDetailDrawer({ track, open, onClose }: { track: Track; open: boole
             <div className="flex items-center justify-between mb-1">
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--premium)]">Lyrics</p>
               <button
-                onClick={() => setKaraokeOpen(true)}
+                onClick={() => setLyricsFullscreen(true)}
                 className="flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition-opacity hover:opacity-80"
                 style={{ background: "var(--accent)", color: "white" }}
-                aria-label="Open karaoke mode"
+                aria-label="View lyrics fullscreen"
               >
-                <Mic size={11} />
-                Karaoke
+                <Maximize2 size={11} />
+                Full screen
               </button>
             </div>
             <p className="text-[11px] mb-3" style={{ color: "var(--foreground-muted)" }}>
@@ -406,7 +405,9 @@ function TrackDetailDrawer({ track, open, onClose }: { track: Track; open: boole
             <LyricsDisplay trackId={track.id} />
           </div>
         )}
-        <KaraokeMode trackId={track.id} open={karaokeOpen} onClose={() => setKaraokeOpen(false)} />
+        {lyricsFullscreen && lyricsMap[track.id] && (
+          <FullscreenLyrics trackId={track.id} title={track.title} onClose={() => setLyricsFullscreen(false)} />
+        )}
 
         {related.length > 0 && (
           <div className="mt-6">
@@ -456,6 +457,49 @@ function TrackDetailDrawer({ track, open, onClose }: { track: Track; open: boole
           </a>
         </div>
       </aside>
+    </div>
+  );
+}
+
+function FullscreenLyrics({ trackId, title, onClose }: { trackId: string; title: string; onClose: () => void }) {
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex flex-col"
+      style={{ background: "var(--background)" }}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Fullscreen lyrics"
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between px-5 py-4 flex-shrink-0" style={{ borderBottom: "1px solid var(--border)" }}>
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--premium)]">Lyrics</p>
+          <p className="font-black text-lg leading-tight mt-0.5" style={{ color: "var(--foreground)" }}>{cleanTitle(title)}</p>
+        </div>
+        <button
+          onClick={onClose}
+          className="h-10 w-10 rounded-full flex items-center justify-center"
+          style={{ background: "var(--surface2)" }}
+          aria-label="Close fullscreen lyrics"
+        >
+          <X size={18} />
+        </button>
+      </div>
+      {/* Scrollable lyrics */}
+      <div className="flex-1 overflow-y-scroll px-5 py-6" style={{ WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"] }}>
+        <LyricsDisplay trackId={trackId} />
+      </div>
     </div>
   );
 }

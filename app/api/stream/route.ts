@@ -6,20 +6,27 @@ import https from "node:https";
 const BLUEHOST_IP = "162.241.252.194";
 const agent = new https.Agent({ rejectUnauthorized: false, keepAlive: true });
 
-const VALID_PATH = /^\/three\/wp-content\/uploads\/[\w/.\-%]+\.(mp3|m4a|wav|ogg|aac)$/i;
+const VALID_WP_PATH = /^\/three\/wp-content\/uploads\/[\w/.\-%]+\.(mp3|m4a|wav|ogg|aac)$/i;
+const VALID_STATION_PATH = /^\/three\/station\/[\w-]+\/stream$/i;
 
 export async function GET(req: NextRequest) {
   const path = req.nextUrl.searchParams.get("path");
 
-  if (!path || !VALID_PATH.test(path)) {
+  const isWpPath = !!path && VALID_WP_PATH.test(path);
+  const isStationPath = !!path && VALID_STATION_PATH.test(path);
+
+  if (!path || (!isWpPath && !isStationPath)) {
     return new Response("Invalid path", { status: 400 });
   }
+
+  // Station paths live on media.shemenmusic.com (same Bluehost IP, different vhost)
+  const hostHeader = isStationPath ? "media.shemenmusic.com" : "shemenmusic.com";
 
   const rangeHeader = req.headers.get("range");
 
   return new Promise<Response>((resolve) => {
     const reqHeaders: Record<string, string> = {
-      Host: "shemenmusic.com",
+      Host: hostHeader,
       "User-Agent": "ShemenMusic/1.0",
     };
     if (rangeHeader) reqHeaders["Range"] = rangeHeader;
