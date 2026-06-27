@@ -238,7 +238,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     }
 
     setCurrentTrack(track);
-    audioRef.current.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+    audioRef.current?.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
   }, [attachHandlers, detachHandlers]);
 
   const pause = useCallback(() => {
