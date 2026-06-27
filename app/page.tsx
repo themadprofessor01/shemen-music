@@ -46,6 +46,7 @@ function SectionHeader({ title, href }: { title: string; href?: string }) {
 export default function HomePage() {
   const featured = tracks.filter((track) => track.featured);
   const trending = tracks.filter((track) => track.trending);
+  const worship = tracks.filter((track) => track.category === "worship").slice(0, 12);
   const totalPlays = tracks.reduce((sum, track) => sum + track.plays, 0);
   const instrumentalCount = tracks.filter((track) => track.category === "instrumental").length;
 
@@ -141,6 +142,11 @@ export default function HomePage() {
       <section>
         <SectionHeader title="Featured" href="/instrumentals" />
         <FeaturedScrollSection tracks={featured} />
+      </section>
+
+      <section>
+        <SectionHeader title="Praise &amp; Worship" href="/worship" />
+        <FeaturedScrollSection tracks={worship} />
       </section>
 
       <section>
