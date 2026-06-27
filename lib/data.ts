@@ -95,7 +95,6 @@ export const tracks: Track[] = [
   },
   {
     id: "go-to-church-194",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "Go To Church 194",
     artist: "Georlynn",
     duration: "05:48",
@@ -433,7 +432,6 @@ export const tracks: Track[] = [
   },
   {
     id: "going-deeper-doing-more-215",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "Going Deeper, Doing More 215",
     artist: "Georlynn",
     duration: "07:40",
@@ -1258,7 +1256,6 @@ export const tracks: Track[] = [
   },
   {
     id: "deeper-147",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "Deeper 147",
     artist: "Georlynn",
     duration: "05:56",
@@ -1931,7 +1928,6 @@ export const tracks: Track[] = [
   },
   {
     id: "ye-shall-receive-power-216",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "Ye Shall Receive Power 216",
     artist: "Georlynn",
     duration: "06:10",
@@ -2047,7 +2043,6 @@ export const tracks: Track[] = [
   },
   {
     id: "he-does-all-things-well-full-instrumental",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "He Does All Things Well (Full Instrumental)",
     artist: "Andraé Crouch",
     duration: "05:07",
@@ -2476,7 +2471,6 @@ export const tracks: Track[] = [
   },
   {
     id: "come-home-full-instrumental-track",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "Come Home (Full Instrumental Track)",
     artist: "Andraé Crouch & MINISTRY MUSIC INSTRUMENTALS",
     duration: "05:47",
@@ -2649,7 +2643,6 @@ export const tracks: Track[] = [
   },
   {
     id: "parting-souls-173",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "Parting Souls 173",
     artist: "Georlynn",
     duration: "16:06",
@@ -3106,7 +3099,6 @@ export const tracks: Track[] = [
   },
   {
     id: "new-jerusalem-188",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "New Jerusalem 188",
     artist: "Georlynn",
     duration: "07:03",
@@ -3263,7 +3255,6 @@ export const tracks: Track[] = [
   },
   {
     id: "the-lord-is-my-light",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "The Lord Is My Light",
     artist: "Andraé Crouch",
     duration: "05:26",
@@ -3570,7 +3561,6 @@ export const tracks: Track[] = [
   },
   {
     id: "come-away-full-instrumental-track",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "Come Away (Full Instrumental Track)",
     artist: "Maranatha Music",
     duration: "03:27",
@@ -3584,7 +3574,6 @@ export const tracks: Track[] = [
   },
   {
     id: "count-it-all-joy",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "Count It All Joy",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "05:01",
@@ -3786,7 +3775,6 @@ export const tracks: Track[] = [
   },
   {
     id: "peace-wbvs",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "Peace w/BVs",
     artist: "DT",
     duration: "06:56",
@@ -4206,7 +4194,6 @@ export const tracks: Track[] = [
   },
   {
     id: "abide-in-me-full-instrumental",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "Abide In Me (Full Instrumental)",
     artist: "Sandra Crouch",
     duration: "05:00",
@@ -4335,7 +4322,6 @@ export const tracks: Track[] = [
   },
   {
     id: "comforter",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "Comforter",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "04:40",
@@ -4410,7 +4396,6 @@ export const tracks: Track[] = [
   },
   {
     id: "its-our-time",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "It's Our Time",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "04:19",
@@ -4869,7 +4854,6 @@ export const tracks: Track[] = [
   },
   {
     id: "to-god-be-the-glory",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "To God Be the Glory",
     artist: "Ministry Music Instrumentals & Andraé Crouch",
     duration: "03:18",
@@ -5275,7 +5259,6 @@ export const tracks: Track[] = [
   },
   {
     id: "can-you-reach-my-friend",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "Can You Reach My Friend",
     artist: "Helen Baylor",
     duration: "03:46",
@@ -5331,7 +5314,6 @@ export const tracks: Track[] = [
   },
   {
     id: "early-in-the-morning",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "Early in the Morning",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "05:30",
@@ -5430,7 +5412,6 @@ export const tracks: Track[] = [
   },
   {
     id: "in-his-time-full-instrumental-track",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "In His Time (Full Instrumental Track)",
     artist: "Maranatha Music",
     duration: "03:16",
@@ -5544,7 +5525,6 @@ export const tracks: Track[] = [
   },
   {
     id: "learning-to-live-like-jesus",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "Learning to Live Like Jesus",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "04:46",
@@ -5602,7 +5582,6 @@ export const tracks: Track[] = [
   },
   {
     id: "love-lifted-me-full-instrumental-track",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "Love Lifted Me (Full Instrumental Track)",
     artist: "Mary McKee & The Genesis",
     duration: "03:37",
@@ -5688,7 +5667,6 @@ export const tracks: Track[] = [
   },
   {
     id: "nothing-without-your-love",
-    audioUrl: "/api/stream?path=/three/wp-content/uploads/2024/03/Reigning-From-Sixteen-149.mp3",
     title: "Nothing Without Your Love",
     artist: "MINISTRY MUSIC INSTRUMENTALS",
     duration: "03:53",
